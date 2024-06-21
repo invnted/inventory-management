@@ -19,10 +19,12 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".adminUserprofile"
+            android:exported="false" />
+        <activity
             android:name=".addUser"
             android:exported="false"
-            android:theme="@style/Theme.NCC_Inventory_addManager"
-            />
+            android:theme="@style/Theme.NCC_Inventory_addManager" />
         <activity
             android:name=".managerAdminProfile"
             android:exported="false"
