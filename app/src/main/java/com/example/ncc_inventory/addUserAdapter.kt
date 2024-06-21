@@ -26,16 +26,16 @@ class addUserAdapter(var context : Activity, private var adapterUserItem: ArrayL
         holder.rvDesig.text = currentItem.designation
         holder.rvId.text = currentItem.userId
         holder.rvName.text = currentItem.userName
-//        holder.itemView.setOnClickListener {
-//            val intent = Intent(context,managerAdminProfile::class.java)
-//            intent.putExtra("name",currentItem.userName)
-//            intent.putExtra("id",currentItem.userId)
-//            intent.putExtra("password",currentItem.password)
-//            intent.putExtra("desig",currentItem.designation)
-//            intent.putExtra("section",currentItem.section)
-//            intent.putExtra("appt",currentItem.appointment)
-//            context.startActivity(Intent(intent))
-//        }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context,adminUserprofile::class.java)
+            intent.putExtra("name",currentItem.userName)
+            intent.putExtra("id",currentItem.userId)
+            intent.putExtra("password",currentItem.password)
+            intent.putExtra("desig",currentItem.designation)
+            intent.putExtra("section",currentItem.section)
+            intent.putExtra("appt",currentItem.appointment)
+            context.startActivity(Intent(intent))
+        }
 
     }
 
