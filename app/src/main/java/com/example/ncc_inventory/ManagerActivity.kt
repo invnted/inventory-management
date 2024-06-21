@@ -1,5 +1,7 @@
 package com.example.ncc_inventory
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -13,6 +15,9 @@ import retrofit2.Retrofit
 class ManagerActivity : AppCompatActivity(){
     private lateinit var retrofit : Retrofit
     private lateinit var binding : ActivityManagerBinding
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -100,8 +105,7 @@ class ManagerActivity : AppCompatActivity(){
                 if(response.isSuccessful){
                     val managers = response.body()
                     if (managers != null) {
-//                        managerAdapter = ManagerAdapter(managers)
-//                        recyclerView.adapter = managerAdapter
+
 
                         for(i in managers.indices){
                             var obj: adapterManagerItem = adapterManagerItem(managers[i].managerId,managers[i].managerName,managers[i].password,managers[i].designation,managers[i].section,managers[i].appointment,managers[i].allProductReport,managers[i].demandReceived,managers[i].issueProduct)
@@ -126,5 +130,21 @@ class ManagerActivity : AppCompatActivity(){
     companion object {
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
+        const val REQUEST_CODE_PROFILE = 1002
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ManagerActivity.REQUEST_CODE_PROFILE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // The user returned from ProfileActivity, refresh the fragment
+                val fragment = supportFragmentManager.findFragmentById(R.id.frameLayout)
+
+                if (fragment is managerListFragment) {
+
+                    showManager(fragment)
+                }
+            }
+        }
     }
 }

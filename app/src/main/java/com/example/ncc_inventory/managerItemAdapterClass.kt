@@ -40,7 +40,7 @@ class managerItemAdapterClass(var context : Activity,private var adapterManagerI
             intent.putExtra("demandreceived",currentItem.demandReceived)
             intent.putExtra("issue",currentItem.issueProduct)
 
-         context.startActivity(Intent(intent))
+            context.startActivityForResult(intent,ManagerActivity.REQUEST_CODE_PROFILE)
         }
 
     }

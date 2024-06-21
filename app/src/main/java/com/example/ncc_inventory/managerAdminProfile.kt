@@ -1,5 +1,6 @@
 package com.example.ncc_inventory
 
+import android.app.Activity
 import android.app.Dialog
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class managerAdminProfile : AppCompatActivity() {
+
     private lateinit var myname : TextView
     private lateinit var pName : TextView
     private lateinit var pId : TextView
@@ -31,14 +33,13 @@ class managerAdminProfile : AppCompatActivity() {
     private lateinit var pIssue : TextView
     private lateinit var mybb : ImageView
     private lateinit var editicon : ImageView
-    private lateinit var mId : String
     private lateinit var mName : String
     private lateinit var mPass : String
     private lateinit var mDesig : String
     private lateinit var mSection :String
     private lateinit var mAppont : String
     private lateinit var retroFit : Retrofit
-
+    private lateinit var pureId : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,7 @@ class managerAdminProfile : AppCompatActivity() {
         val check1 = intent.getBooleanExtra("isallproduct",false)
         val check2 = intent.getBooleanExtra("demandreceived",false)
         val check3 = intent.getBooleanExtra("issue",false)
+        pureId = intent.getStringExtra("id").toString()
 
         if(check1){
             pAll.text = "All Product Report :   Allowed"
@@ -102,7 +104,6 @@ class managerAdminProfile : AppCompatActivity() {
             var dialog = Dialog(this)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.edit_manager_)
-            val managerID : EditText = dialog.findViewById(R.id.userId)
             val managerName : EditText = dialog.findViewById(R.id.managerName)
             val managerPass : EditText = dialog.findViewById(R.id.managerPass)
             val managerDesignation : EditText = dialog.findViewById(R.id.managerDesignation)
@@ -115,7 +116,6 @@ class managerAdminProfile : AppCompatActivity() {
             var isDemand : Boolean = false
             var isIssue : Boolean = false
 
-            managerID.setText(intent.getStringExtra("id"))
             managerName.setText(intent.getStringExtra("name"))
             managerPass.setText(intent.getStringExtra("password"))
             managerDesignation.setText(intent.getStringExtra("desig"))
@@ -129,7 +129,6 @@ class managerAdminProfile : AppCompatActivity() {
             val deleteButton : TextView = dialog.findViewById(R.id.deleteBtn)
             saveChanges.setOnClickListener {
                 saveChanges.startAnimation(click)
-                mId = managerID.text.toString()
                 mName = managerName.text.toString()
                 mPass = managerPass.text.toString()
                 mDesig = managerDesignation.text.toString()
@@ -144,7 +143,7 @@ class managerAdminProfile : AppCompatActivity() {
                 if(issueProduct.isChecked){
                     isIssue = true
                 }
-                val managerEdit = managerEdit(mId,mName,mPass,mDesig,mSection,mAppont,isProduct,isDemand,isIssue)
+                val managerEdit = managerEdit(pureId,mName,mPass,mDesig,mSection,mAppont,isProduct,isDemand,isIssue)
                 val managerEditService = retroFit.create(editManagerService::class.java)
                 managerEditService.editManager(managerEdit).enqueue(object : Callback<ManagerResponse>{
                     override fun onResponse(
@@ -155,6 +154,8 @@ class managerAdminProfile : AppCompatActivity() {
                             val respo = response.body()
                             if(respo?.success == true){
                                 Toast.makeText(this@managerAdminProfile,"Changes Saved",Toast.LENGTH_SHORT).show()
+                                pureId = managerEdit.managerId
+                                changePfData(managerEdit.managerName,managerEdit.managerId,managerEdit.password,managerEdit.designation,managerEdit.section,managerEdit.appointment,managerEdit.allProductReport,managerEdit.demandReceived,managerEdit.issueProduct)
                             }
                             else{
                                 Toast.makeText(this@managerAdminProfile,"Save changes failed",Toast.LENGTH_SHORT).show()
@@ -169,8 +170,7 @@ class managerAdminProfile : AppCompatActivity() {
             }
             deleteButton.setOnClickListener {
                 deleteButton.startAnimation(click)
-                val muId = managerID.text.toString()
-                val deleteManager = deleteManager(muId)
+                val deleteManager = deleteManager(pureId)
                 val deleteManagerService = retroFit.create(DeleteManagerService::class.java)
                 deleteManagerService.deleteManager(deleteManager).enqueue(object : Callback<ManagerResponse>{
                     override fun onResponse(
@@ -181,6 +181,8 @@ class managerAdminProfile : AppCompatActivity() {
                             val respo = response.body()
                             if(respo?.success == true){
                                 Toast.makeText(this@managerAdminProfile,"Manager SuccessFully deleted",Toast.LENGTH_SHORT).show()
+                                dialog.dismiss()
+                                onBackPressed()
                             }
                             else{
                                 Toast.makeText(this@managerAdminProfile,"Some error occurred",Toast.LENGTH_SHORT).show()
@@ -195,8 +197,7 @@ class managerAdminProfile : AppCompatActivity() {
                     }
                 })
 
-                dialog.dismiss()
-                goParentActivity()
+
             }
             dialog.show()
         }
@@ -211,5 +212,38 @@ class managerAdminProfile : AppCompatActivity() {
                 // Handle the case where no parent activity is specified (optional)
                 finish()
             }
+    }
+
+    private fun changePfData(gUsername : String , gUserId : String ,gUserPass : String , gUserDesig : String , gUserSection : String, gUserAppt : String, check1 : Boolean,check2 : Boolean , check3 : Boolean){
+        myname.text = gUsername
+        pName.text = "Name :   $gUsername"
+        pId.text = "Id :   $gUserId"
+        pPass.text ="Password :   $gUserPass"
+        pDesig.text ="Designation :   $gUserDesig"
+        pSection.text ="Section :   $gUserSection"
+        pAppoint.text = "Appointment :   $gUserAppt"
+
+        if(check1){
+            pAll.text = "All Product Report :   Allowed"
+        }else{
+            pAll.text = "All Product Report :   Not Allowed"
+        }
+
+        if(check2){
+            pDemand.text = "Demand Received :   Allowed"
+        }else{
+            pDemand.text = "Demand Received :   Not Allowed"
+        }
+
+        if(check3){
+            pIssue.text = "Issue Product :   Allowed"
+        }else{
+            pIssue.text = "Issue Product :   Not Allowed"
+        }
+    }
+
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
+        super.onBackPressed()
     }
 }

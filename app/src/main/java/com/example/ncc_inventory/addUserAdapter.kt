@@ -34,7 +34,7 @@ class addUserAdapter(var context : Activity, private var adapterUserItem: ArrayL
             intent.putExtra("desig",currentItem.designation)
             intent.putExtra("section",currentItem.section)
             intent.putExtra("appt",currentItem.appointment)
-            context.startActivity(Intent(intent))
+            context.startActivityForResult(intent,addUser.REQUEST_CODE_PROFILE)
         }
 
     }

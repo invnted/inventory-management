@@ -1,5 +1,7 @@
 package com.example.ncc_inventory
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,6 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.create
 
 class addUser : AppCompatActivity() {
+
 
     private lateinit var retrofit : Retrofit
     private lateinit var binding : ActivityAddUserBinding
@@ -109,5 +112,19 @@ class addUser : AppCompatActivity() {
     companion object {
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
+        const val REQUEST_CODE_PROFILE = 1001
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PROFILE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // The user returned from ProfileActivity, refresh the fragment
+                val fragment = supportFragmentManager.findFragmentById(R.id.frameLayout2)
+                if (fragment is userListFragment) {
+                    showUser(fragment)
+                }
+            }
+        }
     }
 }
