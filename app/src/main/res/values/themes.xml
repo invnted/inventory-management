@@ -46,4 +46,9 @@
         <item name="android:navigationBarColor">@color/lightskyBlue</item>
         <item name="android:fitsSystemWindows">true</item>
     </style>
+    <style name="Theme.NCC_Inventory_authStore" parent="Base.Theme.NCC_Inventory" >
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:navigationBarColor">@color/lightskyBlue</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
 </resources>

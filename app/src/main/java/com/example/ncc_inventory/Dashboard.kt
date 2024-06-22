@@ -16,6 +16,7 @@ class Dashboard : AppCompatActivity() {
     private lateinit var category : ImageView
     private lateinit var addmanager31 : ImageView
     private lateinit var AddUser : ImageView
+    private lateinit var store : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -63,6 +64,12 @@ class Dashboard : AppCompatActivity() {
         AddUser.setOnClickListener {
             AddUser.startAnimation(click)
             startActivity(Intent(this,addUser::class.java))
+        }
+
+        store = findViewById(R.id.authoStore)
+        store.setOnClickListener {
+            store.startAnimation(click)
+            startActivity(Intent(this,AuthoraizationStrore::class.java))
         }
     }
     private fun profileSection(profile : ImageView,click : Animation, adminName : String ,adminEmail : String , role : String ,  id : String , department : String){
