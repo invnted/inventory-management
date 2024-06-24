@@ -106,4 +106,72 @@ exports.uploadCSV = async (req, res) => {
     res.status(500).json({ error: 'Failed to upload CSV file.' });
   }
 };
-// Add other CRUD operations (getProducts, updateProduct, deleteProduct, etc.)
+
+
+exports.getAllProductsType = async (req, res) => {
+  try {
+    const productTypes = await Product.distinct('productType');
+    console.log(productTypes);
+    res.status(200).json(productTypes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+exports.getProductStore = async (req, res) => {
+  const { productType } = req.body;
+ 
+  
+
+  try {
+      const result = await Product.aggregate([
+          { $match: { productType } },
+          {
+              $group: {
+                  _id: "$status",
+                  count: { $sum: 1 }
+              }
+          },
+          {
+              $group: {
+                  _id: null,
+                  statusCounts: {
+                      $push: {
+                          status: "$_id",
+                          count: "$count"
+                      }
+                  },
+                  totalProducts: { $sum: "$count" }
+              }
+          }
+      ]);
+
+     
+      let response = {
+          totalProducts: "0",
+          HELD: "0",
+          ISSUED: "0",
+          SERVICEABLE: "0",
+          UNSERVICEABLE: "0",
+          BER: "0"
+      };
+
+      if (result.length > 0) {
+          result[0].statusCounts.forEach(status => {
+              response[status.status] = status.count.toString();
+          });
+          response.totalProducts = result[0].totalProducts.toString();
+      }
+
+      console.log(response); 
+      response.success = true; 
+
+      res.status(200).json(response);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+  
+ 
+ 
