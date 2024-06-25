@@ -9,7 +9,8 @@ const upload = multer({ dest: 'uploads/' });
 router.post('/add', productController.addProduct);
 router.get('/get-products-csv',productController.getProductCSV)
 router.post('/upload-product-csv', upload.single('csvFile'), productController.uploadCSV);
+router.post('/productType-list',productController.getAllProductsType);
+router.post('/getProductStore',productController.getProductStore);
 
-// Add other routes: get, update, delete
 
 module.exports = router;
