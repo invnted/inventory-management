@@ -159,7 +159,7 @@ class loginpage : AppCompatActivity() {
                           Toast.makeText(this@loginpage,"Invalid Credentials",Toast.LENGTH_SHORT).show()
                       }
                   }else{
-                      Toast.makeText(this@loginpage,"Response failed Please Check your internet connection",Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this@loginpage,"Invalid Credentials",Toast.LENGTH_SHORT).show()
                   }
               }
 

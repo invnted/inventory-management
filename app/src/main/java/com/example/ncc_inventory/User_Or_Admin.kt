@@ -25,16 +25,19 @@ class User_Or_Admin : AppCompatActivity() {
             myAdmin.startAnimation(click)
             intent.putExtra("check" , "100")
             startActivity(intent)
+            finish()
         }
         myManager.setOnClickListener {
             myManager.startAnimation(click)
             intent.putExtra("check","010")
             startActivity(intent)
+            finish()
         }
         myUser.setOnClickListener {
             myUser.startAnimation(click)
             intent.putExtra("check","001")
             startActivity(intent)
+            finish()
         }
     }
 }
