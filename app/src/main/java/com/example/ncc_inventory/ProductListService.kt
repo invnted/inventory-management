@@ -4,6 +4,6 @@ import retrofit2.Call
 import retrofit2.http.POST
 
 interface ProductListService {
-    @POST("https://0842-2409-4085-9d0d-d35c-78e8-38e6-9a5e-539d.ngrok-free.app/products/productType-list")
+    @POST("https://043b-2409-4085-8698-9796-8121-b8c-314d-aadb.ngrok-free.app/products/productType-list")
     fun getProductList():Call<List<String>>
 }

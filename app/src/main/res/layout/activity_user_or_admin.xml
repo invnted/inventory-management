@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".User_Or_Admin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Let us Know"
+          android:textStyle="bold"
+          android:fontFamily="@font/poppins_medium"
+          android:textColor="#FAFF9800"
+          android:textSize="18sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Who you are"
+            android:textColor="@color/purple"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="34sp"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="130dp"
+            android:id="@+id/myAdmin"
+            android:elevation="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="130dp"
+            android:src="@drawable/mysettings"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="27sp"
+            android:fontFamily="@font/poppins_medium"
+            android:layout_marginTop="5dp"
+            android:text="Admin"
+            android:textColor="@color/skyBlue"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/myManager"
+            android:layout_width="130dp"
+            android:elevation="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="130dp"
+            android:src="@drawable/managermy"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="27sp"
+            android:fontFamily="@font/poppins_medium"
+            android:layout_marginTop="5dp"
+            android:text="Manager"
+            android:textColor="@color/skyBlue"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="130dp"
+            android:id="@+id/myUser"
+            android:layout_marginTop="20dp"
+            android:elevation="5dp"
+            android:layout_height="130dp"
+            android:src="@drawable/myuser"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="27sp"
+            android:fontFamily="@font/poppins_medium"
+            android:layout_marginTop="5dp"
+            android:text="User"
+            android:textColor="@color/skyBlue"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

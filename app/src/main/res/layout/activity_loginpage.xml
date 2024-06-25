@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightskyBlue"
     tools:context=".loginpage">
 
     <ImageView
@@ -125,7 +126,7 @@
         android:drawableStart="@drawable/baseline_person_24"
         android:drawablePadding="12dp"
         android:ems="10"
-        android:hint="Email"
+        android:hint="Enter your Id"
         android:inputType="textEmailAddress"
         android:paddingStart="10dp"
         android:textColor="@color/skyBlue"
