@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Demand = require('../models/Demand');
 const csvParser = require('csv-parser');
 const fs = require('fs');
 const { createObjectCsvStringifier } = require('csv-writer');
@@ -172,6 +173,22 @@ exports.getProductStore = async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 };
+
+exports.makeDemand = async (req, res) => {
+  try {
+    const demand = new Demand(req.body);
+    console.log(req.body)
+
+    await demand.save();
+    console.log("Sucessfully added new demand");
+    res.status(200).json({success:true});
+
+  } catch (err) {
+    console.log("Error while adding demand");
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
   
  
  
