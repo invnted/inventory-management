@@ -303,11 +303,11 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { userId, password } = req.body;
 
   console.log("login req as user", req.body)
 
-  const userId=email;
+  // const userId=email;
 
 
   try {
