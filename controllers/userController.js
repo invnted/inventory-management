@@ -38,7 +38,7 @@ exports.registerAdmin = async (req, res) => {
 exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(req.body)
+  console.log("login req as admin", req.body)
 
   try {
     let admin = await Admin.findOne({ email });
@@ -150,6 +150,8 @@ exports.registerManager = async (req, res) => {
 
 exports.loginManager = async (req, res) => {
   const { managerId, password } = req.body;
+
+  console.log("login req as manager", req.body)
 
   try {
     let manager = await Manager.findOne({ managerId });
@@ -272,6 +274,8 @@ exports.deleteManager = async (req, res) => {
 exports.registerUser = async (req, res) => {
   const { userId, userName, password, designation, section, appointment } = req.body;
 
+ 
+
   try {
     let user = await User.findOne({ userId });
 
@@ -301,26 +305,34 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("login req as user", req.body)
+
+  const userId=email;
+
+
   try {
-    let user = await User.findOne({ email });
+    console.log("finding USER ID: ",userId)
+    let user = await User.findOne({ userId });
+    console.log("USER FOUND")
 
-    if (!user) {
-      return res.status(401).json({ msg: 'Invalid Credentials' });
-    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
+    if (!user || user.password !== password) {
+      console.log(user.password,"not matched with",password);
       return res.status(401).json({ msg: 'Invalid Credentials' });
     }
 
     const payload = { user: { id: user.id } };
 
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      const { profileId, userName, email, role, department } = user;
-      res.json({ token, user: { profileId, userName, email, role, department } });
-    });
+    jwt.sign(
+      payload, 
+      "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", 
+      { expiresIn: 3600 }, 
+      (err, token) => {
+        if (err) throw err;
+        const { userId, userName, designation, section, appointment } = user;
+        res.json({ token, user: { userId, userName, designation, section, appointment },success:true });
+      }
+    );
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -341,23 +353,11 @@ exports.updateUser = async (req, res) => {
   console.log(req.body);
 
   const {
-    userId,
-    userName,
-    password,
-    email,
-    role,
-    department,
-    permissions,
+    userId, userName, password, designation, section, appointment,
   } = req.body;
 
   const updateFields = {
-    userId,
-    userName,
-    password,
-    email,
-    role,
-    department,
-    permissions,
+    userId, userName, password, designation, section, appointment,
   };
 
   try {
@@ -382,25 +382,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-
-// exports.updateUser = async (req, res) => {
-//   const { userName, role, department, email, password } = req.body;
-
-//   const updateFields = { userName, role, department, email, password };
-
-//   try {
-//     let user = await User.findById(req.params.id);
-
-//     if (!user) return res.status(404).json({ msg: 'User not found' });
-
-//     user = await User.findByIdAndUpdate(req.params.id, { $set: updateFields }, { new: true });
-
-//     res.json(user);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server error');
-//   }
-// };
 
 exports.deleteUser = async (req, res) => {
   const { userId } = req.body; 
