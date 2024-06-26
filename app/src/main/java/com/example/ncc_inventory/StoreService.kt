@@ -5,6 +5,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface StoreService {
-    @POST("https://043b-2409-4085-8698-9796-8121-b8c-314d-aadb.ngrok-free.app/products/getProductStore")
+    @POST("https://d8de-2409-4085-8698-9796-a414-f656-175c-b897.ngrok-free.app/products/getProductStore")
     fun getData(@Body productTypeResponse: productTypeResponse ) : Call<storeResponse>
 }

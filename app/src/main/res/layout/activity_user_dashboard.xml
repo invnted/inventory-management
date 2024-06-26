@@ -185,6 +185,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline132">
 
         <ImageView
+            android:id="@+id/userRaiseDemand"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:paddingTop="15dp"

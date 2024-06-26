@@ -9,6 +9,6 @@ import retrofit2.http.Part
 
 interface ProductService {
 
-    @POST("https://043b-2409-4085-8698-9796-8121-b8c-314d-aadb.ngrok-free.app/products/add") // Replace with your actual endpoint for adding products
+    @POST("https://d8de-2409-4085-8698-9796-a414-f656-175c-b897.ngrok-free.app/products/add") // Replace with your actual endpoint for adding products
     fun addProduct(@Body product: Product): Call<ProductResponse> // Replace with your response type
 }

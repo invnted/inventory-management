@@ -19,6 +19,9 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".userRaiseDemandPanel"
+            android:exported="false" />
+        <activity
             android:name=".userDashboard"
             android:exported="false" />
         <activity
