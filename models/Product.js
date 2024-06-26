@@ -10,10 +10,9 @@ const ProductSchema = new mongoose.Schema({
   additionalDetail: String,
   status: {
     type: String,
-    enum: ['available', 'out of stock', 'dead stock', 'returned'],
-    default: 'available',
+    enum: ['HELD', 'BER', 'ISSUED','UNSERVICEABLE','SERVICEABLE'],
+    default: 'SERVICEABLE',
   },
-  // imageUrl: String,
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', ProductSchema);
