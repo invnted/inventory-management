@@ -7,9 +7,6 @@ const auth = require('../middlewares/auth');
 router.post('/admin-register', userController.registerAdmin);
 router.post('/admin-login', userController.loginAdmin);
 router.get('/', auth, userController.getAllAdmins);
-router.get('/:id', auth, userController.getAdminById);
-// router.put('/:id', auth, userController.updateAdmin);
-// router.delete('/:id', auth, userController.deleteAdmin);
 
 // Managers routes
 router.post('/manager-register', userController.registerManager);

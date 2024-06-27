@@ -189,6 +189,53 @@ exports.makeDemand = async (req, res) => {
   }
 };
 
+exports.getUserDemands = async (req, res) => {
+  try {
+    console.log("Get Demand Function called !")
+    const { userId } = req.body; 
+    console.log(userId)
+    const userDemands = await Demand.find({ userId }).select('-userId -designation -additionalDetail -updatedAt');
+    console.log(userDemands);
+    
+    // Map userDemands to format the response as needed
+    const formattedDemands = userDemands.map(demand => ({
+      demandId: demand.demandId, 
+      productType: demand.productType,
+      productName: demand.productName,
+      productModel: demand.productModel,
+      productBrand: demand.productBrand,
+      productQuantity: demand.productQuantity,
+      status: demand.status,
+      createdAt: demand.createdAt
+    }));
+
+    res.status(200).json({
+      success: true,
+      message: "User demands fetched successfully",
+      data: formattedDemands
+    });
+  } catch (error) {
+    console.error("Error fetching user demands:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch user demands",
+      error: error.message
+    });
+  }
+};
+
+
+exports.getAllDemand = async (req, res) => {
+  try {
+    const demands = await Demand.find({});
+    console.log(demands);
+    res.status(200).json(demands);
+  } catch (error) {
+    console.error("Error fetching demands:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
   
  
  
