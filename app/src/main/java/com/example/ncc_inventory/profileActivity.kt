@@ -48,6 +48,8 @@ class profileActivity : AppCompatActivity() {
             },500)
         }
 
+
+
         //for going back
         goBack = findViewById(R.id.goback)
         goBack.setOnClickListener {
@@ -64,6 +66,9 @@ class profileActivity : AppCompatActivity() {
         }
 
     }
+
+
+
     private fun setValues(){
         name = findViewById(R.id.name)
         mail = findViewById(R.id.mail)

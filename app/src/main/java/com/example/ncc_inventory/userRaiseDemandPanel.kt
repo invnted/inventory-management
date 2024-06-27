@@ -1,5 +1,6 @@
 package com.example.ncc_inventory
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -41,6 +42,7 @@ class userRaiseDemandPanel : AppCompatActivity() {
     private lateinit var userId : String
     private lateinit var userDesig : String
     private lateinit var retrofiit : Retrofit
+    private lateinit var checkStatus : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_raise_demand_panel)
@@ -69,6 +71,7 @@ class userRaiseDemandPanel : AppCompatActivity() {
 
         retrofiit = rFit.retrofit!!
 
+        checkStatus = findViewById(R.id.dmStatus)
         uName = findViewById(R.id.userproductName)
         uBrand = findViewById(R.id.userbrand)
         uQuantity = findViewById(R.id.quantity)
@@ -102,6 +105,13 @@ class userRaiseDemandPanel : AppCompatActivity() {
             }else{
                 Toast.makeText(this,"Please Fill the mandatory fields",Toast.LENGTH_SHORT).show()
             }
+        }
+        checkStatus.setOnClickListener {
+            checkStatus.startAnimation(click)
+            userId = intent.getStringExtra("id").toString()
+            val it = Intent(this,checkDemandStatusUser::class.java)
+            it.putExtra("id",userId)
+            startActivity(it)
         }
 
     }

@@ -54,6 +54,11 @@
     <style name="Theme.NCC_Inventory_userOradmin" parent="Base.Theme.NCC_Inventory" >
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">true</item></style>
+
+    <style name="Theme.NCC_Inventory_userdemandSt" parent="Base.Theme.NCC_Inventory" >
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

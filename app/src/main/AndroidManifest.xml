@@ -19,6 +19,18 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".checkDemandStatusUser"
+            android:theme="@style/Theme.NCC_Inventory_userdemandSt"
+            android:exported="false" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".userRaiseDemandPanel" />
+
+        </activity>
+        <activity
+            android:name=".requestedDemandPanelAdmin"
+            android:exported="false" />
+        <activity
             android:name=".userRaiseDemandPanel"
             android:exported="false" />
         <activity
