@@ -25,11 +25,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".userRaiseDemandPanel" />
-
         </activity>
         <activity
             android:name=".requestedDemandPanelAdmin"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.NCC_Inventory_demandrequested">
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".Dashboard" />
+        </activity>
         <activity
             android:name=".userRaiseDemandPanel"
             android:exported="false" />

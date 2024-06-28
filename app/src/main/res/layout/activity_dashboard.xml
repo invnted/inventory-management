@@ -420,6 +420,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:id="@+id/dmdrqsted"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:src="@drawable/request" />
@@ -429,7 +430,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center"
-            android:text="Pending Demand"
+            android:text="Demand Requested"
             android:textColor="#bebebe"
             android:textSize="15sp"
             android:textStyle="bold" />
