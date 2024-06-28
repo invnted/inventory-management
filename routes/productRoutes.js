@@ -13,7 +13,7 @@ router.post('/productType-list',productController.getAllProductsType);
 router.post('/getProductStore',productController.getProductStore);
 router.post('/makeDemand',productController.makeDemand);
 router.post('/getUserDemand',productController.getUserDemands);
-router.get('/getAllDemand',productController.getAllDemand);
+router.post('/getAllDemand',productController.getAllDemand);
 
 
 module.exports = router;
