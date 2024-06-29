@@ -40,7 +40,7 @@ class profileActivity : AppCompatActivity() {
         val click = AnimationUtils.loadAnimation(this,R.anim.click)
         logout.setOnClickListener {
             logout.startAnimation(click)
-            val intent = Intent(this,loginpage::class.java)
+            val intent = Intent(this,User_Or_Admin::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             Handler(Looper.getMainLooper()).postDelayed({
                 this.startActivity(intent)

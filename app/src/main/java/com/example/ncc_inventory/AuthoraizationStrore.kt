@@ -12,10 +12,12 @@ import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.NavUtils
 import ir.mahozad.android.PieChart
 import ir.mahozad.android.component.Alignment
 import retrofit2.Call
@@ -52,6 +54,7 @@ class AuthoraizationStrore : AppCompatActivity() {
     private lateinit var uSB: TextView
     private lateinit var ber: TextView
     private lateinit var myTextView: TextView
+    private lateinit var back : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authoraization_strore)
@@ -130,6 +133,20 @@ class AuthoraizationStrore : AppCompatActivity() {
         getDetailsBtn.setOnClickListener {
             getDetailsBtn.startAnimation(click)
             sendAndReceiveData()
+        }
+
+        back = findViewById(R.id.mybbbtn)
+        back.setOnClickListener {
+            back.startAnimation(click)
+            val parentIntent = NavUtils.getParentActivityIntent(this)
+            if (parentIntent != null) {
+                // Navigate to the parent activity
+                NavUtils.navigateUpTo(this, parentIntent)
+            } else {
+                // Handle the case where no parent activity is specified (optional)
+                finish()
+            }
+
         }
 
 

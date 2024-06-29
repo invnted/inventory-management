@@ -55,6 +55,7 @@
         app:layout_constraintGuide_percent="0.09" />
 
     <ImageView
+        android:id="@+id/mybbbtn"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/back"

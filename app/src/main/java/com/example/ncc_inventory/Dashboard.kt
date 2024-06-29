@@ -18,6 +18,7 @@ class Dashboard : AppCompatActivity() {
     private lateinit var AddUser : ImageView
     private lateinit var store : ImageView
     private lateinit var dmdrqsted : ImageView
+    private lateinit var pendingdmd : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -77,6 +78,12 @@ class Dashboard : AppCompatActivity() {
         dmdrqsted.setOnClickListener {
             dmdrqsted.startAnimation(click)
             startActivity(Intent(this,requestedDemandPanelAdmin::class.java))
+        }
+
+        pendingdmd = findViewById(R.id.pendingdmd)
+        pendingdmd.setOnClickListener {
+            pendingdmd.startAnimation(click)
+            startActivity(Intent(this,PendingDemandPanelAdmin::class.java))
         }
     }
     private fun profileSection(profile : ImageView,click : Animation, adminName : String ,adminEmail : String , role : String ,  id : String , department : String){

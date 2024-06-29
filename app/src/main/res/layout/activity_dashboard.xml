@@ -383,7 +383,9 @@
         app:layout_constraintStart_toStartOf="@+id/guideline31"
         app:layout_constraintTop_toTopOf="@+id/guideline33">
 
+
         <ImageView
+            android:id="@+id/pendingdmd"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
