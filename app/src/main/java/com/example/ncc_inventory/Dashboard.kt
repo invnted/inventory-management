@@ -4,11 +4,14 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 
 class Dashboard : AppCompatActivity() {
     private lateinit var userName : TextView
@@ -19,6 +22,8 @@ class Dashboard : AppCompatActivity() {
     private lateinit var store : ImageView
     private lateinit var dmdrqsted : ImageView
     private lateinit var pendingdmd : ImageView
+    private lateinit var navBar : ImageView
+    private lateinit var drawer : DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -85,6 +90,14 @@ class Dashboard : AppCompatActivity() {
             pendingdmd.startAnimation(click)
             startActivity(Intent(this,PendingDemandPanelAdmin::class.java))
         }
+
+        drawer = findViewById(R.id.myDrawer)
+        navBar = findViewById(R.id.navBar)
+        navBar.setOnClickListener {
+            navBar.startAnimation(click)
+             drawer.openDrawer(GravityCompat.START)
+        }
+
     }
     private fun profileSection(profile : ImageView,click : Animation, adminName : String ,adminEmail : String , role : String ,  id : String , department : String){
         profile.startAnimation(click)

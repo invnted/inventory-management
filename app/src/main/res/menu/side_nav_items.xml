@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/storeReport"
+    android:title="Store Report"
+    android:icon="@drawable/baseline_store_24"/>
+
+    <item
+        android:id="@+id/issueReport"
+        android:title="Issue Report"
+        android:icon="@drawable/baseline_issue_long_24"/>
+    <item
+        android:id="@+id/demandReport"
+        android:title="Demand Report"
+        android:icon="@drawable/baseline_list_alt_24"/>
+    <item
+        android:id="@+id/allUserReport"
+        android:title="All User Report"
+        android:icon="@drawable/baseline_user_24"/>
+    <item
+        android:id="@+id/allManagerReport"
+        android:title="All Manager Report"
+        android:icon="@drawable/baseline_manage_accounts_24"/>
+</menu>
