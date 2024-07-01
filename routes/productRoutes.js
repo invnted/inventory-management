@@ -10,9 +10,7 @@ router.post('/add', productController.addProduct);
 router.get('/get-products-csv',productController.getProductCSV)
 router.post('/upload-product-csv', upload.single('csvFile'), productController.uploadCSV);
 router.post('/productType-list',productController.getAllProductsType);
-router.post('/productModel-list',productController.getAllProductsModel);
-router.post('/productBrand-list',productController.getAllProductsBrand);
-
+router.post('/getAllProduct',productController.getAllProductsModel);
 router.post('/getProductStore',productController.getProductStore);
 router.post('/makeDemand',productController.makeDemand);
 router.post('/getUserDemand',productController.getUserDemands);
