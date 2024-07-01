@@ -131,7 +131,8 @@ exports.getAllProducts = async (req, res) => {
             productModel: product.productModel,
             productBrand: product.productBrand,
             additionalDetail: product.additionalDetail,
-            productQuantity: product.productQuantity
+            productQuantity: product.productQuantity,
+            status: product.status 
           }))
         };
       })
@@ -141,9 +142,6 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
-
 
 exports.getProductStore = async (req, res) => {
   const { productType } = req.body;
@@ -273,27 +271,24 @@ exports.getPendingDemand = async (req, res) => {
 exports.storeReport = async (req, res) => {
   const { productType, productModel, productBrand, status, fromDate, toDate } = req.body;
   let query = {};
+  
   if (productType) { query.productType = productType; }
-
   if (productModel) { query.productModel = productModel; }
-  
   if (productBrand) { query.productBrand = productBrand; }
-  
   if (status) { query.status = status; }
   
-  if (fromDate && toDate) 
-    {
-      query.createdAt = { $gte: new Date(fromDate),  $lte: new Date(toDate) };
-    }
+  if (fromDate && toDate) {
+    
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+    
+    query.createdAt = { $gte: startDate, $lte: endDate };
+  }
 
-  try 
-  {
-    const reports = await YourModel.find(query);
+  try {
+    const reports = await Product.find(query);
     res.json(reports);
-  } 
-  
-  catch (err) 
-  {
+  } catch (err) {
     console.error("Error fetching reports:", err);
     res.status(500).json({ error: "Error fetching reports" });
   }
