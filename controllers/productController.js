@@ -247,6 +247,32 @@ exports.getPendingDemand = async (req, res) => {
   }
 };
 
+
+exports.storeReport = async (req, res) => {
+  const { productType, productModel, productBrand, status, fromDate, toDate } = req.body;
+  let query = {};
+  if (productType) { query.productType = productType; }
+
+  if (productModel) { query.productModel = productModel; }
   
- 
- 
+  if (productBrand) { query.productBrand = productBrand; }
+  
+  if (status) { query.status = status; }
+  
+  if (fromDate && toDate) 
+    {
+      query.createdAt = { $gte: new Date(fromDate),  $lte: new Date(toDate) };
+    }
+
+  try 
+  {
+    const reports = await YourModel.find(query);
+    res.json(reports);
+  } 
+  
+  catch (err) 
+  {
+    console.error("Error fetching reports:", err);
+    res.status(500).json({ error: "Error fetching reports" });
+  }
+};
