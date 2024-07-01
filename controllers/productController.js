@@ -119,12 +119,34 @@ exports.getAllProductsType = async (req, res) => {
   }
 };
 
+exports.getAllProducts = async (req, res) => {
+  try {
+    const productTypes = await Product.distinct('productType');
+    const productsDetails = await Promise.all(
+      productTypes.map(async (type) => {
+        const products = await Product.find({ productType: type });
+        return {
+          productType: type,
+          details: products.map(product => ({
+            productModel: product.productModel,
+            productBrand: product.productBrand,
+            additionalDetail: product.additionalDetail,
+            productQuantity: product.productQuantity
+          }))
+        };
+      })
+    );
+    res.status(200).json(productsDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 
 exports.getProductStore = async (req, res) => {
   const { productType } = req.body;
- 
-  
-
   try {
       const result = await Product.aggregate([
           { $match: { productType } },
