@@ -128,11 +128,9 @@ exports.getAllProducts = async (req, res) => {
         return {
           productType: type,
           details: products.map(product => ({
+            productName: product.productName,
             productModel: product.productModel,
             productBrand: product.productBrand,
-            additionalDetail: product.additionalDetail,
-            productQuantity: product.productQuantity,
-            status: product.status 
           }))
         };
       })
@@ -291,5 +289,29 @@ exports.storeReport = async (req, res) => {
   } catch (err) {
     console.error("Error fetching reports:", err);
     res.status(500).json({ error: "Error fetching reports" });
+  }
+};
+
+exports.getstoreCSV = async (req, res) => {
+  try {
+    const products = await Product.find({}).lean(); 
+    const csvStringifier = createObjectCsvStringifier({
+      header: [
+        { id: 'productId', title: 'Product ID' },
+        { id: 'productType', title: 'Product Type' },
+        { id: 'productName', title: 'Product Name' },
+        { id: 'productModel', title: 'Product Model' },
+        { id: 'productBrand', title: 'Product Brand' },
+        { id: 'status', title: 'Product Status' },
+       
+      ]
+    });
+
+    const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(products);
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=store_report.csv');
+    res.status(200).send(csvData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
