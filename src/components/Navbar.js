@@ -1,95 +1,81 @@
-// import React from 'react'
-// import { Link } from 'react-router-dom'
-// import Search from './Search'
-// import ProfilePhoto from '../Images/profile photo.jpg'
-
-
-
-
-// function Navbar() {
-//     return (
-//         <div>
-
-
-//             <nav className="bg-white border-gray-200 dark:bg-gray-900">
-//                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-
-//                         <span className="self-center text-2xl font-bold whitespace-nowrap dark:text-white">Super Admin Dashboard</span>
-//                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-//                         <Link to='/home/logout' type="button" className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-//                             <img className="w-8 h-8 rounded-full" src={ProfilePhoto} />
-//                         </Link>
-
-//                     </div>
-//                     <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-//                         <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-//                             <li>
-//                                 <a href="#" className="block py-2 px-3 text-white bg-blue-700  rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Dashboard</a>
-//                             </li>
-//                             <li>
-//                                 <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Reports</a>
-//                             </li>
-
-
-
-//                         </ul>
-//                     </div>
-//                 </div>
-//             </nav>
-
-//         </div>
-//     )
-// }
-
-// export default Navbar
-
-
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Search from './Search'
-import ProfilePhoto from '../Images/profile photo.jpg'
+import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import Search from './Search';
+import ProfilePhoto from '../Images/profile photo.jpg';
 import { useLocation } from 'react-router-dom';
 
-
-
-
 function Navbar() {
-    // const location = useLocation();
-    // const { username, email, department, profileId, role } = location.state || {};
+    const adminName = localStorage.getItem('adminName') || 'N/A';
+    const email = localStorage.getItem('email') || 'N/A';
+    const department = localStorage.getItem('department') || 'N/A';
+    const profileID = localStorage.getItem('profileId') || 'N/A';
+    const role = localStorage.getItem('role') || 'N/A';
+
+    const Menus = [
+        { label: "Admin Name", value: adminName },
+        { label: "Email", value: email },
+        { label: "Department", value: department },
+        { label: "profile ID", value: profileID },
+        { label: "Role", value: role }
+    ];
+
+    const [open, setOpen] = useState(false);
+
+    const menuRef = useRef();
+    const imgRef = useRef();
+
+    const logOut = () => {
+        window.localStorage.clear();
+        window.location.href = "/";
+    };
+
     return (
         <div>
-
-            {/* <h1>Username: {username}</h1>
-            <h1>Email: {email}</h1>
-            <h1>Department: {department}</h1>
-            <h1>Profile ID: {profileId}</h1>
-            <h1>Role: {role}</h1> */}
-
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-
-                    <span className="self-center text-2xl font-bold whitespace-nowrap dark:text-white">Super Admin Dashboard</span>
-                    <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                        <Link to='/home/logout' type="button" className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                            <img className="w-8 h-8 rounded-full" src={ProfilePhoto} />
-                        </Link>
-
-                    </div>
-                    <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-                        <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    <span className="hidden sm:block self-center text-2xl font-bold whitespace-nowrap dark:text-white">Super Admin Dashboard</span>
+                    
+                    <div className="">
+                        <ul className=" flex text-xl md:text-2xl text-white justify-center items-center">
                             <li>
-                                <Link to='/home' href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Dashboard</Link>
+                                <Link to='/home'  className=" py-2 px-3">Dashboard</Link>
                             </li>
                             <li>
-                                <Link to='/reports' href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Reports</Link>
+                                <Link to='/reports'  className=" py-2 px-3">Reports</Link>
                             </li>
                         </ul>
                     </div>
+                    <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                        <div className="relative flex text-sm rounded-full md:me-0 focus:ring-4 focus:ring-blue-600">
+                            <img
+                                ref={imgRef}
+                                src={ProfilePhoto}
+                                alt="face"
+                                onClick={() => setOpen(!open)}
+                                className="profile w-14 h-14 rounded-full border-4 border-sky-600 cursor-pointer"
+                            />
+                            {open && (
+                                <div ref={menuRef} className='bg-sky-600 p-6 shadow-2xl absolute text-white top-16 right-0 rounded-lg text-left z-10'>
+                                    <ul className='space-y-2'>
+                                        {Menus.map((menu, index) => (
+                                            <li key={index} className='p-2 text-lg flex w-auto'>
+                                                <span className="font-semibold">{menu.label}&nbsp;:&nbsp;</span> {menu.value}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
+                                        <Link to='/'>
+                                            <button onClick={logOut}>Logout</button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </nav>
-
         </div>
-    )
+    );
 }
 
-export default Navbar
+export default Navbar;

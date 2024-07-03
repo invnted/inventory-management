@@ -2,11 +2,10 @@
 import './App.css';
 import Home from './super-admin/Home';
 import { BrowserRouter as Router, Routes,Route, Link, Navigate } from "react-router-dom";
-import Login from './components/Login';
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddCategory from './super-admin/AddProduct';
-import Popup from './components/Popup';
 import AddManager from './super-admin/AddManager';
 import AddUser from './super-admin/AddUser';
 import AuthorizationStore from './super-admin/AuthorizationStore';
@@ -16,6 +15,14 @@ import Reports from './pages/Reports';
 import RadioButton from './components/RadioButton';
 import AllManager from './components/AllManager';
 import UsersList from './super-admin/UsersList';
+import StoreReport from './reports/StoreReport';
+import LoginOption from './components/LoginOption';
+import AdminLogin from './components/Login';
+import ManagerLogin from './components/ManagerLogin';
+import UserLogin from './components/UserLogin';
+import UserHome from './users/UserHome';
+import RaiseDemand from './users/RaiseDemand';
+import RaiseDemandReport from './users/RaiseDemandReport';
 
 function App() {
 
@@ -23,8 +30,12 @@ function App() {
     <Router>
       <div>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/radio" element={<RadioButton />} />
+        {/* Login Options */}
+        <Route path="/" element={<LoginOption />} />
+        <Route path="/login" element={<AdminLogin/>} />
+        <Route path="/manager-login" element={<ManagerLogin/>} />
+        <Route path="/user-login" element={<UserLogin/>} />
+        {/* Admin panel */}
         <Route path="/home" element={<Home />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/home/add-category" element={<AddCategory />} />
@@ -35,6 +46,13 @@ function App() {
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />
         <Route path="/home/demand-request" element={<DemandRequest />} />
         <Route path="/home/pending-demand" element={<PendingDemand />} />
+        {/* User Panel */}
+        <Route path="/user-home" element={<UserHome/>} />
+        <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />
+        <Route path="/user-home/raise-demand-report" element={<RaiseDemandReport/>} />
+
+        {/* Report Section */}
+        <Route path="/reports/store-reports" element={<StoreReport/>} />
 
         
 

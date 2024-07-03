@@ -40,7 +40,7 @@ function AllManager() {
 
     useEffect(() => {
         fetchManagers();
-    }, []); 
+    }, []);
 
     const handleEditClick = (manager) => {
         setEditingManager(manager.managerId);
@@ -49,11 +49,11 @@ function AllManager() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-    
+
         if (name === 'allProductReport' || name === 'demandReceived' || name === 'issueProduct') {
             setEditedManager({
                 ...editedManager,
-                [name]: value === 'true'  
+                [name]: value === 'true'
             });
         } else {
             setEditedManager({
@@ -62,7 +62,7 @@ function AllManager() {
             });
         }
     };
-    
+
 
     const handleSaveClick = async (managerId) => {
         try {
@@ -128,8 +128,8 @@ function AllManager() {
     };
 
     // Filter managers based on search term
-    const filteredManagers = managers.filter((manager) => 
-        manager.managerId.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const filteredManagers = managers.filter((manager) =>
+        manager.managerId.toLowerCase().includes(searchTerm.toLowerCase()) ||
         manager.managerName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -352,4 +352,4 @@ function AllManager() {
     );
 }
 
-export default AllManager;
+export default AllManager;

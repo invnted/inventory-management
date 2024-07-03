@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import RadioButton from './RadioButton';
 import Bg from '../Images/bg1.jpg'
 import { useEffect, useRef } from 'react';
-
-
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const LOGIN_URL = ` ${serverUrl}/admins/admin-login`
+const LOGIN_URL = ` ${serverUrl}/users/user-login`
 
+function UserLogin() {
 
-
-function AdminLogin() {
-  const [admin, setUser] = useState({
-    email: "",
+  const [user, setUser] = useState({
+    userId: "",
     password: "",
   });
 
@@ -25,7 +21,7 @@ function AdminLogin() {
     let value = e.target.value;
 
     setUser({
-      ...admin,
+      ...user,
       [name]: value,
     });
   };
@@ -38,36 +34,39 @@ function AdminLogin() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(admin),
+        body: JSON.stringify(user),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log("Received:", data)
 
-        const adminName = data.admin.adminName;
-        const email = data.admin.email;
-        const department = data.admin.department;
-        const profileId = data.admin.profileId;
-        const role = data.admin.role;
+        // userId, userName, designation, section, appointment
 
-        localStorage.setItem('adminName', adminName);
-        localStorage.setItem('email', email);
-        localStorage.setItem('department', department);
-        localStorage.setItem('profileId', profileId);
-        localStorage.setItem('role', role);
+        const userId = data.user.userId
+        const userName = data.user.userName;
+        const designation = data.user.designation;
+        const section = data.user.section;
+        const appointment = data.user.appointment;
+
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('designation', designation);
+        localStorage.setItem('section', section);
+        localStorage.setItem('appointment', appointment);
 
 
-        console.log("adminName:", adminName);
-        console.log("Email:", email);
-        console.log("Department:", department);
-        console.log("Profile ID:", profileId);
-        console.log("Role:", role);
+
+        console.log("userId:", userId);
+        console.log("userName:", userName);
+        console.log("Designation:", designation);
+        console.log("section:", section);
+        console.log("appointment:", appointment);
 
         toast.success("Login successful");
-        setUser({ email: "", password: "" });
+        setUser({ userId: "", password: "" });
 
-        navigate('/home', { state: { adminName, email, department, profileId, role } });
+        navigate('/User-Home');
       } else {
         toast.error("Invalid credentials");
       }
@@ -75,12 +74,7 @@ function AdminLogin() {
       toast.error("An error occurred");
     }
   };
-  const videoRef = useRef(null);
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.8; // Adjust the playback rate here (0.5 means half speed)
-    }
-  }, []);
+
   return (
     <div className='relative h-screen'>
       <img
@@ -90,16 +84,16 @@ function AdminLogin() {
         <div className="w-4/5 md:w-1/4 border  rounded-lg shadow p-5">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
-              Admin Login
+              User Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                <input type="email" name="email" id="email" className="w-full bg-transparent border-b border-gray-300  px-4 py-2 focus:outline-none text-white" placeholder="name@company.com" onChange={handleInput} required />
+                <label htmlFor="userId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User ID</label>
+                <input type="text" name="userId" id="userId" onChange={handleInput} className="w-full bg-transparent border-b border-gray-300  px-4 py-2 focus:outline-none text-white" placeholder=" User ID" required />
               </div>
               <div>
                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" onChange={handleInput} name="password" id="password" placeholder="••••••••" className="w-full bg-transparent border-b border-gray-300  px-4 py-2 focus:outline-none text-white mb-6" required />
+                <input type="password" name="password" id="password" onChange={handleInput} placeholder="••••••••" className="w-full bg-transparent border-b border-gray-300  px-4 py-2 focus:outline-none text-white  mb-6" required />
               </div>
               <div className='mt-20 flex justify-center items-center'>
                 <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">Login</button>
@@ -109,7 +103,7 @@ function AdminLogin() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default AdminLogin;
+export default UserLogin

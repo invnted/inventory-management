@@ -97,8 +97,45 @@ function AddManager() {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className='grid grid-cols-1 md:grid-cols-2 justify-center items-center bg-gray-500 p-12'>
-            <div className='grid grid-cols-1 justify-center items-center'>
+          
+          <div className=' justify-center items-center bg-gray-500 p-12'>
+          
+          <div className='flex flex-col md:flex-row justify-center items-center text-gray-200 font-bold'>
+              <div className='flex gap-5 justify-center items-center'>
+                <div>All Product Reports</div>
+                <div>
+                  <Switch
+                    name='allProductReport'
+                    onChange={(checked) => handleSwitch(checked, 'allProductReport')}
+                    checked={manager.allProductReport}
+                  />
+                </div>
+              </div>
+
+              <div className='flex gap-5 justify-center items-center p-5 md:p-10'>
+                <div>Demand Reports</div>
+                <div>
+                  <Switch
+                    name='demandReceived'
+                    onChange={(checked) => handleSwitch(checked, 'demandReceived')}
+                    checked={manager.demandReceived}
+                  />
+                </div>
+              </div>
+
+              <div className='flex gap-5 justify-center items-center'>
+                <div>Issue Product</div>
+                <div>
+                  <Switch
+                    name='issueProduct'
+                    onChange={(checked) => handleSwitch(checked, 'issueProduct')}
+                    checked={manager.issueProduct}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className=' grid grid-cols-1 justify-center items-center'>
               <input
                 type='text'
                 name='managerId'
@@ -155,47 +192,32 @@ function AddManager() {
               />
 
             </div>
-            <div className='flex flex-col justify-center items-center text-gray-200 font-bold'>
-              <div className='flex gap-5 justify-center items-center'>
-                <div>All Product Reports</div>
-                <div>
-                  <Switch
-                    name='allProductReport'
-                    onChange={(checked) => handleSwitch(checked, 'allProductReport')}
-                    checked={manager.allProductReport}
-                  />
-                </div>
-              </div>
-
-              <div className='flex gap-5 justify-center items-center p-5 md:p-10'>
-                <div>Demand Reports</div>
-                <div>
-                  <Switch
-                    name='demandReceived'
-                    onChange={(checked) => handleSwitch(checked, 'demandReceived')}
-                    checked={manager.demandReceived}
-                  />
-                </div>
-              </div>
-
-              <div className='flex gap-5 justify-center items-center'>
-                <div>Issue Product</div>
-                <div>
-                  <Switch
-                    name='issueProduct'
-                    onChange={(checked) => handleSwitch(checked, 'issueProduct')}
-                    checked={manager.issueProduct}
-                  />
-                </div>
-              </div>
-            </div>
-
+            
+          <div className='md:flex justify-around items-center '>
             <button
               type='submit'
-              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-auto w-1/2 md:w-1/3 p-2 md:p-3 m-5 rounded-xl'
+              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
             >
               Submit
             </button>
+
+            <button
+              
+              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
+            >
+              Choose CSV File
+            </button>
+
+            <button
+              
+              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
+            >
+              Submit CSV File
+            </button>
+
+           
+            </div>
+
           </div>
         </form>
         <div></div>

@@ -26,7 +26,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/add-manager'>
-                    <div className="bg-gray-200 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-gray-400 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={AddManager} alt="Description" />
                         </div>
@@ -46,7 +46,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/authorization-store'>
-                    <div className="bg-gray-200 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-gray-400 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={Store} alt="Description" />
                         </div>
@@ -66,7 +66,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/pending-demand'>
-                    <div className="bg-gray-200 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-gray-400 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={PendingDemand} alt="Description" />
                         </div>
