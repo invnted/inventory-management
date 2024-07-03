@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -12,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 
 class Dashboard : AppCompatActivity() {
     private lateinit var userName : TextView
@@ -24,6 +26,7 @@ class Dashboard : AppCompatActivity() {
     private lateinit var pendingdmd : ImageView
     private lateinit var navBar : ImageView
     private lateinit var drawer : DrawerLayout
+    private lateinit var navigationView : NavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -91,12 +94,27 @@ class Dashboard : AppCompatActivity() {
             startActivity(Intent(this,PendingDemandPanelAdmin::class.java))
         }
 
+        navigationView = findViewById(R.id.navigation_view)
         drawer = findViewById(R.id.myDrawer)
         navBar = findViewById(R.id.navBar)
         navBar.setOnClickListener {
             navBar.startAnimation(click)
              drawer.openDrawer(GravityCompat.START)
         }
+
+        navigationView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.storereport -> {
+                    // Handle the Activity 1 click
+                    val intent = Intent(this, storeReport::class.java)
+                    startActivity(intent)
+                }
+
+                // Add other cases for other menu items as needed
+            }
+            drawer.closeDrawer(GravityCompat.START)
+            true
+        })
 
     }
     private fun profileSection(profile : ImageView,click : Animation, adminName : String ,adminEmail : String , role : String ,  id : String , department : String){

@@ -19,10 +19,12 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".storeReport"
+            android:exported="false" />
+        <activity
             android:name=".PendingDemandPanelAdmin"
             android:exported="false"
-            android:theme="@style/Theme.NCC_Inventory_pendingdemand"
-            >
+            android:theme="@style/Theme.NCC_Inventory_pendingdemand">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Dashboard" />
@@ -56,12 +58,11 @@
         <activity
             android:name=".AuthoraizationStrore"
             android:exported="false"
-            android:theme="@style/Theme.NCC_Inventory_authStore" >
+            android:theme="@style/Theme.NCC_Inventory_authStore">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Dashboard" />
         </activity>
-
         <activity
             android:name=".adminUserprofile"
             android:exported="false"
