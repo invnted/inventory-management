@@ -267,24 +267,30 @@ exports.getPendingDemand = async (req, res) => {
 
 
 exports.storeReport = async (req, res) => {
-  const { productType, productModel, productBrand, status, fromDate, toDate } = req.body;
+  const {productName, productType, productModel, productBrand, fromDate, toDate } = req.body;
   let query = {};
+
+  console.log ("Request for store report: ",req.body)
   
+  if (productName) { query.productName = productName; }
   if (productType) { query.productType = productType; }
   if (productModel) { query.productModel = productModel; }
   if (productBrand) { query.productBrand = productBrand; }
-  if (status) { query.status = status; }
   
-  if (fromDate && toDate) {
+  
+  // if (fromDate && toDate) {
     
-    const startDate = new Date(fromDate);
-    const endDate = new Date(toDate);
+    // const startDate = new Date(fromDate);
+    // const endDate = new Date(toDate);
     
-    query.createdAt = { $gte: startDate, $lte: endDate };
-  }
+    // query.createdAt = { $gte: startDate, $lte: endDate };
+  // }
 
   try {
     const reports = await Product.find(query);
+
+    console.log("Response given to client: ",reports);
+
     res.json(reports);
   } catch (err) {
     console.error("Error fetching reports:", err);
