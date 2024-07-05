@@ -45,8 +45,6 @@ class loginpage : AppCompatActivity() {
             loginUser(email, password, baseUrl)
         }
     }
-
-
     private fun loginUser(email: String, password: String, baseUrl: String) {
         // Retrofit setup (explained later)
         val retrofit = Retrofit.Builder()

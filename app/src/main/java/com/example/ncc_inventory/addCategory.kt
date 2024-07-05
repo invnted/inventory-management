@@ -150,6 +150,13 @@ class addCategory : AppCompatActivity() {
             if(validation(id,selectedItem,name,brand,price)){
              val product = Product(selectedItem,id,name,brand,price,model,dt)
              addProduct(product)
+             productName.text.clear()
+             productBrand.text.clear()
+             productPrice.text.clear()
+             productModel.text.clear()
+             additionalDetails.text.clear()
+             mainId.text=""
+             id = ""
             }
             else{
                 Toast.makeText(this,"Please fill all the mandatory fields properly",Toast.LENGTH_SHORT).show()
@@ -261,7 +268,6 @@ class addCategory : AppCompatActivity() {
             }
         }
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -282,7 +288,6 @@ class addCategory : AppCompatActivity() {
             }
         }
     }
-
     private fun openFilePicker() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -290,8 +295,6 @@ class addCategory : AppCompatActivity() {
         }
         startActivityForResult(intent, REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE)
     }
-
-
     private fun readCSVFromUri(uri: Uri) {
         try {
             contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -364,8 +367,6 @@ class addCategory : AppCompatActivity() {
             Toast.makeText(this, "An error occurred while processing the CSV file", Toast.LENGTH_LONG).show()
         }
     }
-
-
     private fun isCsvFile(uri: Uri): Boolean {
         val mimeType = contentResolver.getType(uri)
         return mimeType?.let {
@@ -399,10 +400,6 @@ class addCategory : AppCompatActivity() {
             dialog.dismiss()
         }
     }
-
-
-
-
     private fun generateId():String{
         val firstTwo = kotlin.random.Random.nextInt(10,99).toString()
         val middle1 = kotlin.random.Random.nextInt('A'.code,'Z'.code+1).toChar()
@@ -414,10 +411,9 @@ class addCategory : AppCompatActivity() {
         val ID = firstTwo+middle1+middle2+two+middle3+middle4+lastTwo
         return ID
     }
-
     private fun validation(id:String,selectedItem:String,name:String,brand:String,price:String):Boolean{
         var sk = false
-        if(id.isNotEmpty()){
+        if(id.isNotEmpty() && id != ""){
             if (selectedItem.isNotEmpty()){
                 if(name.isNotEmpty()){
                     if(brand.isNotEmpty()){
@@ -430,6 +426,4 @@ class addCategory : AppCompatActivity() {
         }
         return sk
     }
-
-
 }
