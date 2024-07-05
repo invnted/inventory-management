@@ -23,6 +23,7 @@ import UserLogin from './components/UserLogin';
 import UserHome from './users/UserHome';
 import RaiseDemand from './users/RaiseDemand';
 import RaiseDemandReport from './users/RaiseDemandReport';
+import ManagerDashboard from './manager/ManagerDashboard';
 
 function App() {
 
@@ -46,6 +47,9 @@ function App() {
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />
         <Route path="/home/demand-request" element={<DemandRequest />} />
         <Route path="/home/pending-demand" element={<PendingDemand />} />
+
+        {/* Manger Section */}
+        <Route path="/manager-login/manager-dashboard" element={<ManagerDashboard/>} />
         {/* User Panel */}
         <Route path="/user-home" element={<UserHome/>} />
         <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />
