@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
 import { useRef, useState, useEffect } from 'react';
+import AddUser from '../super-admin/AddUser';
+import ManagerAddUser from '../manager/ManagerAddUser';
 
 function ManagerNavbar() {
     const [open, setOpen] = useState(false);
@@ -11,7 +13,7 @@ function ManagerNavbar() {
     const designation = localStorage.getItem('designation') || 'N/A';
 
     const Menus = [
-        { label: "User ID", value: userId },
+        { label: "Manager ID", value: userId },
         { label: "Name", value: userName },
         { label: "Designation", value: designation }
     ];
@@ -39,11 +41,10 @@ function ManagerNavbar() {
 
   return (
     <div>
-        <ManagerNavbar/>
-            <nav className="bg-purple-600">
+            <nav className="bg-sky-900">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <Link to='/user-home'>
-                        <span className="self-center text-3xl font-bold whitespace-nowrap text-white hover:text-blue-900 delay-100">User Dashboard</span>
+                        <span className="hidden sm:block self-center text-3xl font-bold whitespace-nowrap dark:text-white">Manager Dashboard</span>
                     </Link>
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         <div className="relative flex text-sm rounded-full md:me-0 focus:ring-4 focus:ring-blue-600">
@@ -74,12 +75,17 @@ function ManagerNavbar() {
                             )}
                         </div>
                     </div>
-                    <ul className='flex gap-10 text-xl font-semibold text-white'>
-                        <Link to='/user-home/raise-demand' className='hover:text-blue-900 delay-100'>
-                            <li>Raise Demand</li>
+                    <ul className='flex flex-col md:flex-row gap-10 text-xl font-semibold text-white'>
+                        <Link to='/manager-dashboard' className='hover:text-blue-900 delay-100'>
+                            <li>Dashboard</li>
                         </Link>
-                        <li>Product Received</li>
-                        <li>Product Use</li>
+                        <li>Add Category</li>
+                        <Link to='/manager-dashboard/managerAdd-user'>
+                        <li>
+                            Add User
+                        </li>
+                        </Link>
+                        <li>Demand</li>
                     </ul>
                 </div>
             </nav>

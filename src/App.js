@@ -24,6 +24,7 @@ import UserHome from './users/UserHome';
 import RaiseDemand from './users/RaiseDemand';
 import RaiseDemandReport from './users/RaiseDemandReport';
 import ManagerDashboard from './manager/ManagerDashboard';
+import ManagerAddUser from './manager/ManagerAddUser';
 
 function App() {
 
@@ -49,7 +50,9 @@ function App() {
         <Route path="/home/pending-demand" element={<PendingDemand />} />
 
         {/* Manger Section */}
-        <Route path="/manager-login/manager-dashboard" element={<ManagerDashboard/>} />
+        <Route path="/manager-dashboard" element={<ManagerDashboard/>} />
+        <Route path="/manager-dashboard/managerAdd-user" element={<ManagerAddUser/>} />
+
         {/* User Panel */}
         <Route path="/user-home" element={<UserHome/>} />
         <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />

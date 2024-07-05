@@ -93,7 +93,7 @@ function ManagerDashboard() {
       };
     }, []);
   return (
-    <div className='bg-sky-400'>
+    <div className='bg-sky-400 h-screen'>
       <ManagerNavbar/>
       <form
         className='flex justify-center items-center gap-5 pt-5'
@@ -101,11 +101,11 @@ function ManagerDashboard() {
       >
         <select
           id='productTypes'
-          className='text-2xl font-bold rounded-xl outline-none block p-3 bg-sky-700 dark:text-white w-72 cursor-pointer hover:bg-sky-900 delay-100'
+          className='text-2xl font-bold rounded-xl outline-none block p-3 bg-sky-800 dark:text-white w-72 cursor-pointer hover:bg-sky-900 delay-100'
           onChange={handleProductTypeChange}
           value={selectedProductType}
         >
-          <option value=''>Select Product Type</option>
+          <option value=''>Select The Product</option>
           {productTypes.map((productType, index) => (
             <option
               value={productType}
@@ -118,7 +118,7 @@ function ManagerDashboard() {
         </select>
         <button
           type='submit'
-          className='p-4 bg-sky-700 w-28 flex justify-center items-center text-xl font-bold text-white rounded-xl cursor-pointer hover:bg-sky-900 delay-100'
+          className='p-4 bg-sky-800 w-28 flex justify-center items-center text-xl font-bold text-white rounded-xl cursor-pointer hover:bg-sky-900 delay-100'
         >
           Submit
         </button>

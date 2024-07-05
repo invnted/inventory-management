@@ -93,7 +93,7 @@ function AuthorizationStore() {
   }, []);
 
   return (
-    <div className='bg-sky-400'>
+    <div className='bg-sky-400 h-screen'>
       <Navbar />
       <form
         className='flex justify-center items-center gap-5 pt-5'
