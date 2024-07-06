@@ -160,9 +160,9 @@ exports.loginManager = async (req, res) => {
       return res.status(401).json({ msg: 'Invalid Credentials' });
     }
 
-    const isMatch = await compare(password, manager.password);
 
-    if (!isMatch) {
+    if (manager.password !== password) {
+      console.log(manager.password,"not matched with",password);
       return res.status(401).json({ msg: 'Invalid Credentials' });
     }
 
