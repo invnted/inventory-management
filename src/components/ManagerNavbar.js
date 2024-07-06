@@ -8,14 +8,23 @@ import ManagerAddUser from '../manager/ManagerAddUser';
 function ManagerNavbar() {
     const [open, setOpen] = useState(false);
 
-    const userName = localStorage.getItem('userName') || 'N/A';
-    const userId = localStorage.getItem('userId') || 'N/A';
+    //Profile
+    const managerId = localStorage.getItem('managerId') || 'N/A';
+    const managerName = localStorage.getItem('managerName') || 'N/A';
     const designation = localStorage.getItem('designation') || 'N/A';
 
+    //Permission
+    const allProductReport = localStorage.getItem('allProductReport') || 'N/A';
+    const demandReceived = localStorage.getItem('demandReceived') || 'N/A';
+    const issueProduct = localStorage.getItem('issueProduct') || 'N/A';
+
     const Menus = [
-        { label: "Manager ID", value: userId },
-        { label: "Name", value: userName },
-        { label: "Designation", value: designation }
+        { label: "Manager ID", value: managerId },
+        { label: "Name", value: managerName },
+        { label: "Designation", value: designation },
+        { label: "All Product Report", value: allProductReport },
+        { label: "Demand Received", value: demandReceived },
+        { label: "Issue Product", value: issueProduct }
     ];
 
     const menuRef = useRef();
