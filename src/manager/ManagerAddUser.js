@@ -2,7 +2,7 @@ import React from 'react'
 
 function ManagerAddUser() {
   return (
-    <div>ManagerAddUser</div>
+    <div>Hiis my name is anup</div>
   )
 }
 
