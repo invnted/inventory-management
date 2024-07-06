@@ -18,6 +18,7 @@ function ManagerNavbar() {
     const demandReceived = localStorage.getItem('demandReceived') || 'N/A';
     const issueProduct = localStorage.getItem('issueProduct') || 'N/A';
 
+    //Menus
     const Menus = [
         { label: "Manager ID", value: managerId },
         { label: "Name", value: managerName },
