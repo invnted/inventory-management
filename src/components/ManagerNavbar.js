@@ -18,14 +18,11 @@ function ManagerNavbar() {
     const demandReceived = localStorage.getItem('demandReceived') || 'N/A';
     const issueProduct = localStorage.getItem('issueProduct') || 'N/A';
 
-    //Menus
     const Menus = [
         { label: "Manager ID", value: managerId },
         { label: "Name", value: managerName },
-        { label: "Designation", value: designation },
-        { label: "All Product Report", value: allProductReport },
-        { label: "Demand Received", value: demandReceived },
-        { label: "Issue Product", value: issueProduct }
+        { label: "Designation", value: designation }
+
     ];
 
     const menuRef = useRef();
@@ -49,8 +46,8 @@ function ManagerNavbar() {
         window.location.href = "/";
     };
 
-  return (
-    <div>
+    return (
+        <div>
             <nav className="bg-sky-900">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <Link to='/user-home'>
@@ -86,21 +83,25 @@ function ManagerNavbar() {
                         </div>
                     </div>
                     <ul className='flex flex-col md:flex-row gap-10 text-xl font-semibold text-white'>
-                        <Link to='/manager-dashboard' className='hover:text-blue-900 delay-100'>
+                        <Link to='/manager-dashboard' className='hover:text-blue-500 delay-100'>
                             <li>Dashboard</li>
                         </Link>
-                        <li>Add Category</li>
-                        <Link to='/manager-dashboard/managerAdd-user'>
-                        <li>
-                            Add User
-                        </li>
+                        <Link to='/manager-dashboard/manager-AddProduct'>
+                            <li className='hover:text-blue-500 delay-100'>Add Product</li>
                         </Link>
-                        <li>Demand</li>
+                        <Link to='/manager-dashboard/managerAdd-user'>
+                            <li className='hover:text-blue-500 delay-100'>
+                                Add User
+                            </li>
+                        </Link>
+                        <Link to='/manager-dashboard/ManagerDemand'>
+                            <li className='hover:text-blue-500 delay-100'>Demand</li>
+                        </Link>
                     </ul>
                 </div>
             </nav>
         </div>
-  )
+    )
 }
 
 export default ManagerNavbar

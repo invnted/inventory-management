@@ -1,3 +1,4 @@
+import React from 'react'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -5,135 +6,136 @@ import { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import AddUsers from '../Images/add-user.png'
 import List from '../Images/list.png'
+import ManagerNavbar from '../components/ManagerNavbar';
 
-function UsersList() {
-  const [users, setUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
-  const [editedUser, setEditedUser] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');
-  const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const userListURL = `${serverUrl}/users/user-getAll`;
-  const userEditURL = `${serverUrl}/users/user-update`;
-  const userDeleteURL = `${serverUrl}/users/user-delete`;
-
-  // Function to fetch all users
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(userListURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Received:", data);
-        setUsers(data);
-        toast.success('Successfully fetched data');
-      } else {
-        toast.error('Failed to fetch data');
-      }
-    } catch (error) {
-      console.error('Error while fetching:', error);
-      toast.error('An error occurred');
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const handleEditClick = (user) => {
-    setEditingUser(user.userId);
-    setEditedUser(user);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    
-      setEditedUser({
-        ...editedUser,
-        [name]: value
-      });
-  };
-
-
-  const handleSaveClick = async (userId) => {
-    try {
-      const response = await fetch(userEditURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editedUser),
-      });
-
-      if (response.ok) {
-        const updatedUsers = users.map((user) =>
-          user.userId === userId ? editedUser : user
-        );
-        setUsers(updatedUsers);
-        setEditingUser(null);
-        toast.success('User updated successfully');
-      } else {
-        toast.error('Failed to update user');
-      }
-    } catch (error) {
-      console.error('Error while updating:', error);
-      toast.error('An error occurred');
-    }
-  };
-
-  const handleDeleteClick = async (userId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
-    if (confirmDelete) {
+function ManagerUserList() {
+    const [users, setUsers] = useState([]);
+    const [editingUser, setEditingUser] = useState(null);
+    const [editedUser, setEditedUser] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
+    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const userListURL = `${serverUrl}/users/user-getAll`;
+    const userEditURL = `${serverUrl}/users/user-update`;
+    const userDeleteURL = `${serverUrl}/users/user-delete`;
+  
+    // Function to fetch all users
+    const fetchUsers = async () => {
       try {
-        const response = await fetch(userDeleteURL, {
+        const response = await fetch(userListURL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userId }),
         });
-
+  
         if (response.ok) {
-          const updatedUsers = users.filter(
-            (user) => user.userId !== userId
-          );
-          setUsers(updatedUsers);
-          toast.success('User deleted successfully');
+          const data = await response.json();
+          console.log("Received:", data);
+          setUsers(data);
+          toast.success('Successfully fetched data');
         } else {
-          toast.error('Failed to delete User');
+          toast.error('Failed to fetch data');
         }
       } catch (error) {
-        console.error('Error while deleting:', error);
+        console.error('Error while fetching:', error);
         toast.error('An error occurred');
       }
-    }
-  };
-
-
-
-  // Function to handle search input change
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Filter users based on search term
-  const filteredUsers = users.filter((user) =>
-    user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.userName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+    };
+  
+    useEffect(() => {
+      fetchUsers();
+    }, []);
+  
+    const handleEditClick = (user) => {
+      setEditingUser(user.userId);
+      setEditedUser(user);
+    };
+  
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+  
+      
+        setEditedUser({
+          ...editedUser,
+          [name]: value
+        });
+    };
+  
+  
+    const handleSaveClick = async (userId) => {
+      try {
+        const response = await fetch(userEditURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editedUser),
+        });
+  
+        if (response.ok) {
+          const updatedUsers = users.map((user) =>
+            user.userId === userId ? editedUser : user
+          );
+          setUsers(updatedUsers);
+          setEditingUser(null);
+          toast.success('User updated successfully');
+        } else {
+          toast.error('Failed to update user');
+        }
+      } catch (error) {
+        console.error('Error while updating:', error);
+        toast.error('An error occurred');
+      }
+    };
+  
+    const handleDeleteClick = async (userId) => {
+      const confirmDelete = window.confirm('Are you sure you want to delete this user?');
+      if (confirmDelete) {
+        try {
+          const response = await fetch(userDeleteURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }),
+          });
+  
+          if (response.ok) {
+            const updatedUsers = users.filter(
+              (user) => user.userId !== userId
+            );
+            setUsers(updatedUsers);
+            toast.success('User deleted successfully');
+          } else {
+            toast.error('Failed to delete User');
+          }
+        } catch (error) {
+          console.error('Error while deleting:', error);
+          toast.error('An error occurred');
+        }
+      }
+    };
+  
+  
+  
+    // Function to handle search input change
+    const handleSearchChange = (e) => {
+      setSearchTerm(e.target.value);
+    };
+  
+    // Filter users based on search term
+    const filteredUsers = users.filter((user) =>
+      user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.userName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  
   return (
     <div>
-      <Navbar />
+      <ManagerNavbar/>
       <div className='m-4 md:m-12 border border-black justify-between'>
-        <div className='text-center bg-gray-800 text-black h-24 flex items-center justify-center'>
+        <div className='text-center bg-sky-900 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
-            <Link to='/home/add-user'>
+            <Link to='/manager-dashboard/managerAdd-user'>
               <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                 <div className='w-10 block'>
                   <img src={AddUsers} alt='Description' />
@@ -143,7 +145,7 @@ function UsersList() {
                 </div>
               </div>
             </Link>
-            <Link to='/home/add-user/users-list'>
+            <Link to='/manager-dashboard/manager-UserList'>
             <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
               <div className='w-10 block'>
                 <img src={List} alt='Description' />
@@ -155,7 +157,7 @@ function UsersList() {
             </Link>
           </div>
         </div>
-        <div className='bg-gray-500'>
+        <div className='bg-sky-600'>
           <form className="max-w-md mx-auto md:pt-20 p-6">
             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div className="relative">
@@ -169,26 +171,26 @@ function UsersList() {
             </div>
           </form>
           <div className="p-2 md:p-10">
-            <button onClick={fetchUsers} className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
+            <button onClick={fetchUsers} className="bg-sky-900 text-white p-2 rounded-md">Refresh</button>
             {filteredUsers.length > 0 && (
               <div className="overflow-x-auto mt-4">
-                <table className="min-w-full bg-white border border-gray-300">
+                <table className="min-w-full bg-sky-300 border border-black">
                   <thead>
                     <tr>
-                      <th className="py-2 px-4 border border-gray-300 text-center">User ID</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Name</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Designation</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Appointment</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Section</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Password</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Action</th>
+                      <th className="py-2 px-4 border border-black text-center">User ID</th>
+                      <th className="py-2 px-4 border border-black text-center">Name</th>
+                      <th className="py-2 px-4 border border-black text-center">Designation</th>
+                      <th className="py-2 px-4 border border-black text-center">Appointment</th>
+                      <th className="py-2 px-4 border border-black text-center">Section</th>
+                      <th className="py-2 px-4 border border-black text-center">Password</th>
+                      <th className="py-2 px-4 border border-black text-center">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredUsers.map((user) => (
                       <tr key={user.userId}>
-                        <td className="py-2 px-4 border border-gray-300 text-center">{user.userId}</td>
-                        <td className="py-2 px-4 border border-gray-300 text-center">
+                        <td className="py-2 px-4 border border-black text-center">{user.userId}</td>
+                        <td className="py-2 px-4 border border-black text-center">
                           {editingUser === user.userId ? (
                             <input
                               type="text"
@@ -202,7 +204,7 @@ function UsersList() {
                           )}
                         </td>
                         
-                        <td className="py-2 px-4 border border-gray-300 text-center">
+                        <td className="py-2 px-4 border border-black text-center">
                           {editingUser === user.userId ? (
                             <input
                               type="text"
@@ -215,7 +217,7 @@ function UsersList() {
                             user.designation
                           )}
                         </td>
-                        <td className="py-2 px-4 border border-gray-300 text-center">
+                        <td className="py-2 px-4 border border-black text-center">
                           {editingUser === user.userId ? (
                             <input
                               type="text"
@@ -228,7 +230,7 @@ function UsersList() {
                             user.appointment
                           )}
                         </td>
-                        <td className="py-2 px-4 border border-gray-300 text-center">
+                        <td className="py-2 px-4 border border-black text-center">
                           {editingUser === user.userId ? (
                             <input
                               type="text"
@@ -241,7 +243,7 @@ function UsersList() {
                             user.section
                           )}
                         </td>
-                        <td className="py-2 px-4 border border-gray-300 text-center">
+                        <td className="py-2 px-4 border border-black text-center">
                           {editingUser === user.userId ? (
                             <input
                               type="text"
@@ -255,7 +257,7 @@ function UsersList() {
                           )}
                         </td>
                         
-                        <td className="py-2 px-4 border border-gray-300 text-center">
+                        <td className="py-2 px-4 border border-black text-center">
                           {editingUser === user.userId ? (
                             <>
                               <button
@@ -298,7 +300,7 @@ function UsersList() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default UsersList;
+export default ManagerUserList

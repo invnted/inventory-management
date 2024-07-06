@@ -25,6 +25,10 @@ import RaiseDemand from './users/RaiseDemand';
 import RaiseDemandReport from './users/RaiseDemandReport';
 import ManagerDashboard from './manager/ManagerDashboard';
 import ManagerAddUser from './manager/ManagerAddUser';
+import ManagerUserList from './manager/ManagerUserList';
+import ManagerDemand from './manager/ManagerDemand';
+import ManagerDemandReport from './manager/ManagerDemandReport';
+import ManagerAddProduct from './manager/ManagerAddProduct';
 
 function App() {
 
@@ -52,6 +56,11 @@ function App() {
         {/* Manger Section */}
         <Route path="/manager-dashboard" element={<ManagerDashboard/>} />
         <Route path="/manager-dashboard/managerAdd-user" element={<ManagerAddUser/>} />
+        <Route path="/manager-dashboard/manager-UserList" element={<ManagerUserList/>} />
+        <Route path="/manager-dashboard/manager-AddProduct" element={<ManagerAddProduct/>} />
+        <Route path="/manager-dashboard/ManagerDemand" element={<ManagerDemand/>} />
+        <Route path="/manager-dashboard/ManagerDemandReport" element={<ManagerDemandReport/>} />
+
 
         {/* User Panel */}
         <Route path="/user-home" element={<UserHome/>} />
