@@ -128,6 +128,38 @@ class loginpage : AppCompatActivity() {
                 })
         }
         else if(check == "010"){
+           val managerloginrequest = managerloginrequest(email,password)
+           val managerLoginService = retrofit.create(managerLoginService::class.java)
+           managerLoginService.managerLogin(managerloginrequest).enqueue(object :Callback<managerLoginResponse>{
+               override fun onResponse(
+                   call: Call<managerLoginResponse>,
+                   response: Response<managerLoginResponse>
+               ) {
+                   if(response.isSuccessful){
+                       val respo = response.body()
+                       if(respo?.success==true){
+                           val it = Intent(this@loginpage, managerDashboard::class.java)
+                           it.putExtra("name",respo.managerData.managerName)
+                           it.putExtra("id",respo.managerData.managerId)
+                           it.putExtra("pass",respo.managerData.password)
+                           it.putExtra("desig",respo.managerData.designation)
+                           it.putExtra("appt",respo.managerData.appointment)
+                           it.putExtra("section",respo.managerData.section)
+                           it.putExtra("allreport",respo.managerData.allProductReport)
+                           it.putExtra("issue",respo.managerData.issueProduct)
+                           it.putExtra("demand",respo.managerData.demandReceived)
+                           startActivity(it)
+                       }
+                   }else
+                   {
+                       Toast.makeText(this@loginpage,"Invalid Credentials",Toast.LENGTH_SHORT).show()
+                   }
+               }
+               override fun onFailure(call: Call<managerLoginResponse>, t: Throwable) {
+                   Toast.makeText(this@loginpage,"Response failed",Toast.LENGTH_SHORT).show()
+
+               }
+           })
 
         }
         else if(check == "001"){
