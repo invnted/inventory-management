@@ -76,7 +76,7 @@ function ManagerLogin() {
         toast.success('Login successful');
         setManager({ managerId: '', password: '' });
 
-        navigate('/Manager-Home');
+        navigate('/Manager-Dashboard');
       } else {
         toast.error('Invalid credentials');
       }
