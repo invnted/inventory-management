@@ -1,11 +1,11 @@
 import React from 'react'
 import AddCategory from '../Images/category.png'
-import AddManager from '../Images/add.png'
+import AddManager from '../Images/add1.png'
 import ListManager from '../Images/list.png'
 import AddUser from '../Images/add manager.png'
-import Store from '../Images/store.png'
+import Store from '../Images/store1.png'
 import DemandRequesr from '../Images/demand.png'
-import PendingDemand from '../Images/clock.png'
+import PendingDemand from '../Images/clock1.png'
 import { Link } from 'react-router-dom'
 
 
@@ -16,7 +16,7 @@ function DashBoard() {
         <div className='m-20 justify-between'>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 m-auto">
                 <Link to='/home/add-category'>
-                    <div className="bg-gray-700 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img className='color-white' src={AddCategory} alt="Description" />
                         </div>
@@ -26,7 +26,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/add-manager'>
-                    <div className="bg-gray-400 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={AddManager} alt="Description" />
                         </div>
@@ -36,7 +36,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/add-user'>
-                    <div className="bg-gray-700 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={AddUser} alt="Description" />
                         </div>
@@ -46,7 +46,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/authorization-store'>
-                    <div className="bg-gray-400 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={Store} alt="Description" />
                         </div>
@@ -56,7 +56,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/demand-request'>
-                    <div className="bg-gray-700 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={DemandRequesr} alt="Description" />
                         </div>
@@ -66,7 +66,7 @@ function DashBoard() {
                     </div>
                 </Link>
                 <Link to='/home/pending-demand'>
-                    <div className="bg-gray-400 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={PendingDemand} alt="Description" />
                         </div>

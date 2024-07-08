@@ -82,11 +82,8 @@ function AdminLogin() {
     }
   }, []);
   return (
-    <div className='relative h-screen'>
-      <img
-        src={Bg}
-        className='w-screen h-screen object-cover' />
-      <div className='absolute inset-0  bg-black  bg-opacity-60 backdrop-blur-md flex items-center justify-center'>
+    <div className='relative h-screen bg-sky-800'>
+      <div className='absolute inset-0  flex items-center justify-center'>
         <div className="w-4/5 md:w-1/4 border  rounded-lg shadow p-5">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
