@@ -16,6 +16,7 @@ router.post('/makeDemand',productController.makeDemand);
 router.post('/getUserDemand',productController.getUserDemands);
 router.post('/getAllDemand',productController.getAllDemand);
 router.post('/getPendingDemand',productController.getPendingDemand);
+router.post('/updateDemand',productController.updateDemand);
 router.post('/storeReport',productController.storeReport);
 
 module.exports = router;
