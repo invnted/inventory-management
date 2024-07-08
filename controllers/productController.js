@@ -321,3 +321,26 @@ exports.getstoreCSV = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.updateDemandStatus = async (req, res) => {
+  try {
+    const { demandId, status } = req.body;
+
+    const demand = await Demand.findByIdAndUpdate(
+      demandId,
+      { status: status },
+      { new: true, runValidators: true }
+    );
+
+    if (!demand) {
+      return res.status(404).json({ success: false, message: 'Demand not found' });
+    }
+
+    console.log("Successfully updated demand status");
+    res.status(200).json({ success: true, demand });
+
+  } catch (err) {
+    console.log("Error while updating demand status", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
