@@ -20,6 +20,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 object rFit{
   var retrofit : Retrofit? = null
+  const val BASE_URL_PLACEHOLDER = "https://c2a3-157-39-26-88.ngrok-free.app/"
 }
 class loginpage : AppCompatActivity() {
     private lateinit var check : String
@@ -41,7 +42,7 @@ class loginpage : AppCompatActivity() {
             loginButton.startAnimation(click)
             val email = findViewById<EditText>(R.id.email).text.toString()
             val password = findViewById<EditText>(R.id.password).text.toString()
-            val baseUrl = "https://043b-2409-4085-8698-9796-8121-b8c-314d-aadb.ngrok-free.app/"
+            val baseUrl = rFit.BASE_URL_PLACEHOLDER
             loginUser(email, password, baseUrl)
         }
     }

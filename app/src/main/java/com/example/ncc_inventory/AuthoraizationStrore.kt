@@ -1,5 +1,6 @@
 package com.example.ncc_inventory
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -134,22 +135,10 @@ class AuthoraizationStrore : AppCompatActivity() {
             getDetailsBtn.startAnimation(click)
             sendAndReceiveData()
         }
-
         back = findViewById(R.id.mybbbtn)
-        back.setOnClickListener {
-            back.startAnimation(click)
-            val parentIntent = NavUtils.getParentActivityIntent(this)
-            if (parentIntent != null) {
-                // Navigate to the parent activity
-                NavUtils.navigateUpTo(this, parentIntent)
-            } else {
-                // Handle the case where no parent activity is specified (optional)
-                finish()
-            }
-
-        }
-
-
+    }
+    fun onSimulateBackClick(view: View) {
+        onBackPressed()
     }
 
     private fun sendAndReceiveData() {

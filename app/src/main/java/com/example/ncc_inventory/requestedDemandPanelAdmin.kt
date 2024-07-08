@@ -46,18 +46,9 @@ class requestedDemandPanelAdmin : AppCompatActivity() {
         getd()
         setupSearchView()
 
-        backBtn.setOnClickListener {
-            backBtn.startAnimation(AnimationUtils.loadAnimation(this,R.anim.click))
-            val parentIntent = NavUtils.getParentActivityIntent(this)
-            if (parentIntent != null) {
-                // Navigate to the parent activity
-                NavUtils.navigateUpTo(this, parentIntent)
-            } else {
-                // Handle the case where no parent activity is specified (optional)
-                finish()
-            }
-        }
-
+    }
+    fun onSimulateBackClick(view: View) {
+        onBackPressed()
     }
     private fun getd(){
         val dmdRequestService = rtft.create(dmdRequestService::class.java)

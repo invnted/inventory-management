@@ -152,6 +152,7 @@
         android:layout_marginTop="16dp"
         android:layout_height="27dp"
         android:src="@drawable/back"
+        android:onClick="onSimulateBackClick"
         app:layout_constraintBottom_toTopOf="@+id/guideline82"
         app:layout_constraintStart_toStartOf="@+id/guideline79"
         app:layout_constraintTop_toTopOf="@+id/guideline81" />
