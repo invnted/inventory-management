@@ -337,7 +337,7 @@ exports.updateDemandStatus = async (req, res) => {
     }
 
     console.log("Successfully updated demand status");
-    res.status(200).json({ success: true, demand });
+    res.status(200).json({ success: true, status: demand.status });
 
   } catch (err) {
     console.log("Error while updating demand status", err);
