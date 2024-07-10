@@ -344,3 +344,15 @@ exports.updateDemandStatus = async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
+exports.productTypesInDemand = async (req, res) => {
+  try {
+    const { userId } = req.body; 
+    const productTypes = await Demand.distinct('productType', { userId });
+    res.status(200).json(productTypes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
