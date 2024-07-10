@@ -20,6 +20,6 @@ router.post('/updateDemandStatus',productController.updateDemandStatus);
 
 router.post('/storeReport',productController.storeReport);
 router.post('/availableDemands',productController.productTypesInDemand);
-router.post('/demandReport',productController.demandReport);
+// router.post('/demandReport',productController.demandReport);
 
 module.exports = router;
