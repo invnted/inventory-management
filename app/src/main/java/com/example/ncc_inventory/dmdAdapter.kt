@@ -33,7 +33,7 @@ class dmdAdapter(val context: Context , val adapterItems : List<dmdRequestedItem
         holder.productModel.text = currentItem.productModel
         holder.productBrand.text = currentItem.productBrand
         holder.additionalDetail.text = currentItem.additionalDetail
-        holder.additionalDetail.text = currentItem.additionalDetail
+        holder.status.text = currentItem.status
         holder.productQuantity.text = currentItem.productQuantity.toString()
     }
 
@@ -61,6 +61,5 @@ class dmdAdapter(val context: Context , val adapterItems : List<dmdRequestedItem
         val additionalDetail : TextView = itemView.findViewById<TextView>(R.id.adt)
         val productQuantity :  TextView = itemView.findViewById<TextView>(R.id.qut)
         val status :  TextView = itemView.findViewById<TextView>(R.id.pdstatus)
-
     }
 }

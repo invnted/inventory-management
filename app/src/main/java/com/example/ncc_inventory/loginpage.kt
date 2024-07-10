@@ -20,8 +20,11 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 object rFit{
   var retrofit : Retrofit? = null
-  const val BASE_URL_PLACEHOLDER = "https://c2a3-157-39-26-88.ngrok-free.app/"
+  const val BASE_URL_PLACEHOLDER = "https://3bfa-103-37-80-91.ngrok-free.app/"
 }
+data class managerloginrequest(
+    val managerId : String,val  password : String
+)
 class loginpage : AppCompatActivity() {
     private lateinit var check : String
     override fun onCreate(savedInstanceState: Bundle?) {

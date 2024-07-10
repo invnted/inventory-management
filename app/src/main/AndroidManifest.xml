@@ -20,6 +20,9 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".managerDemandReceivedPanel"
+            android:exported="false" />
+        <activity
             android:name=".managerDashboard"
             android:exported="false"
             android:theme="@style/Theme.NCC_Inventory_dashboard" />
@@ -60,8 +63,6 @@
             android:name=".User_Or_Admin"
             android:exported="false"
             android:theme="@style/Theme.NCC_Inventory_userOradmin" />
-
-
         <activity
             android:name=".AuthoraizationStrore"
             android:exported="false"
@@ -70,8 +71,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Dashboard" />
         </activity>
-
-
         <activity
             android:name=".adminUserprofile"
             android:exported="false"

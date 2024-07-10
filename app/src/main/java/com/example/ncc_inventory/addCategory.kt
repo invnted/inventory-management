@@ -165,18 +165,7 @@ class addCategory : AppCompatActivity() {
 
         //back button initialization
         backButton = findViewById(R.id.backButton)
-        backButton.setOnClickListener {
-            backButton.startAnimation(click)
-            val parentIntent = NavUtils.getParentActivityIntent(this)
-            if(parentIntent != null){
-                navigateUpTo(parentIntent)
-                finish()
-            }
-            else{
-                Toast.makeText(this,"No parent Intent present",Toast.LENGTH_SHORT).show()
-                finish()
-            }
-        }
+
 
 
         bulkUpload = findViewById(R.id.bulkUpload)
@@ -212,6 +201,10 @@ class addCategory : AppCompatActivity() {
         }
 
     }
+    fun onSimulateBackClick(view: View) {
+        onBackPressed()
+    }
+
 
     private fun addProduct(product : Product){
         productService = retrofit.create(ProductService::class.java)

@@ -231,6 +231,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline109">
 
         <ImageView
+            android:id="@+id/managerAddCategory"
             android:layout_width="match_parent"
             android:layout_height="135dp"
             android:src="@drawable/addimage" />
@@ -293,6 +294,7 @@
             android:layout_width="match_parent"
             android:layout_height="135dp"
             android:paddingStart="12dp"
+            android:id="@+id/managerAdduser"
             android:paddingTop="15dp"
             android:paddingEnd="12dp"
             android:paddingBottom="6dp"
@@ -333,6 +335,7 @@
             android:paddingStart="12dp"
             android:paddingTop="15dp"
             android:paddingEnd="12dp"
+            android:id="@+id/managerDemandReceived"
             android:paddingBottom="6dp"
             android:src="@drawable/request" />
 
