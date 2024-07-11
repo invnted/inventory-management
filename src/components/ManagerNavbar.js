@@ -60,7 +60,7 @@ function ManagerNavbar() {
                     <Link to="/manager-dashboard" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Dashboard</Link>
                     <Link to="/manager-dashboard/manager-AddProduct" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Add Product</Link>
                     <Link to="/manager-dashboard/managerAdd-user" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Add User</Link>
-                    <Link to="/manager-dashboard/ManagerDemand" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Demand</Link>
+                    <Link to="/manager-dashboard/ManagerDemandReport" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Demand</Link>
                 </nav>
             </div>
             <div className="flex-1 ">

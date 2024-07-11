@@ -91,7 +91,7 @@ function ManagerDemand() {
 
             <form onSubmit={handleSubmit}>
 
-                <div className='grid grid-cols-1  justify-center items-center bg-sky-400 '>
+                <div className='grid grid-cols-1  justify-center items-center bg-sky-300 '>
                     <div className='grid grid-cols-1 justify-center items-center m-10 md:mx-20 '>
                         <div className='flex justify-center items-center h-auto pb-5 gap-6 text-center text-blue-700  font-bold text-5xl'>
                             <Link to='/manager-dashboard/ManagerDemand'>

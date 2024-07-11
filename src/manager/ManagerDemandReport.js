@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import UserNavbar from '../components/UserNavbar';
-import { Link } from 'react-router-dom';
 import ManagerNavbar from '../components/ManagerNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getUserDemand`;
+const REQ_URL = `${serverUrl}/products/getAllDemand`;
 
 const userId = localStorage.getItem('userId') || 'N/A';
 
 function ManagerDemandReport() {
     const [demands, setDemands] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,32 +24,41 @@ function ManagerDemandReport() {
                 const result = await response.json();
 
                 if (result.success) {
-                    setDemands(result.data);
+                    setDemands(result.demands || []); // Ensure it uses 'demands' from response
                 } else {
-                    console.error(result.message);
+                    setError(result.message);
                 }
             } catch (error) {
                 console.error('Error fetching demands:', error);
+                setError('Error fetching demands');
             }
         };
 
         fetchData();
     }, []);
 
+    const getStatusClassName = (status) => {
+        switch (status.toLowerCase()) {
+            case 'approved':
+                return 'text-green-500 text-lg font-bold';
+            case 'rejected':
+                return 'text-red-500 text-lg font-bold';
+            case 'pending':
+                return 'text-blue-500 text-lg font-bold';
+            default:
+                return '';
+        }
+    };
+
     return (
         <div>
-            <div className='bg-sky-400 h-screen'>
-                <ManagerNavbar/>
-                <div className='flex justify-center items-center h-auto pb-5 gap-6 text-center text-blue-700 font-bold text-5xl m-10 md:mx-20'>
-                    <Link to='/manager-dashboard/ManagerDemand'>
-                        <div>Raise Demand</div>
-                    </Link>
-                    <Link to='/manager-dashboard/ManagerDemandReport'>
-                        <div className='border-4 p-2 border-purple-700 rounded-xl'>Raise Demand Report</div>
-                    </Link>
+            <div className='bg-white h-screen'>
+                <ManagerNavbar />
+                <div className='flex justify-center items-center h-auto pb-5 gap-6 text-center text-white font-bold text-5xl m-10 md:mx-20 bg-sky-800'>
+                    <div className='p-6 rounded-xl'>Demand Report</div>
                 </div>
 
-                <div className='bg-sky-600 mx-20'>
+                <div className='bg-sky-300 mx-20'>
                     <form className="max-w-md mx-auto md:pt-20 p-6">
                         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div className="relative">
@@ -63,41 +71,45 @@ function ManagerDemandReport() {
                         </div>
                     </form>
                     <div className="p-2 md:p-10">
-                        <button className="bg-sky-900 text-white p-2 rounded-md">Refresh</button>
+                        <button className="bg-sky-900 text-white p-2 rounded-md" onClick={() => window.location.reload()}>Refresh</button>
 
                         <div className="overflow-x-auto mt-4">
-                            <table className="min-w-full bg-sky-300 border">
-                                <thead>
-                                    <tr>
-                                        <th className="py-2 px-4 border border-black text-center">Demand ID</th>
-                                        <th className="py-2 px-4 border border-black text-center">Product Name</th>
-                                        <th className="py-2 px-4 border border-black text-center">Product Model</th>
-                                        <th className="py-2 px-4 border border-black text-center">Product Brand</th>
-                                        <th className="py-2 px-4 border border-black text-center">Product Quantity</th>
-                                        <th className="py-2 px-4 border border-black text-center">Status</th>
-                                        <th className="py-2 px-4 border border-black text-center">Created At</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {demands.length > 0 ? (
-                                        demands.map((demand) => (
-                                            <tr key={demand.demandId}>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productModel}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productBrand}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productQuantity}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.status}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.createdAt}</td>
-                                            </tr>
-                                        ))
-                                    ) : (
+                            {error ? (
+                                <div className="text-red-500 text-center">{error}</div>
+                            ) : (
+                                <table className="min-w-full bg-sky-300 border">
+                                    <thead>
                                         <tr>
-                                            <td colSpan="7" className="py-2 px-4 border border-black text-center">No demands found</td>
+                                            <th className="py-2 px-4 border border-black text-center">Demand ID</th>
+                                            <th className="py-2 px-4 border border-black text-center">Product Name</th>
+                                            <th className="py-2 px-4 border border-black text-center">Product Model</th>
+                                            <th className="py-2 px-4 border border-black text-center">Product Brand</th>
+                                            <th className="py-2 px-4 border border-black text-center">Product Quantity</th>
+                                            <th className="py-2 px-4 border border-black text-center">Status</th>
+                                            <th className="py-2 px-4 border border-black text-center">Created At</th>
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {demands.length > 0 ? (
+                                            demands.map((demand) => (
+                                                <tr key={demand.demandId}>
+                                                    <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
+                                                    <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
+                                                    <td className="py-2 px-4 border border-black text-center">{demand.productModel}</td>
+                                                    <td className="py-2 px-4 border border-black text-center">{demand.productBrand}</td>
+                                                    <td className="py-2 px-4 border border-black text-center">{demand.productQuantity}</td>
+                                                    <td className={`py-2 px-4 border border-black text-center ${getStatusClassName(demand.status)}`}>{demand.status}</td>
+                                                    <td className="py-2 px-4 border border-black text-center">{demand.createdAt}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="7" className="py-2 px-4 border border-black text-center">No demands found</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     </div>
                 </div>

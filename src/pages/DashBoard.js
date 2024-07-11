@@ -31,7 +31,7 @@ function DashBoard() {
                             <img src={AddManager} alt="Description" />
                         </div>
                         <div className='p-2'>
-                            <h2>Add Manager</h2>
+                            <h2 className='text-white'>Add Manager</h2>
                         </div>
                     </div>
                 </Link>
@@ -51,7 +51,7 @@ function DashBoard() {
                             <img src={Store} alt="Description" />
                         </div>
                         <div className='p-2'>
-                            <h2>Authorization Store</h2>
+                            <h2 className='text-white'>Authorization Store</h2>
                         </div>
                     </div>
                 </Link>
@@ -71,7 +71,7 @@ function DashBoard() {
                             <img src={PendingDemand} alt="Description" />
                         </div>
                         <div className='p-2'>
-                            <h2>Pending Demand</h2>
+                            <h2 className='text-white'>Pending Demand</h2>
                         </div>
                     </div>
                 </Link>

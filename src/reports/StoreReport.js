@@ -80,11 +80,10 @@ function StoreReport() {
   return (
     <div className='h-cover'>
       <Navbar />
-      <div className='relative'>
-        <img src={Bg} className='w-screen h-screen object-cover' />
-        <div className='absolute inset-0 m-20'>
-          <div className='border border-black'>
-            <div className='flex justify-center items-center bg-sky-950 p-8 tex-bold text-white  text-4xl'>Store Report</div>
+      <div className=''>
+        <div className=' inset-0 m-20'>
+          <div className='bg-sky-300'>
+            <div className='flex justify-center items-center bg-sky-800 p-8 tex-bold text-white  text-4xl'>Store Report</div>
             <form className='flex flex-wrap justify-center items-center text-center text-white m-10 '>
               <div className='w-full md:w-1/4'>
                 <div>
@@ -174,7 +173,7 @@ function StoreReport() {
                 </div>
               </div>
               <div className='w-full md:w-1/4 p-2 flex justify-center items-center'>
-                <div>From Date :</div>
+                <div className='text-black text-lg font-semibold'>From Date :</div>
                 <div className='px-2'>
                   <input
                     type='date'
@@ -187,7 +186,7 @@ function StoreReport() {
                 </div>
               </div>
               <div className='w-full md:w-1/4 p-2 flex justify-center items-center'>
-                <div>To Date :</div>
+                <div className='text-black text-lg font-semibold'>To Date :</div>
                 <div className='px-2'>
                   <input
                     type='date'

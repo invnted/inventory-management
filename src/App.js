@@ -29,6 +29,8 @@ import ManagerUserList from './manager/ManagerUserList';
 import ManagerDemand from './manager/ManagerDemand';
 import ManagerDemandReport from './manager/ManagerDemandReport';
 import ManagerAddProduct from './manager/ManagerAddProduct';
+import DemandReport from './super-admin/DemandReport';
+import ManagerReport from './manager/ManagerReport';
 
 function App() {
 
@@ -44,6 +46,7 @@ function App() {
         {/* Admin panel */}
         <Route path="/home" element={<Home />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/reports/manager-report" element={<ManagerReport />} />
         <Route path="/home/add-category" element={<AddCategory />} />
         <Route path="/home/add-manager" element={<AddManager />} />
         <Route path="/home/all-managers" element={<AllManager />} />
@@ -52,6 +55,7 @@ function App() {
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />
         <Route path="/home/demand-request" element={<DemandRequest />} />
         <Route path="/home/pending-demand" element={<PendingDemand />} />
+        <Route path="/home/demand-report" element={<DemandReport />} />
 
         {/* Manger Section */}
         <Route path="/manager-dashboard" element={<ManagerDashboard/>} />
