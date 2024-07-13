@@ -102,11 +102,21 @@ class Dashboard : AppCompatActivity() {
              drawer.openDrawer(GravityCompat.START)
         }
 
+        val headerView = navigationView.getHeaderView(0)
+        val navHeaderName: TextView = headerView.findViewById(R.id.headerName)
+        val navHeaderId: TextView = headerView.findViewById(R.id.headerId)
+        navHeaderName.text = adminName
+        navHeaderId.text = adminEmail
+
         navigationView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.storereport -> {
                     // Handle the Activity 1 click
                     val intent = Intent(this, storeReport::class.java)
+                    startActivity(intent)
+                }
+                R.id.Itp ->{
+                    val intent = Intent(this,add_tech_person::class.java)
                     startActivity(intent)
                 }
 
@@ -115,8 +125,8 @@ class Dashboard : AppCompatActivity() {
             drawer.closeDrawer(GravityCompat.START)
             true
         })
-
     }
+
     private fun profileSection(profile : ImageView,click : Animation, adminName : String ,adminEmail : String , role : String ,  id : String , department : String){
         profile.startAnimation(click)
         val it = Intent(this,profileActivity::class.java)

@@ -144,6 +144,8 @@ class storeReport : AppCompatActivity() {
         val service = retrofit.create(storeDataService::class.java)
         service.getStoreReport(request).enqueue(object : Callback<List<Report>> {
             override fun onResponse(call: Call<List<Report>>, response: Response<List<Report>>) {
+                downloadCsvbtn.isEnabled = false
+                downloadCsvbtn.visibility = View.INVISIBLE
                 if (response.isSuccessful) {
                     respo = response.body()!!
                     if (!respo.isNullOrEmpty()) {

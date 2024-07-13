@@ -17,14 +17,16 @@
         app:civ_border_color="@color/white"
         />
     <TextView
+        android:id="@+id/headerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:text="Rahul Dasila"
+        android:text="Ram"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:fontFamily="@font/poppins_medium"/>
     <TextView
+        android:id="@+id/headerId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="13sp"

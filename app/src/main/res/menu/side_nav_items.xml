@@ -10,8 +10,8 @@
         android:title="Issue Report"
         android:icon="@drawable/baseline_issue_long_24"/>
     <item
-        android:id="@+id/demandReport"
-        android:title="Demand Report"
+        android:id="@+id/Itp"
+        android:title="Add IT-Person"
         android:icon="@drawable/baseline_list_alt_24"/>
     <item
         android:id="@+id/allUserReport"
