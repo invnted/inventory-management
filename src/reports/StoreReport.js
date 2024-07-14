@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Bg from '../Images/bg1.jpg';
 import Navbar from '../components/Navbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -53,15 +52,22 @@ function StoreReport() {
   };
 
   const handleViewClick = async () => {
+    const productModelElement = document.querySelector('select[name="productModel"]');
+    const productBrandElement = document.querySelector('select[name="productBrand"]');
+    const statusElement = document.querySelector('select[name="status"]');
+  
+    const formattedFromDate = fromDate ? formatDate(fromDate) : '';
+    const formattedToDate = toDate ? formatDate(toDate) : '';
+
     const query = {
       productType: selectedProductType,
-      productModel: document.querySelector('select[name="productModel"]').value,
-      productBrand: document.querySelector('select[name="productBrand"]').value,
-      status: document.querySelector('select[name="status"]').value,
-      fromDate,
-      toDate
+      productModel: productModelElement ? productModelElement.value : '',
+      productBrand: productBrandElement ? productBrandElement.value : '',
+      status: statusElement ? statusElement.value : '',
+      fromDate: formattedFromDate,
+      toDate: formattedToDate
     };
-
+  
     try {
       const response = await fetch(storeReportUrl, {
         method: 'POST',
@@ -75,6 +81,11 @@ function StoreReport() {
     } catch (error) {
       console.error('Error fetching report:', error);
     }
+  };
+
+  const formatDate = (dateString) => {
+    const [day, month, year] = dateString.split('-');
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -142,26 +153,6 @@ function StoreReport() {
                     {productBrands.map((brand, index) => (
                       <option value={brand} key={index}>
                         {brand}
-                      </option>
-                    ))}
-                  </select>
-                  <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white'>
-                    <svg className='fill-current h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
-                      <path d='M7 10l5 5 5-5H7z' />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className='w-full md:w-1/4 p-2'>
-                <div className='relative inline-block w-64 text-black'>
-                  <select
-                    name="status"
-                    className='block appearance-none w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  >
-                    <option value=''>Select the Status</option>
-                    {statuses.map((status, index) => (
-                      <option value={status} key={index}>
-                        {status}
                       </option>
                     ))}
                   </select>

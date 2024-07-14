@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Bg from '../Images/bg1.jpg';
 import { toast } from 'react-toastify';
 
@@ -89,6 +89,17 @@ function ManagerLogin() {
     <div className="relative h-screen bg-sky-800">
       <div className="absolute inset-0  flex items-center justify-center">
         <div className="w-4/5 md:w-1/4 border rounded-lg shadow p-5">
+        <div className='grid grid-cols-3 md:gap-4 gap-2 justify-center items-center mt-5'>
+            <Link to='/login'>
+              <div className='bg-sky-200 border md:text-xl font-semibold text-black w-full  rounded-lg text-center p-2'>Admid</div>
+            </Link>
+            <Link to='/manager-login'>
+              <div className='text-xl text-white border font-semibold w-full rounded-lg text-center p-2 '>Manager</div>
+            </Link>
+            <Link to='/'>
+              <div className=' bg-sky-200 border md:text-xl font-semibold text-black w-full  rounded-lg text-center p-2'>User</div>
+            </Link>
+          </div>
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
               Manager Login

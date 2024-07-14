@@ -120,7 +120,7 @@ function AddProduct() {
         </div>
         <div className=' bg-gray-500 h-auto'>
           <div className='md:px-72 md:p-10'>
-            <form className='grid grid-cols-1 md:grid-cols-1' onSubmit={handleSubmit}>
+            <form className='grid grid-cols-1 md:grid-cols-1' onSubmit={handleSubmit} autoComplete="off" >
               <input type='text' name="productType" placeholder='Product Type' className='m-5 p-2 outline-none rounded-xl' value={product.productType} onChange={handleInput} required />
 
 

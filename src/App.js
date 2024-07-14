@@ -39,10 +39,10 @@ function App() {
       <div>
       <Routes>
         {/* Login Options */}
-        <Route path="/" element={<LoginOption />} />
+        {/* <Route path="" element={<LoginOption />} /> */}
         <Route path="/login" element={<AdminLogin/>} />
         <Route path="/manager-login" element={<ManagerLogin/>} />
-        <Route path="/user-login" element={<UserLogin/>} />
+        <Route path="/" element={<UserLogin/>} />
         {/* Admin panel */}
         <Route path="/home" element={<Home />} />
         <Route path="/reports" element={<Reports />} />

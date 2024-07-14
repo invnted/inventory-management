@@ -39,7 +39,7 @@ function UserNavbar() {
 
     return (
         <div>
-            <nav className="bg-purple-600">
+            <nav className="bg-sky-800">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <Link to='/user-home'>
                         <span className="self-center text-3xl font-bold whitespace-nowrap text-white hover:text-blue-900 delay-100">User Dashboard</span>
