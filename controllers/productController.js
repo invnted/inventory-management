@@ -407,3 +407,13 @@ exports.productTypesInDemand = async (req, res) => {
   }
 };
 
+exports.getUnissuedProductList = async (res) => {
+  try {
+    const demands = await Demand.find({ status: "APPROVED" });
+    console.log(demands);
+    res.status(200).json({ demands, success: true });
+  } catch (error) {
+    console.error("Error fetching demands:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
