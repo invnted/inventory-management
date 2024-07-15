@@ -4,13 +4,13 @@ import Navbar from '../components/Navbar';
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const productListUrl = `${serverUrl}/products/getAllProduct`;
 const storeReportUrl = `${serverUrl}/products/storeReport`;
+const storeReportCSV = `${serverUrl}/products/getStoreReportCSV`;
 
 function StoreReport() {
   const [productTypes, setProductTypes] = useState([]);
   const [selectedProductType, setSelectedProductType] = useState('');
   const [productModels, setProductModels] = useState([]);
   const [productBrands, setProductBrands] = useState([]);
-  const [statuses, setStatuses] = useState([]);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [reportData, setReportData] = useState([]);
@@ -25,7 +25,6 @@ function StoreReport() {
           },
         });
         const data = await response.json();
-        console.log('Fetched products:', data);
         setProductTypes(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -38,36 +37,48 @@ function StoreReport() {
   const handleProductTypeChange = (e) => {
     const selectedType = e.target.value;
     setSelectedProductType(selectedType);
-
+  
     if (selectedType) {
       const selectedProduct = productTypes.find(product => product.productType === selectedType);
       setProductModels([...new Set(selectedProduct.details.map(detail => detail.productModel))]);
       setProductBrands([...new Set(selectedProduct.details.map(detail => detail.productBrand))]);
-      setStatuses([...new Set(selectedProduct.details.map(detail => detail.status))]);
+
+      console.log("Selected type:",selectedType)
+
     } else {
       setProductModels([]);
       setProductBrands([]);
-      setStatuses([]);
     }
+  };
+  
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    return `${day}-${month}-${year} ${formattedHours}:${minutes}:${seconds} ${ampm}`;
   };
 
   const handleViewClick = async () => {
     const productModelElement = document.querySelector('select[name="productModel"]');
     const productBrandElement = document.querySelector('select[name="productBrand"]');
-    const statusElement = document.querySelector('select[name="status"]');
-  
-    const formattedFromDate = fromDate ? formatDate(fromDate) : '';
-    const formattedToDate = toDate ? formatDate(toDate) : '';
 
     const query = {
       productType: selectedProductType,
       productModel: productModelElement ? productModelElement.value : '',
       productBrand: productBrandElement ? productBrandElement.value : '',
-      status: statusElement ? statusElement.value : '',
-      fromDate: formattedFromDate,
-      toDate: formattedToDate
+      fromDate,
+      toDate
     };
-  
+
+    console.log("Query :",query)
+
     try {
       const response = await fetch(storeReportUrl, {
         method: 'POST',
@@ -82,11 +93,66 @@ function StoreReport() {
       console.error('Error fetching report:', error);
     }
   };
+ 
 
-  const formatDate = (dateString) => {
-    const [day, month, year] = dateString.split('-');
-    return `${year}-${month}-${day}`;
+  const handleDownloadClick = async () => {
+    const productModelElement = document.querySelector('select[name="productModel"]');
+    const productBrandElement = document.querySelector('select[name="productBrand"]');
+  
+    const query = {
+      productType: selectedProductType,
+      productModel: productModelElement ? productModelElement.value : '',
+      productBrand: productBrandElement ? productBrandElement.value : '',
+      fromDate,
+      toDate
+    };
+  
+    console.log('Download Query:', query); // Ensure selectedProductType is correctly set
+  
+    try {
+      const response = await fetch(storeReportCSV, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query),
+      });
+  
+      const blob = await response.blob();
+      const csvData = await blob.text();
+  
+      console.log('Raw CSV Data:', csvData);
+  
+      const rows = csvData.split('\n').map(row => {
+        const columns = row.split(',');
+        if (columns.length >= 5) {
+          const [productType, productModel, productBrand, productStatus, createdAt] = columns;
+          const formattedDate = createdAt ? formatDate(createdAt.trim()) : ''; // Check if createdAt is defined before calling trim
+          return [productType, productModel, productBrand, productStatus, createdAt].join(',');
+        }
+        return ''; // Handle incomplete rows if necessary
+      });
+  
+      const formattedCsvData = rows.join('\n');
+      const formattedBlob = new Blob([formattedCsvData], { type: 'text/csv' });
+  
+      console.log("After Processing: ", formattedCsvData);
+  
+      const url = window.URL.createObjectURL(formattedBlob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'store_report.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading CSV:', error);
+    }
   };
+  
+  
+  
 
   return (
     <div className='h-cover'>
@@ -149,7 +215,7 @@ function StoreReport() {
                     name="productBrand"
                     className='block appearance-none w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
                   >
-                    <option value=''>Select the Product Brand</option>
+                    <option value=''>Select Product Brand</option>
                     {productBrands.map((brand, index) => (
                       <option value={brand} key={index}>
                         {brand}
@@ -163,72 +229,71 @@ function StoreReport() {
                   </div>
                 </div>
               </div>
-              <div className='w-full md:w-1/4 p-2 flex justify-center items-center'>
-                <div className='text-black text-lg font-semibold'>From Date :</div>
-                <div className='px-2'>
-                  <input
-                    type='date'
-                    id='fromDate'
-                    name='fromDate'
-                    className='bg-sky-700 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-500'
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                  />
-                </div>
+              <div className='w-full md:w-1/4 p-2'>
+                <input
+                  type='date'
+                  className='appearance-none block w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                />
               </div>
-              <div className='w-full md:w-1/4 p-2 flex justify-center items-center'>
-                <div className='text-black text-lg font-semibold'>To Date :</div>
-                <div className='px-2'>
-                  <input
-                    type='date'
-                    id='toDate'
-                    name='toDate'
-                    className='bg-sky-700 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-blue-500'
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                  />
-                </div>
+              <div className='w-full md:w-1/4 p-2'>
+                <input
+                  type='date'
+                  className='appearance-none block w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                />
               </div>
-              <div className='flex justify-around items-center w-full md:w-1/2 p-2 '>
+              <div className='w-full md:w-1/4 p-2'>
                 <button
-                  type="button"
-                  className='bg-gray-800 w-40 p-3 text-white text-2xl rounded-2xl '
+                  type='button'
+                  className='w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
                   onClick={handleViewClick}
                 >
-                  View
+                  View Report
                 </button>
-                <div className='p-2'>
-                  <button className='bg-gray-800 w-40 p-3 text-white text-2xl rounded-2xl '>Download</button>
-                </div>
+              </div>
+              <div className='w-full md:w-1/4 p-2'>
+                <button
+                  type='button'
+                  className='w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
+                  onClick={handleDownloadClick}
+                >
+                  Download CSV
+                </button>
               </div>
             </form>
-
-            {reportData.length > 0 && (
-              <div className='p-5'>
-                <table className='min-w-full leading-normal'>
-                  <thead>
-                    <tr>
-                      <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Product Type</th>
-                      <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Product Model</th>
-                      <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Product Brand</th>
-                      <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Status</th>
-                      <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Created At</th>
+            <div className='overflow-auto bg-white text-black p-10'>
+              <table className='min-w-full divide-y divide-gray-200'>
+                <thead className='bg-gray-50'>
+                  <tr>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                      Product Type
+                    </th>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                      Product Model
+                    </th>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                      Product Brand
+                    </th>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                      Date & Time
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className='bg-white divide-y divide-gray-200'>
+                  {reportData.map((report, index) => (
+                    <tr key={index}>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{report.productType}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{report.productModel}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{report.productBrand}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{formatDate(report.createdAt)}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {reportData.map((report, index) => (
-                      <tr key={index}>
-                        <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>{report.productType}</td>
-                        <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>{report.productModel}</td>
-                        <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>{report.productBrand}</td>
-                        <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>{report.status}</td>
-                        <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>{new Date(report.createdAt).toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
