@@ -19,7 +19,7 @@ router.post('/getAllDemand',productController.getAllDemand);          // Used in
 router.post('/getPendingDemand',productController.getPendingDemand);  // Used in Admin Panel to see all pending demandds
 
 //For Sending CSV Files
-router.post('/getStoreReportCSV',productController.getstoreCSV);                   //Used in Store Report panel to download CSV
+router.post('/getStoreReportCSV',productController.getstoreReportCSV);                   //Used in Store Report panel to download CSV
 // router.get('/get-products-csv',productController.getProductCSV)
 
 

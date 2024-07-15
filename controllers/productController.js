@@ -323,7 +323,7 @@ exports.storeReport = async (req, res) => {
 };
 
 
-exports.getstoreCSV = async (req, res) => {
+exports.getstoreReportCSV = async (req, res) => {
   const { productType, productModel, productBrand, fromDate, toDate } = req.body;
   console.log(req.body)
   let query = {};
@@ -407,47 +407,3 @@ exports.productTypesInDemand = async (req, res) => {
   }
 };
 
-
-exports.storeReportCSV = async (req, res) => {
-  const { productType, productModel, productBrand, status, fromDate, toDate } = req.body;
-  let query = {};
-
-  if (productType) query.productType = productType;
-  if (productModel) query.productModel = productModel;
-  if (productBrand) query.productBrand = productBrand;
-  if (status) query.status = status;
-
-  if (fromDate && toDate) {
-    try {
-      const startDate = new Date(fromDate);
-      const endDate = new Date(toDate);
-      endDate.setHours(23, 59, 59, 999);
-      query.createdAt = { $gte: startDate, $lte: endDate };
-    } catch (err) {
-      console.error("Error parsing dates:", err);
-      return res.status(400).json({ error: "Invalid date format" });
-    }
-  }
-
-  try {
-    const reports = await Product.find(query).lean();
-    const filePath = path.join(__dirname, '..', 'store_report.csv');
-    const ws = fs.createWriteStream(filePath);
-
-    fastcsv
-      .write(reports, { headers: true })
-      .on('finish', () => {
-        res.download(filePath, 'store_report.csv', (err) => {
-          if (err) {
-            console.error("Error downloading file:", err);
-            res.status(500).json({ error: "Error downloading file" });
-          }
-          fs.unlinkSync(filePath);
-        });
-      })
-      .pipe(ws);
-  } catch (err) {
-    console.error("Error fetching reports:", err);
-    res.status(500).json({ error: "Error fetching reports" });
-  }
-};
