@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const path = require('path');
+const fastcsv = require('fast-csv');
 const Demand = require('../models/Demand');
 const csvParser = require('csv-parser');
 const fs = require('fs');
@@ -27,42 +29,50 @@ function validateCSVHeadings(headings) {
 
 exports.addProduct = async (req, res) => {
   try {
-    const product = new Product(req.body);
-    console.log(req.body)
-    await product.save();
-    console.log("Sucessfully added new product");
-    res.status(200).json({success:true,product});
-
-  } catch (err) {
-    console.log("Error while adding product");
-    res.status(500).json({ success: false, error: err.message });
-
-  }
-};
-
-exports.getProductCSV = async (req, res) => {
-  try {
-    const products = await Product.find({}).lean(); // Fetch all products from the database
-    const csvStringifier = createObjectCsvStringifier({
-      header: [
-        { id: 'productId', title: 'Product ID' },
-        { id: 'productType', title: 'Product Type' },
-        { id: 'productName', title: 'Product Name' },
-        { id: 'productModel', title: 'Product Model' },
-        { id: 'productBrand', title: 'Product Brand' },
-        { id: 'productPrice', title: 'Product Price' },
-        { id: 'additionalDetail', title: 'Additional Detail' }
-      ]
+    // Convert specific fields to lowercase
+    const lowercaseFields = ['productType', 'productName', 'productModel', 'productBrand', 'additionalDetail' , /* add other fields here */];
+    lowercaseFields.forEach(field => {
+      if (req.body[field]) {
+        req.body[field] = req.body[field].toLowerCase();
+      }
     });
 
-    const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(products);
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename=products.csv');
-    res.status(200).send(csvData);
+    // Create new Product instance using req.body
+    const product = new Product(req.body);
+    await product.save();
+    
+    console.log("Successfully added new product");
+    res.status(200).json({ success: true, product });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error while adding product:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 };
+
+// exports.getProductCSV = async (req, res) => {
+//   try {
+//     const products = await Product.find({}).lean(); // Fetch all products from the database
+//     const csvStringifier = createObjectCsvStringifier({
+//       header: [
+//         { id: 'productId', title: 'Product ID' },
+//         { id: 'productType', title: 'Product Type' },
+//         { id: 'productName', title: 'Product Name' },
+//         { id: 'productModel', title: 'Product Model' },
+//         { id: 'productBrand', title: 'Product Brand' },
+//         { id: 'productPrice', title: 'Product Price' },
+//         { id: 'additionalDetail', title: 'Additional Detail' }
+//       ]
+//     });
+
+//     const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(products);
+//     res.setHeader('Content-Type', 'text/csv');
+//     res.setHeader('Content-Disposition', 'attachment; filename=products.csv');
+//     res.status(200).send(csvData);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
 
 exports.uploadCSV = async (req, res) => {
@@ -267,29 +277,43 @@ exports.getPendingDemand = async (req, res) => {
 
 
 exports.storeReport = async (req, res) => {
-  const {productName, productType, productModel, productBrand, fromDate, toDate } = req.body;
+  const { productName, productType, productModel, productBrand, fromDate, toDate } = req.body;
   let query = {};
 
-  console.log ("Request for store report: ",req.body)
-  
+  console.log("Request for store report: ", req.body);
+
   if (productName) { query.productName = productName; }
   if (productType) { query.productType = productType; }
   if (productModel) { query.productModel = productModel; }
   if (productBrand) { query.productBrand = productBrand; }
-  
-  
-  // if (fromDate && toDate) {
-    
-    // const startDate = new Date(fromDate);
-    // const endDate = new Date(toDate);
-    
-    // query.createdAt = { $gte: startDate, $lte: endDate };
-  // }
+
+  if (fromDate && toDate) {
+    try {
+      // Parse fromDate and toDate into Date objects
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
+
+      // Check if parsing was successful
+      if (isNaN(startDate.valueOf()) || isNaN(endDate.valueOf())) {
+        throw new Error("Invalid date format");
+      }
+
+      // Adjust endDate to include the entire day
+      endDate.setHours(23, 59, 59, 999); // Set to end of day
+
+      // Create date range query for createdAt field
+      query.createdAt = { $gte: startDate, $lte: endDate };
+
+    } catch (err) {
+      console.error("Error parsing dates:", err);
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+  }
 
   try {
     const reports = await Product.find(query);
 
-    console.log("Response given to client: ",reports);
+    console.log("Response given to client: ", reports);
 
     res.json(reports);
   } catch (err) {
@@ -298,18 +322,46 @@ exports.storeReport = async (req, res) => {
   }
 };
 
+
 exports.getstoreCSV = async (req, res) => {
+  const { productType, productModel, productBrand, fromDate, toDate } = req.body;
+  console.log(req.body)
+  let query = {};
+
+  if (productType) query.productType = productType;
+  if (productModel) query.productModel = productModel;
+  if (productBrand) query.productBrand = productBrand;
+
+  if (fromDate && toDate) {
+    try {
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
+      endDate.setHours(23, 59, 59, 999);
+
+      if (isNaN(startDate.valueOf()) || isNaN(endDate.valueOf())) {
+        throw new Error("Invalid date format");
+      }
+
+      query.createdAt = { $gte: startDate, $lte: endDate };
+    } catch (err) {
+      console.error("Error parsing dates:", err);
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+  }
+
+  console.log('Query:', query);
+
+
   try {
-    const products = await Product.find({}).lean(); 
+    const products = await Product.find(query).lean();
+
     const csvStringifier = createObjectCsvStringifier({
       header: [
-        { id: 'productId', title: 'Product ID' },
         { id: 'productType', title: 'Product Type' },
-        { id: 'productName', title: 'Product Name' },
         { id: 'productModel', title: 'Product Model' },
         { id: 'productBrand', title: 'Product Brand' },
         { id: 'status', title: 'Product Status' },
-       
+        { id: 'createdAt', title: 'Date & Time' },
       ]
     });
 
@@ -356,3 +408,46 @@ exports.productTypesInDemand = async (req, res) => {
 };
 
 
+exports.storeReportCSV = async (req, res) => {
+  const { productType, productModel, productBrand, status, fromDate, toDate } = req.body;
+  let query = {};
+
+  if (productType) query.productType = productType;
+  if (productModel) query.productModel = productModel;
+  if (productBrand) query.productBrand = productBrand;
+  if (status) query.status = status;
+
+  if (fromDate && toDate) {
+    try {
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
+      endDate.setHours(23, 59, 59, 999);
+      query.createdAt = { $gte: startDate, $lte: endDate };
+    } catch (err) {
+      console.error("Error parsing dates:", err);
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+  }
+
+  try {
+    const reports = await Product.find(query).lean();
+    const filePath = path.join(__dirname, '..', 'store_report.csv');
+    const ws = fs.createWriteStream(filePath);
+
+    fastcsv
+      .write(reports, { headers: true })
+      .on('finish', () => {
+        res.download(filePath, 'store_report.csv', (err) => {
+          if (err) {
+            console.error("Error downloading file:", err);
+            res.status(500).json({ error: "Error downloading file" });
+          }
+          fs.unlinkSync(filePath);
+        });
+      })
+      .pipe(ws);
+  } catch (err) {
+    console.error("Error fetching reports:", err);
+    res.status(500).json({ error: "Error fetching reports" });
+  }
+};

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 const Manager = require('../models/Manager');
 const User = require('../models/User');
+const Moderator = require('../models/Moderator');
 
 // Admin methods
 exports.registerAdmin = async (req, res) => {
@@ -382,7 +383,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-
 exports.deleteUser = async (req, res) => {
   const { userId } = req.body; 
 
@@ -401,3 +401,61 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+
+//Moderator 
+exports.registerModerator = async (req, res) => {
+  const { moderatorId, moderatorName, password, designation, section, appointment, remark } = req.body;
+
+  try {
+    let moderator = await Moderator.findOne({ moderatorId });
+
+    if (moderator) {
+      return res.status(400).json({ msg: 'Moderator already exists' });
+    }
+
+    moderator = new Moderator({ moderatorId, moderatorName, password, designation, section, appointment, remark });
+    await moderator.save();
+    const payload = { moderator: { id: moderator.id } };
+    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+      if (err) throw err;
+      res.json({success:true});
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.loginModerator = async (req, res) => {
+  const { moderatorId, password } = req.body;
+
+  console.log("login req as Moderator", req.body)
+
+  try {
+    console.log("finding Moderator: ",moderatorId)
+    let moderator = await Moderator.findOne({ moderatorId });
+    console.log("Moderator FOUND")
+
+
+    if (!moderator || moderator.password !== password) {
+      console.log(moderator.password,"not matched with",password);
+      return res.status(401).json({ msg: 'Invalid Credentials' });
+    }
+
+    const payload = { moderator: { id: moderator.id } };
+
+    jwt.sign(
+      payload, 
+      "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", 
+      { expiresIn: 3600 }, 
+      (err, token) => {
+        if (err) throw err;
+        const { moderatorId, moderatorName, designation, section, appointment } = moderator;
+        res.json({ token, moderator: { moderatorId, moderatorName, designation, section, appointment },success:true });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
