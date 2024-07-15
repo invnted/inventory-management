@@ -17,7 +17,7 @@ router.post('/getProductStore',productController.getProductStore);    // Used in
 router.post('/getUserDemand',productController.getUserDemands);       // Used in User Panel user can see his own demands
 router.post('/getAllDemand',productController.getAllDemand);          // Used in Admin & Manager Paenl to see all demands
 router.post('/getPendingDemand',productController.getPendingDemand);  // Used in Admin Panel to see all pending demandds
-router.post('/unissuedProductList',productController.getUnissuedProductList)
+router.get('/unissuedProductList',productController.getUnissuedProductList) //Used in Moderator Panel to get unissued list
 
 //For Sending CSV Files
 router.post('/getStoreReportCSV',productController.getstoreReportCSV);                   //Used in Store Report panel to download CSV

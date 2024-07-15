@@ -407,7 +407,7 @@ exports.productTypesInDemand = async (req, res) => {
   }
 };
 
-exports.getUnissuedProductList = async (res) => {
+exports.getUnissuedProductList = async (req, res) => {
   try {
     const demands = await Demand.find({ status: "APPROVED" });
     console.log(demands);
