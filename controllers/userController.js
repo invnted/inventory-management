@@ -404,7 +404,9 @@ exports.deleteUser = async (req, res) => {
 
 //Moderator 
 exports.registerModerator = async (req, res) => {
-  const { moderatorId, moderatorName, password, designation, section, appointment, remark } = req.body;
+  const { moderatorId, moderatorName, password, designation, section, appointment } = req.body;
+
+  console.log("Req to register new modertor")
 
   try {
     let moderator = await Moderator.findOne({ moderatorId });
@@ -413,7 +415,7 @@ exports.registerModerator = async (req, res) => {
       return res.status(400).json({ msg: 'Moderator already exists' });
     }
 
-    moderator = new Moderator({ moderatorId, moderatorName, password, designation, section, appointment, remark });
+    moderator = new Moderator({ moderatorId, moderatorName, password, designation, section, appointment });
     await moderator.save();
     const payload = { moderator: { id: moderator.id } };
     jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
@@ -454,6 +456,69 @@ exports.loginModerator = async (req, res) => {
         res.json({ token, moderator: { moderatorId, moderatorName, designation, section, appointment },success:true });
       }
     );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.getAllModerator = async (req, res) => {
+  try {
+    console.log("Receive req for moderators")
+    const moderators = await Moderator.find();
+    console.log("RESPONSE: ",moderators)
+    res.json(moderators);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.updateModerator = async (req, res) => {
+  console.log(req.body);
+
+  const {
+    moderatorId, moderatorName, password, designation, section, appointment,
+  } = req.body;
+
+  const updateFields = {
+    moderatorId, moderatorName, password, designation, section, appointment,
+  };
+
+  try {
+    let moderator = await Moderator.findOne({ moderatorId: updateFields.moderatorId });
+
+    if (!moderator) {
+      console.log("Moderator not found");
+      return res.status(404).json({ msg: 'Moderator not found' });
+    }
+
+    // Update the moderator document with the new fields
+    moderator = await Moderator.findOneAndUpdate(
+      { moderatorId: updateFields.moderatorId },
+      { $set: updateFields },
+      { new: true }
+    );
+
+    res.json({ moderator, success: true });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.deleteModerator = async (req, res) => {
+  const { moderatorId } = req.body; 
+
+  try {
+    const moderator = await Moderator.findOneAndDelete({ moderatorId });
+
+    if (!moderator) {
+      console.log("Moderator not found");
+      return res.status(404).json({ msg: 'Moderator not found' });
+    }
+
+    res.json({ msg: 'Moderator removed successfully', success: true });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

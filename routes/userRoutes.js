@@ -27,6 +27,9 @@ router.post('/user-delete',userController.deleteUser);
 // Moderators Routes
 router.post('/register', userController.registerModerator);
 router.post('/login', userController.loginModerator);
+router.post('/moderator-getAll',userController.getAllModerator);
+router.post('/moderator-update',userController.updateModerator);
+router.post('/moderator-delete',userController.deleteModerator);
 
 
 

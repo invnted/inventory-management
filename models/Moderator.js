@@ -7,7 +7,6 @@ const ModeratorSchema = new mongoose.Schema({
   designation: String,
   section: String,
   appointment:String,
-  remark:String,
 }, { timestamps: true });
 
 module.exports = mongoose.model('Moderator', ModeratorSchema);
