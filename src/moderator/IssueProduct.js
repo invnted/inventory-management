@@ -4,7 +4,7 @@ import ModeratorNavbar from './ModeratorNavbar';
 import { Link } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getAllDemand`;
+const REQ_URL = `${serverUrl}/products//unissuedProductList`;
 
 function IssueProduct() {
     const [demandData, setDemandData] = useState([]);
