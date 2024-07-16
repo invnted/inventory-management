@@ -8,10 +8,14 @@ const ProductSchema = new mongoose.Schema({
   productBrand: String,
   productPrice: Number,
   additionalDetail: String,
+  issuedTo: {
+    type: String,
+    default: 'NONE',
+  },
   status: {
     type: String,
     enum: ['HELD', 'BER', 'ISSUED','UNSERVICEABLE','SERVICEABLE'],
-    default: 'SERVICEABLE',
+    default: 'HELD',
   },
 }, { timestamps: true });
 
