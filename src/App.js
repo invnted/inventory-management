@@ -31,6 +31,11 @@ import ManagerDemandReport from './manager/ManagerDemandReport';
 import ManagerAddProduct from './manager/ManagerAddProduct';
 import DemandReport from './super-admin/DemandReport';
 import ManagerReport from './manager/ManagerReport';
+import ModeratorHome from './moderator/ModeratorHome';
+import AddModerator from './super-admin/AddModerator';
+import AllModerator from './super-admin/AllModerator';
+import ModeratorLogin from './components/ModeratorLogin';
+
 
 function App() {
 
@@ -42,6 +47,7 @@ function App() {
         {/* <Route path="" element={<LoginOption />} /> */}
         <Route path="/login" element={<AdminLogin/>} />
         <Route path="/manager-login" element={<ManagerLogin/>} />
+        <Route path="/moderator-login" element={<ModeratorLogin/>} />
         <Route path="/" element={<UserLogin/>} />
         {/* Admin panel */}
         <Route path="/home" element={<Home />} />
@@ -71,6 +77,11 @@ function App() {
         <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />
         <Route path="/user-home/raise-demand-report" element={<RaiseDemandReport/>} />
 
+        {/* Moderator Panel */}
+        <Route path="/moderator-home" element={<ModeratorHome/>} />
+        <Route path="/moderator-home/add-moderator" element={<AddModerator/>}/>
+        <Route path="/moderator-home/all-moderator" element={<AllModerator/>}/>
+        
         {/* Report Section */}
         <Route path="/reports/store-reports" element={<StoreReport/>} />
 

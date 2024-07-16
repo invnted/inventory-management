@@ -5,6 +5,7 @@ import ListManager from '../Images/list.png'
 import AddUser from '../Images/add manager.png'
 import Store from '../Images/store1.png'
 import DemandRequesr from '../Images/demand.png'
+import Moderator from '../Images/moderator.png'
 import PendingDemand from '../Images/clock1.png'
 import { Link } from 'react-router-dom'
 
@@ -21,7 +22,7 @@ function DashBoard() {
                             <img className='color-white' src={AddCategory} alt="Description" />
                         </div>
                         <div className='p-2 text-white'>
-                            <h2>Add Category</h2>
+                            <h2>Add Product</h2>
                         </div>
                     </div>
                 </Link>
@@ -32,6 +33,16 @@ function DashBoard() {
                         </div>
                         <div className='p-2'>
                             <h2 className='text-white'>Add Manager</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/moderator-home/add-moderator'>
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                        <div className='w-20 block'>
+                            <img src={Moderator} alt="Description" />
+                        </div>
+                        <div className='p-2'>
+                            <h2 className='text-white'>Add Moderator</h2>
                         </div>
                     </div>
                 </Link>
@@ -65,6 +76,9 @@ function DashBoard() {
                         </div>
                     </div>
                 </Link>
+                <div>
+                    {/* Tis is for extra space  */}
+                </div>
                 <Link to='/home/pending-demand'>
                     <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>

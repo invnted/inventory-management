@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const LOGIN_URL = `${serverUrl}/managers/manager-login`;
+const LOGIN_URL = `${serverUrl}/moderators/login`;
 
-function ManagerLogin() {
-  const [manager, setManager] = useState({
-    managerId: '',
+function ModeratorLogin() {
+  const [moderator, setModerator] = useState({
+    moderatorId: '',
     password: '',
   });
 
@@ -17,8 +17,8 @@ function ManagerLogin() {
     const name = e.target.name;
     const value = e.target.value;
 
-    setManager({
-      ...manager,
+    setModerator({
+      ...moderator,
       [name]: value,
     });
   };
@@ -31,7 +31,7 @@ function ManagerLogin() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(manager),
+        body: JSON.stringify(moderator),
       });
 
       if (response.ok) {
@@ -40,53 +40,39 @@ function ManagerLogin() {
 
         const {
           token,
-          managerData: {
-            managerId,
-            managerName,
+          moderator: {
+            moderatorId,
+            moderatorName,
             designation,
             section,
             appointment,
-            allProductReport,
-            demandReceived,
-            issueProduct,
           },
         } = data;
 
-        localStorage.setItem('managerId', managerId);
-        localStorage.setItem('managerName', managerName);
+        localStorage.setItem('moderatorId', moderatorId);
+        localStorage.setItem('moderatorName', moderatorName);
         localStorage.setItem('designation', designation);
         localStorage.setItem('section', section);
         localStorage.setItem('appointment', appointment);
-        localStorage.setItem('allProductReport', allProductReport);
-        localStorage.setItem('demandReceived', demandReceived);
-        localStorage.setItem('issueProduct', issueProduct);
         localStorage.setItem('token', token);
 
-        console.log('ManagerId:', managerId);
-        console.log('ManagerName:', managerName);
-        console.log('Designation:', designation);
-        console.log('Section:', section);
-        console.log('Appointment:', appointment);
-        console.log('All Product Report:', allProductReport);
-        console.log('Demand Received:', demandReceived);
-        console.log('Issue Product:', issueProduct);
-        console.log('Token:', token);
 
         toast.success('Login successful');
-        setManager({ managerId: '', password: '' });
+        setModerator({ moderatorId: '', password: '' });
 
-        navigate('/Manager-Dashboard');
+        navigate('/moderator-home');
       } else {
         toast.error('Invalid credentials');
       }
     } catch (error) {
+      console.log(error)
       toast.error('An error occurred');
     }
   };
 
   const Dropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Manager");
+    const [selectedOption, setSelectedOption] = useState("Moderator");
     const navigate = useNavigate();
 
     const toggleDropdown = () => {
@@ -178,20 +164,20 @@ function ManagerLogin() {
         <Dropdown/>
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
-              Manager Login
+              Moderator Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="managerId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Manager ID
+                <label htmlFor="moderatorId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Moderator ID
                 </label>
                 <input
                   type="text"
-                  name="managerId"
-                  id="managerId"
+                  name="moderatorId"
+                  id="moderatorId"
                   onChange={handleInput}
                   className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white"
-                  placeholder="Manager ID"
+                  placeholder="Moderator ID"
                   required
                 />
               </div>
@@ -225,4 +211,4 @@ function ManagerLogin() {
   );
 }
 
-export default ManagerLogin;
+export default ModeratorLogin;
