@@ -85,7 +85,6 @@ exports.uploadCSV = async (req, res) => {
     console.log("Uploaded file path:", filePath);
 
     // Read the CSV file and validate headings
-    
     const results = [];
     fs.createReadStream(filePath)
       .pipe(csvParser())
@@ -122,7 +121,6 @@ exports.uploadCSV = async (req, res) => {
 exports.getAllProductsType = async (req, res) => {
   try {
     const productTypes = await Product.distinct('productType');
-    console.log(productTypes);
     res.status(200).json(productTypes);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -192,8 +190,6 @@ exports.getProductStore = async (req, res) => {
           });
           response.totalProducts = result[0].totalProducts.toString();
       }
-
-      console.log(response); 
       response.success = true; 
 
       res.status(200).json(response);
@@ -205,8 +201,6 @@ exports.getProductStore = async (req, res) => {
 exports.makeDemand = async (req, res) => {
   try {
     const demand = new Demand(req.body);
-    console.log(req.body)
-
     await demand.save();
     console.log("Sucessfully added new demand");
     res.status(200).json({success:true});
@@ -219,12 +213,7 @@ exports.makeDemand = async (req, res) => {
 
 exports.getUserDemands = async (req, res) => {
   try {
-    console.log("Get Demand Function called !")
-    const { userId } = req.body; 
-    console.log(userId)
     const userDemands = await Demand.find({ userId }).select('-userId -designation -additionalDetail -updatedAt');
-    console.log(userDemands);
-    
     // Map userDemands to format the response as needed
     const formattedDemands = userDemands.map(demand => ({
       demandId: demand.demandId, 
@@ -256,7 +245,6 @@ exports.getUserDemands = async (req, res) => {
 exports.getAllDemand = async (req, res) => {
   try {
     const demands = await Demand.find({});
-    console.log(demands);
     res.status(200).json({demands,success:true});
   } catch (error) {
     console.error("Error fetching demands:", error);
@@ -267,7 +255,6 @@ exports.getAllDemand = async (req, res) => {
 exports.getPendingDemand = async (req, res) => {
   try {
     const demands = await Demand.find({ status: "PENDING" });
-    console.log(demands);
     res.status(200).json({ demands, success: true });
   } catch (error) {
     console.error("Error fetching demands:", error);
@@ -279,8 +266,6 @@ exports.getPendingDemand = async (req, res) => {
 exports.storeReport = async (req, res) => {
   const { productName, productType, productModel, productBrand, fromDate, toDate } = req.body;
   let query = {};
-
-  console.log("Request for store report: ", req.body);
 
   if (productName) { query.productName = productName; }
   if (productType) { query.productType = productType; }
@@ -312,9 +297,6 @@ exports.storeReport = async (req, res) => {
 
   try {
     const reports = await Product.find(query);
-
-    console.log("Response given to client: ", reports);
-
     res.json(reports);
   } catch (err) {
     console.error("Error fetching reports:", err);
@@ -325,7 +307,6 @@ exports.storeReport = async (req, res) => {
 
 exports.getstoreReportCSV = async (req, res) => {
   const { productType, productModel, productBrand, fromDate, toDate } = req.body;
-  console.log(req.body)
   let query = {};
 
   if (productType) query.productType = productType;
@@ -349,7 +330,7 @@ exports.getstoreReportCSV = async (req, res) => {
     }
   }
 
-  console.log('Query:', query);
+  
 
 
   try {
@@ -410,7 +391,6 @@ exports.productTypesInDemand = async (req, res) => {
 exports.getUnissuedProductList = async (req, res) => {
   try {
     const demands = await Demand.find({ status: "APPROVED" });
-    console.log(demands);
     res.status(200).json({ demands, success: true });
   } catch (error) {
     console.error("Error fetching demands:", error);
