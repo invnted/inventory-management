@@ -12,15 +12,16 @@ router.post('/availableDemands',productController.productTypesInDemand);  //Used
 
 
 //Data Retrived For Table
-router.post('/getAllProduct',productController.getAllProducts);       // Get List and data of all products
-router.post('/getProductStore',productController.getProductStore);    // Used in Authorization Panel to draw graph
-router.post('/getUserDemand',productController.getUserDemands);       // Used in User Panel user can see his own demands
-router.post('/getAllDemand',productController.getAllDemand);          // Used in Admin & Manager Paenl to see all demands
-router.post('/getPendingDemand',productController.getPendingDemand);  // Used in Admin Panel to see all pending demandds
-router.post('/unissuedProductList',productController.getUnissuedProductList) //Used in Moderator Panel to get unissued list
+router.post('/getAllProduct',productController.getAllProducts);               // Get List and data of all products
+router.post('/getProductStore',productController.getProductStore);            // Used in Authorization Panel to draw graph
+router.post('/getUserDemand',productController.getUserDemands);               // Used in User Panel user can see his own demands
+router.post('/getAllDemand',productController.getAllDemand);                  // Used in Admin & Manager Paenl to see all demands
+router.post('/getPendingDemand',productController.getPendingDemand);          // Used in Admin Panel to see all pending demandds
+router.post('/unissuedDemandList',productController.getUnissuedDemandList)    // Used in Moderator Panel to get unissued demand list
+router.post('/filterProducts',productController.filterProducts)               // Used in Moderator Panel to get filtered product 
 
 //For Sending CSV Files
-router.post('/getStoreReportCSV',productController.getstoreReportCSV);                   //Used in Store Report panel to download CSV
+router.post('/getStoreReportCSV',productController.getstoreReportCSV);                      //Used in Store Report panel to download CSV
 // router.get('/get-products-csv',productController.getProductCSV)
 
 
@@ -34,6 +35,6 @@ router.post('/add', productController.addProduct);                         // Us
 router.post('/makeDemand',productController.makeDemand);                   // Used in User Panel to raise a demand
 router.post('/updateDemandStatus',productController.updateDemandStatus);   // Used in Manager Panel to Approve/Reject Demand
 router.post('/storeReport',productController.storeReport);                 // Used in Admin Panel for store report table
-// router.post('/demandReport',productController.demandReport);               // Used in Admin/Manager Panel for demand report table
+// router.post('/demandReport',productController.demandReport);            // Used in Admin/Manager Panel for demand report table
 
 module.exports = router;

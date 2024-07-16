@@ -389,7 +389,7 @@ exports.productTypesInDemand = async (req, res) => {
   }
 };
 
-exports.getUnissuedProductList = async (req, res) => {
+exports.getUnissuedDemandList = async (req, res) => {
   try {
     const demands = await Demand.find({ status: "APPROVED" });
     res.status(200).json({ demands, success: true });
@@ -398,3 +398,32 @@ exports.getUnissuedProductList = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.filterProducts = async (req, res) => {
+  const { productType, productModel, productBrand } = req.body;
+  const issuedTo = 'NONE'
+
+
+  let query = {}; // Initialize query with issuedTo condition
+
+  if (productType) query.productType = productType;
+  if (productModel) query.productModel = productModel;
+  if (productBrand) query.productBrand = productBrand;
+  query.issuedTo = issuedTo;
+
+  console.log(query);
+
+  try {
+    const filteredProducts = await Product.find(query);
+
+    
+
+    res.status(200).json({ filteredProducts });
+  } catch (error) {
+    console.error("Error fetching filtered products:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
