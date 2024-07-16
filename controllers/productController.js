@@ -213,6 +213,7 @@ exports.makeDemand = async (req, res) => {
 
 exports.getUserDemands = async (req, res) => {
   try {
+    const { userId } = req.body;
     const userDemands = await Demand.find({ userId }).select('-userId -designation -additionalDetail -updatedAt');
     // Map userDemands to format the response as needed
     const formattedDemands = userDemands.map(demand => ({
