@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getUserDemand`;
 
-const userId = localStorage.getItem('userId') || 'N/A';
+const userId = localStorage.getItem('userId');
 
 function RaiseDemandReport() {
     const [demands, setDemands] = useState([]);

@@ -4,7 +4,7 @@ import ModeratorNavbar from './ModeratorNavbar';
 import { Link } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products//unissuedProductList`;
+const REQ_URL = `${serverUrl}/products/unissuedDemandList`;
 
 function IssueProduct() {
     const [demandData, setDemandData] = useState([]);
@@ -35,9 +35,16 @@ function IssueProduct() {
         console.log('Updated demandData:', demandData);
     }, [demandData]);
 
-    const handleIssue = (demandId) => {
+    const handleIssue = (demandId, userId, productType, productName, productModel,productBrand,productQuantity) => {
         // Handle issue logic here
-        console.log('Issued demand with ID:', demandId);
+        localStorage.setItem('demandId', demandId);
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('productBrand', productBrand);
+        localStorage.setItem('productType', productType);
+        localStorage.setItem('productName', productName);
+        localStorage.setItem('productModel', productModel);
+        localStorage.setItem('productQuantity', productQuantity);
+        
     };
 
     return (
@@ -92,7 +99,7 @@ function IssueProduct() {
                                                     <Link to='/moderator-home/confirm-product'>
                                                         <button
                                                             className="bg-sky-800 text-white px-2 py-1 rounded active:bg-sky-900"
-                                                            onClick={() => handleIssue(demand.demandId)}
+                                                            onClick={() => handleIssue(demand.demandId, demand.userId, demand.productType, demand.productName, demand.productModel,demand.productBrand,demand.productQuantity)}
                                                         >
                                                             Issue
                                                         </button>

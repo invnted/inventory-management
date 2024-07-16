@@ -1,42 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
 import ModeratorNavbar from './ModeratorNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getAllDemand`;
+const REQ_URL = `${serverUrl}/products/filterProducts`;
 
 function ConfirmProduct() {
   const [demandData, setDemandData] = useState([]);
+  const [filters, setFilters] = useState({
+    productType: localStorage.getItem('productType') || '',
+    productModel: localStorage.getItem('productModel') || '',
+    productBrand: localStorage.getItem('productBrand') || ''
+  });
 
-  useEffect(() => {
-    const fetchDemandData = async () => {
-      try {
-        const response = await fetch(REQ_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        console.log('Fetched demand data:', data);
-        if (data.success) {
-          setDemandData(data.demands);
-        }
-      } catch (error) {
-        console.error('Error fetching demand data:', error);
+  const fetchDemandData = async () => {
+    try {
+      const response = await fetch(REQ_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(filters)
+      });
+      const data = await response.json();
+      console.log('Fetched demand data:', data);
+      if (data.success) {
+        setDemandData(data.filteredProducts);
       }
-    };
-
-    fetchDemandData();
-  }, []);
+    } catch (error) {
+      console.error('Error fetching demand data:', error);
+    }
+  };
 
   useEffect(() => {
-    console.log('Updated demandData:', demandData);
-  }, [demandData]);
+    fetchDemandData();
+  }, [filters]);
 
-  const handleAssign = (demandId) => {
+  const handleAssign = (demandId, productId, productType, productBrand, productModel) => {
     // Handle assign logic here
-    console.log('Assigned demand with ID:', demandId);
+    console.log('Assigned demand with ID:', demandId, 'for product:', productId);
+    // Perform your assign logic, e.g., update database, show confirmation, etc.
+  };
+
+  const handleFilterChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleFilterSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem('productType', filters.productType);
+    localStorage.setItem('productModel', filters.productModel);
+    localStorage.setItem('productBrand', filters.productBrand);
+    fetchDemandData();
+  };
+
+  const handleRefresh = () => {
+    fetchDemandData();
   };
 
   return (
@@ -47,19 +68,51 @@ function ConfirmProduct() {
           Demand Requested
         </div>
         <div className='bg-sky-300'>
-          <form className="max-w-md mx-auto md:pt-20 p-6">
-            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg className="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                </svg>
-              </div>
-              <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-600 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
-            </div>
+          <form className="max-w-md mx-auto md:pt-20 p-6" onSubmit={handleFilterSubmit}>
+            <label htmlFor="productType" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Product Type</label>
+            <input 
+              type="text" 
+              id="productType" 
+              name="productType" 
+              className="block w-full p-4 mb-2 text-sm rounded-lg bg-sky-600 placeholder-gray-300 outline-none text-white" 
+              placeholder="Product Type" 
+              value={filters.productType} 
+              onChange={handleFilterChange} 
+            />
+            <label htmlFor="productModel" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Product Model</label>
+            <input 
+              type="text" 
+              id="productModel" 
+              name="productModel" 
+              className="block w-full p-4 mb-2 text-sm rounded-lg bg-sky-600 placeholder-gray-300 outline-none text-white" 
+              placeholder="Product Model" 
+              value={filters.productModel} 
+              onChange={handleFilterChange} 
+            />
+            <label htmlFor="productBrand" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Product Brand</label>
+            <input 
+              type="text" 
+              id="productBrand" 
+              name="productBrand" 
+              className="block w-full p-4 mb-2 text-sm rounded-lg bg-sky-600 placeholder-gray-300 outline-none text-white" 
+              placeholder="Product Brand" 
+              value={filters.productBrand} 
+              onChange={handleFilterChange} 
+            />
+            <button 
+              type="submit" 
+              className="block w-full p-4 text-sm rounded-lg bg-sky-800 text-white mt-2"
+            >
+              Search
+            </button>
           </form>
           <div className="p-2 md:p-10">
-            <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
+            <button 
+              className="bg-sky-800 text-white p-2 rounded-md"
+              onClick={handleRefresh}
+            >
+              Refresh
+            </button>
             <div className="overflow-x-auto mt-4">
               <table className="min-w-full bg-sky-100 border border-black">
                 <thead>
@@ -86,7 +139,7 @@ function ConfirmProduct() {
                         <td className="py-2 px-4 border border-black text-center">
                           <button
                             className="bg-sky-800 text-white px-2 py-1 rounded active:bg-sky-900"
-                            onClick={() => handleAssign(demand.demandId)}
+                            onClick={() => handleAssign(demand.demandId, demand.productId, demand.productType, demand.productBrand, demand.productModel)}
                           >
                             Assign
                           </button>
@@ -110,7 +163,4 @@ function ConfirmProduct() {
   );
 }
 
-
-
-
-export default ConfirmProduct
+export default ConfirmProduct;
