@@ -7,11 +7,11 @@ import { toast } from 'react-toastify';
 
 function AddModerator() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const registrationURL = `${serverUrl}/users/user-register`;
+  const registrationURL = `${serverUrl}/moderators/register`;
 
-  const [user, setUser] = useState({
-    userId: '',
-    userName: '',
+  const [moderator, setModerator] = useState({
+    moderatorId: '',
+    moderatorName: '',
     password: '',
     designation: '',
     section: '',
@@ -20,8 +20,8 @@ function AddModerator() {
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setUser({
-      ...user,
+    setModerator({
+      ...moderator,
       [name]: value,
     });
   };
@@ -35,14 +35,14 @@ function AddModerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(moderator),
       });
 
       if (response.ok) {
         toast.success('Successfully registered');
-        setUser({
-          userId: '',
-          userName: '',
+        setModerator({
+          moderatorId: '',
+          moderatorName: '',
           password: '',
           designation: '',
           section: '',
@@ -98,19 +98,19 @@ function AddModerator() {
                   <div className='grid grid-cols-1 justify-center items-center'>
                     <input
                       type='text'
-                      name='userId'
+                      name='moderatorId'
                       onChange={handleInput}
-                      value={user.userId}
+                      value={moderator.moderatorId}
                       placeholder='Moderator ID'
                       className='m-3 p-2 outline-none border rounded-xl'
                       required
                     />
                     <input
                       type='text'
-                      name='userName'
+                      name='moderatorName'
                       onChange={handleInput}
-                      value={user.userName}
-                      placeholder='ModeratorName'
+                      value={moderator.moderatorName}
+                      placeholder='Moderator Name'
                       className='m-3 p-2 outline-none border rounded-xl'
                       required
                     />
@@ -118,7 +118,7 @@ function AddModerator() {
                       type='text'
                       name='password'
                       onChange={handleInput}
-                      value={user.password}
+                      value={moderator.password}
                       placeholder='Moderator Password'
                       className='m-3 p-2 outline-none border rounded-xl'
                       required
@@ -127,7 +127,7 @@ function AddModerator() {
                       type='text'
                       name='designation'
                       onChange={handleInput}
-                      value={user.designation}
+                      value={moderator.designation}
                       placeholder='Moderator Desgination'
                       className='m-3 p-2 outline-none border rounded-xl'
                       required
@@ -136,7 +136,7 @@ function AddModerator() {
                       type='text'
                       name='section'
                       onChange={handleInput}
-                      value={user.section}
+                      value={moderator.section}
                       placeholder='Moderator Section'
                       className='m-3 p-2 outline-none border rounded-xl'
                       required
@@ -145,7 +145,7 @@ function AddModerator() {
                       type='text'
                       name='appointment'
                       onChange={handleInput}
-                      value={user.appointment}
+                      value={moderator.appointment}
                       placeholder='Moderator Appointment'
                       className='m-3 p-2 outline-none border rounded-xl'
                       required

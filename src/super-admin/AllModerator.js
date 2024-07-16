@@ -1,35 +1,34 @@
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import AddUsers from '../Images/add-user.png'
-import List from '../Images/list.png'
+import AddUsers from '../Images/add-user.png';
+import List from '../Images/list.png';
 
 function AllModerator() {
-  const [users, setUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
-  const [editedUser, setEditedUser] = useState({});
+  const [moderators, setModerators] = useState([]);
+  const [editingModerator, setEditingModerator] = useState(null);
+  const [editedModerator, setEditedModerator] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const userListURL = `${serverUrl}/users/user-getAll`;
-  const userEditURL = `${serverUrl}/users/user-update`;
-  const userDeleteURL = `${serverUrl}/users/user-delete`;
+  const moderatorListURL = `${serverUrl}/moderators/moderator-getAll`;
+  const moderatorEditURL = `${serverUrl}/moderators/moderator-update`;
+  const moderatorDeleteURL = `${serverUrl}/moderators/moderator-delete`;
 
-  // Function to fetch all users
-  const fetchUsers = async () => {
+  // Function to fetch all moderators
+  const fetchModerators = async () => {
     try {
-      const response = await fetch(userListURL, {
+      const response = await fetch(moderatorListURL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         console.log("Received:", data);
-        setUsers(data);
+        setModerators(data);
         toast.success('Successfully fetched data');
       } else {
         toast.error('Failed to fetch data');
@@ -39,46 +38,44 @@ function AllModerator() {
       toast.error('An error occurred');
     }
   };
+  
 
   useEffect(() => {
-    fetchUsers();
+    fetchModerators();
   }, []);
 
-  const handleEditClick = (user) => {
-    setEditingUser(user.userId);
-    setEditedUser(user);
+  const handleEditClick = (moderator) => {
+    setEditingModerator(moderator.moderatorId);
+    setEditedModerator(moderator);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    
-      setEditedUser({
-        ...editedUser,
-        [name]: value
-      });
+    setEditedModerator({
+      ...editedModerator,
+      [name]: value,
+    });
   };
 
-
-  const handleSaveClick = async (userId) => {
+  const handleSaveClick = async (moderatorId) => {
     try {
-      const response = await fetch(userEditURL, {
+      const response = await fetch(moderatorEditURL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(editedUser),
+        body: JSON.stringify(editedModerator),
       });
 
       if (response.ok) {
-        const updatedUsers = users.map((user) =>
-          user.userId === userId ? editedUser : user
+        const updatedModerators = moderators.map((moderator) =>
+          moderator.moderatorId === moderatorId ? editedModerator : moderator
         );
-        setUsers(updatedUsers);
-        setEditingUser(null);
-        toast.success('User updated successfully');
+        setModerators(updatedModerators);
+        setEditingModerator(null);
+        toast.success('Moderator updated successfully');
       } else {
-        toast.error('Failed to update user');
+        toast.error('Failed to update Moderator');
       }
     } catch (error) {
       console.error('Error while updating:', error);
@@ -86,26 +83,26 @@ function AllModerator() {
     }
   };
 
-  const handleDeleteClick = async (userId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
+  const handleDeleteClick = async (moderatorId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this moderator?');
     if (confirmDelete) {
       try {
-        const response = await fetch(userDeleteURL, {
+        const response = await fetch(moderatorDeleteURL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userId }),
+          body: JSON.stringify({ moderatorId }),
         });
 
         if (response.ok) {
-          const updatedUsers = users.filter(
-            (user) => user.userId !== userId
+          const updatedModerators = moderators.filter(
+            (moderator) => moderator.moderatorId !== moderatorId
           );
-          setUsers(updatedUsers);
-          toast.success('User deleted successfully');
+          setModerators(updatedModerators);
+          toast.success('Moderator deleted successfully');
         } else {
-          toast.error('Failed to delete User');
+          toast.error('Failed to delete Moderator');
         }
       } catch (error) {
         console.error('Error while deleting:', error);
@@ -114,17 +111,15 @@ function AllModerator() {
     }
   };
 
-
-
   // Function to handle search input change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Filter users based on search term
-  const filteredUsers = users.filter((user) =>
-    user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.userName.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter moderators based on search term
+  const filteredModerators = moderators.filter((moderator) =>
+    moderator.moderatorId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    moderator.moderatorName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -144,14 +139,14 @@ function AllModerator() {
               </div>
             </Link>
             <Link to='/moderator-home/all-moderator'>
-            <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
-              <div className='w-10 block'>
-                <img src={List} alt='Description' />
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
+                <div className='w-10 block'>
+                  <img src={List} alt='Description' />
+                </div>
+                <div>
+                  <p>Moderator List</p>
+                </div>
               </div>
-              <div>
-                <p>Moderator List</p>
-              </div>
-            </div>
             </Link>
           </div>
         </div>
@@ -165,17 +160,16 @@ function AllModerator() {
                 </svg>
               </div>
               <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" value={searchTerm} onChange={handleSearchChange} required />
-              {/* <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button> */}
             </div>
           </form>
           <div className="p-2 md:p-10">
-            <button onClick={fetchUsers} className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
-            {filteredUsers.length > 0 && (
+            <button onClick={fetchModerators} className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
+            {filteredModerators.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">
                   <thead>
                     <tr>
-                      <th className="py-2 px-4 border border-gray-300 text-center">User ID</th>
+                      <th className="py-2 px-4 border border-gray-300 text-center">Moderator ID</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Name</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Designation</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Appointment</th>
@@ -185,88 +179,86 @@ function AllModerator() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user) => (
-                      <tr key={user.userId}>
-                        <td className="py-2 px-4 border border-gray-300 text-center">{user.userId}</td>
+                    {filteredModerators.map((moderator) => (
+                      <tr key={moderator.moderatorId}>
+                        <td className="py-2 px-4 border border-gray-300 text-center">{moderator.moderatorId}</td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
+                          {editingModerator === moderator.moderatorId ? (
                             <input
                               type="text"
-                              name="userName"
-                              value={editedUser.userName}
+                              name="moderatorName"
+                              value={editedModerator.moderatorName}
                               onChange={handleInputChange}
                               className="bg-gray-200"
                             />
                           ) : (
-                            user.userName
+                            moderator.moderatorName
                           )}
                         </td>
-                        
                         <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
+                          {editingModerator === moderator.moderatorId ? (
                             <input
                               type="text"
                               name="designation"
-                              value={editedUser.designation}
+                              value={editedModerator.designation}
                               onChange={handleInputChange}
                               className="bg-gray-200"
                             />
                           ) : (
-                            user.designation
+                            moderator.designation
                           )}
                         </td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
+                          {editingModerator === moderator.moderatorId ? (
                             <input
                               type="text"
                               name="appointment"
-                              value={editedUser.appointment}
+                              value={editedModerator.appointment}
                               onChange={handleInputChange}
                               className="bg-gray-200"
                             />
                           ) : (
-                            user.appointment
+                            moderator.appointment
                           )}
                         </td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
+                          {editingModerator === moderator.moderatorId ? (
                             <input
                               type="text"
                               name="section"
-                              value={editedUser.section}
+                              value={editedModerator.section}
                               onChange={handleInputChange}
                               className="bg-gray-200"
                             />
                           ) : (
-                            user.section
+                            moderator.section
                           )}
                         </td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
+                          {editingModerator === moderator.moderatorId ? (
                             <input
                               type="text"
                               name="password"
-                              value={editedUser.password}
+                              value={editedModerator.password}
                               onChange={handleInputChange}
                               className="bg-gray-200"
                             />
                           ) : (
-                            user.password
+                            moderator.password
                           )}
                         </td>
-                        
                         <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
+                          {editingModerator === moderator.moderatorId ? (
                             <>
                               <button
                                 className="text-green-600 hover:text-green-900 mr-2"
-                                onClick={() => handleSaveClick(user.userId)}
+                                onClick={() => handleSaveClick(moderator.moderatorId)}
                               >
                                 Save
                               </button>
                               <button
                                 className="text-gray-600 hover:text-gray-900"
-                                onClick={() => setEditingUser(null)}
+                                onClick={() => setEditingModerator(null)}
                               >
                                 Cancel
                               </button>
@@ -275,13 +267,13 @@ function AllModerator() {
                             <>
                               <button
                                 className="text-blue-600 hover:text-blue-900 mr-2"
-                                onClick={() => handleEditClick(user)}
+                                onClick={() => handleEditClick(moderator)}
                               >
                                 Edit
                               </button>
                               <button
                                 className="text-red-600 hover:text-red-900"
-                                onClick={() => handleDeleteClick(user.userId)}
+                                onClick={() => handleDeleteClick(moderator.moderatorId)}
                               >
                                 Delete
                               </button>
@@ -301,4 +293,4 @@ function AllModerator() {
   );
 }
 
-export default AllModerator
+export default AllModerator;

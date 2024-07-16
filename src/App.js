@@ -35,6 +35,8 @@ import ModeratorHome from './moderator/ModeratorHome';
 import AddModerator from './super-admin/AddModerator';
 import AllModerator from './super-admin/AllModerator';
 import ModeratorLogin from './components/ModeratorLogin';
+import IssueProduct from './moderator/IssueProduct';
+import ConfirmProduct from './moderator/ConfirmProduct';
 
 
 function App() {
@@ -81,6 +83,8 @@ function App() {
         <Route path="/moderator-home" element={<ModeratorHome/>} />
         <Route path="/moderator-home/add-moderator" element={<AddModerator/>}/>
         <Route path="/moderator-home/all-moderator" element={<AllModerator/>}/>
+        <Route path="/moderator-home/issue-product" element={<IssueProduct/>}/>
+        <Route path="/moderator-home/confirm-product" element={<ConfirmProduct/>}/>
         
         {/* Report Section */}
         <Route path="/reports/store-reports" element={<StoreReport/>} />

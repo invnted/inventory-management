@@ -41,7 +41,7 @@ function ModeratorNavbar() {
         <div>
             <nav className="bg-sky-800">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <Link to='/user-home'>
+                    <Link to='/moderator-home'>
                         <span className="self-center text-3xl font-bold whitespace-nowrap text-white hover:text-blue-900 delay-100">Moderator Dashboard</span>
                     </Link>
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -74,11 +74,13 @@ function ModeratorNavbar() {
                         </div>
                     </div>
                     <ul className='flex gap-10 text-xl font-semibold text-white'>
-                        <Link to='/user-home/raise-demand' className='hover:text-blue-900 delay-100'>
-                            <li>Raise Demand</li>
+                        <Link to='/moderator-home/issue-product' className='hover:text-blue-900 delay-100'>
+                            <li>Issue Product</li>
                         </Link>
-                        <li>Product Received</li>
-                        <li>Product Use</li>
+                        <Link to='' className='hover:text-blue-900 delay-100'>
+                            <li>Pending</li>
+                        </Link>
+                        
                     </ul>
                 </div>
             </nav>
