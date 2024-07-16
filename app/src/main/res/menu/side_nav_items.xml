@@ -11,7 +11,7 @@
         android:icon="@drawable/baseline_issue_long_24"/>
     <item
         android:id="@+id/Itp"
-        android:title="Add IT-Person"
+        android:title="Add Moderator"
         android:icon="@drawable/baseline_list_alt_24"/>
     <item
         android:id="@+id/allUserReport"

@@ -77,7 +77,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="center|start"
-                android:text="IT-Person Details"
+                android:text="Moderator Details"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -88,7 +88,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="IT-Person Id"
+                android:text="Moderator Id"
                 android:textColor="@color/purple" />
 
             <EditText
@@ -100,7 +100,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/spinnerborder"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="IT-Person Id"
+                android:hint="Moderator Id"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textSize="15sp" />
@@ -111,7 +111,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="IT-Person Name"
+                android:text="Moderator Name"
                 android:textColor="@color/purple" />
 
             <EditText
@@ -123,7 +123,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/spinnerborder"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="IT-Person Name"
+                android:hint="Moderator Name"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textSize="15sp" />
@@ -146,7 +146,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/spinnerborder"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="IT-Person Password"
+                android:hint="Moderator Password"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textSize="15sp" />
@@ -157,7 +157,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="IT-Person Designation"
+                android:text="Moderator Designation"
                 android:textColor="@color/purple" />
 
             <EditText
@@ -169,7 +169,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/spinnerborder"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="IT-Person Designation"
+                android:hint="Moderator Designation"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textSize="15sp" />
@@ -180,7 +180,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="IT-Person Section"
+                android:text="Moderator Section"
                 android:textColor="@color/purple" />
 
             <EditText
@@ -192,7 +192,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/spinnerborder"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="IT-Person Section"
+                android:hint="Moderator Section"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textSize="15sp" />
@@ -203,7 +203,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="IT-Person Appointment"
+                android:text="Moderator Appointment"
                 android:textColor="@color/purple" />
 
             <EditText
@@ -215,7 +215,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/spinnerborder"
                 android:fontFamily="@font/poppins_medium"
-                android:hint="IT-Person Appointment"
+                android:hint="Moderator Appointment"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textSize="15sp" />
@@ -279,7 +279,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_medium"
         android:gravity="center"
-        android:text="Add IT-Person"
+        android:text="Add Moderator"
         android:textColor="@color/white"
         android:textSize="26sp"
         android:textStyle="bold"

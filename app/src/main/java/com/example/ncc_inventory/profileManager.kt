@@ -64,7 +64,7 @@ class profileManager : AppCompatActivity() {
         logout = findViewById(R.id.mpLogout)
         logout.setOnClickListener {
             logout.startAnimation(AnimationUtils.loadAnimation(this,R.anim.click))
-            val intent = Intent(this,User_Or_Admin::class.java)
+            val intent = Intent(this,loginpage::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             Handler(Looper.getMainLooper()).postDelayed({
                 this.startActivity(intent)

@@ -295,7 +295,7 @@ class storeReport : AppCompatActivity() {
     }
 
     private fun getFormattedDate(calendar: Calendar): String {
-        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return sdf.format(calendar.time)
     }
 
