@@ -12,7 +12,7 @@ const DemandSchema = new mongoose.Schema({
   productQuantity: { type: Number, required: true },
   status: {
     type: String,
-    enum: ['PENDING', 'APPROVED', 'REJECTED'],
+    enum: ['PENDING', 'APPROVED', 'REJECTED','COMPLETED'],
     default: 'PENDING',
   },
   createdAt: { type: String }, 

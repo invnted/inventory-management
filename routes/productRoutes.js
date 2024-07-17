@@ -35,6 +35,7 @@ router.post('/add', productController.addProduct);                         // Us
 router.post('/makeDemand',productController.makeDemand);                   // Used in User Panel to raise a demand
 router.post('/updateDemandStatus',productController.updateDemandStatus);   // Used in Manager Panel to Approve/Reject Demand
 router.post('/storeReport',productController.storeReport);                 // Used in Admin Panel for store report table
+router.post('/assignSingleProduct',productController.assignSingleProduct); // Used in Moderator Panel to assign 1 product
 // router.post('/demandReport',productController.demandReport);            // Used in Admin/Manager Panel for demand report table
 
 module.exports = router;

@@ -200,13 +200,22 @@ exports.getProductStore = async (req, res) => {
 
 exports.makeDemand = async (req, res) => {
   try {
+    
+    // Convert specific fields to lowercase
+    const lowercaseFields = ['productType', 'productName', 'productModel', 'productBrand', 'additionalDetail' , /* add other fields here */];
+    lowercaseFields.forEach(field => {
+      if (req.body[field]) {
+        req.body[field] = req.body[field].toLowerCase();
+      }
+    });
+
     const demand = new Demand(req.body);
     await demand.save();
-    console.log("Sucessfully added new demand");
-    res.status(200).json({success:true});
+    console.log("Successfully added new demand");
+    res.status(200).json({ success: true });
 
   } catch (err) {
-    console.log("Error while adding demand");
+    console.error("Error while adding demand:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 };
@@ -356,7 +365,7 @@ exports.getstoreReportCSV = async (req, res) => {
   }
 };
 
-exports.updateDemandStatus = async (req, res) => {
+exports.updateDemandStatus = async (req, res) => {                //UPADTE ATTRIBUTES: APPROVED, REJECTED
   try {
     const { demandId, status } = req.body;
 
@@ -401,27 +410,69 @@ exports.getUnissuedDemandList = async (req, res) => {
 
 exports.filterProducts = async (req, res) => {
   const { productType, productModel, productBrand } = req.body;
+  console.log(req.body);
   const issuedTo = 'NONE'
-
-
   let query = {}; // Initialize query with issuedTo condition
-
   if (productType) query.productType = productType;
   if (productModel) query.productModel = productModel;
   if (productBrand) query.productBrand = productBrand;
   query.issuedTo = issuedTo;
 
-  console.log(query);
+  // console.log("Filter Query: ",query)
 
   try {
     const filteredProducts = await Product.find(query);
-
-    
-
-    res.status(200).json({ filteredProducts });
+    console.log("Returning: ",filteredProducts)
+    res.status(200).json({ filteredProducts, success:true });
   } catch (error) {
     console.error("Error fetching filtered products:", error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.assignSingleProduct = async (req, res) => {
+  const { productId, userId, demandId } = req.body;
+  try {
+    // Fetch the Demand document
+    let demand = await Demand.findOne({ demandId });
+    if (!demand) {
+      return res.status(404).json({ success: false, message: 'Demand not found' });
+    }
+
+    // Check if productQuantity is greater than zero
+    if (demand.productQuantity > 0) {
+      // Decrement productQuantity by one
+      demand.productQuantity -= 1;
+
+      // If productQuantity reaches zero, update the status to COMPLETED
+      if (demand.productQuantity === 0) {
+        demand.status = 'COMPLETED';
+      }
+
+      // Save the updated Demand document
+      await demand.save();
+    } else {
+      return res.status(400).json({ success: false, message: 'No remaining product quantity in the demand' });
+    }
+
+    // Find the product
+    let product = await Product.findOne({ productId });
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    // Update the product document with the new fields
+    const updateFields = { issuedTo: userId, status: 'ISSUED' };
+    product = await Product.findOneAndUpdate(
+      { productId },
+      { $set: updateFields },
+      { new: true }
+    );
+
+    res.json({ success: true, product, demand });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 };
 
