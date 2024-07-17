@@ -7,10 +7,18 @@ const REQ_URL = `${serverUrl}/products/getUserDemand`;
 
 const userId = localStorage.getItem('userId');
 
+console.log("ID Picked for local storage: ",userId)
+
+
 function RaiseDemandReport() {
     const [demands, setDemands] = useState([]);
 
+    
+
     useEffect(() => {
+        
+        
+
         const fetchData = async () => {
             try {
                 const response = await fetch(REQ_URL, {
@@ -106,3 +114,4 @@ function RaiseDemandReport() {
 }
 
 export default RaiseDemandReport;
+
