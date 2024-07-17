@@ -19,6 +19,8 @@ router.post('/getAllDemand',productController.getAllDemand);                  //
 router.post('/getPendingDemand',productController.getPendingDemand);          // Used in Admin Panel to see all pending demandds
 router.post('/unissuedDemandList',productController.getUnissuedDemandList)    // Used in Moderator Panel to get unissued demand list
 router.post('/filterProducts',productController.filterProducts)               // Used in Moderator Panel to get filtered product 
+router.post('/getOutOfStock',productController.outOfStockCalculator)          // Used in Manager Panel to check for OUT OF STOCK product
+
 
 //For Sending CSV Files
 router.post('/getStoreReportCSV',productController.getstoreReportCSV);                      //Used in Store Report panel to download CSV

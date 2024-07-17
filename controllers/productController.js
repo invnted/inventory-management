@@ -476,5 +476,67 @@ exports.assignSingleProduct = async (req, res) => {
   }
 };
 
+exports.outOfStockCalculator = async (req, res) => {
+  try {
+    // Aggregate demands by productType, productBrand, productModel
+    const demands = await Demand.aggregate([
+      {
+        $group: {
+          _id: {
+            productType: '$productType',
+            productBrand: '$productBrand',
+            productModel: '$productModel',
+          },
+          totalQuantity: { $sum: '$productQuantity' },
+        },
+      },
+    ]);
 
+    const outOfStockDemands = [];
+
+    // Iterate through each demand to check against product inventory
+    for (const demand of demands) {
+      const { productType, productBrand, productModel } = demand._id;
+      const totalDemandQuantity = demand.totalQuantity;
+
+      // Fetch total quantity of products from Product collection
+      const totalProductQuantity = await Product.aggregate([
+        {
+          $match: {
+            productType,
+            productBrand,
+            productModel,
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalQuantity: { $sum: 1 },
+          },
+        },
+      ]);
+
+      const availableQuantity = totalProductQuantity.length > 0 ? totalProductQuantity[0].totalQuantity : 0;
+
+      if (totalDemandQuantity > availableQuantity) {
+        outOfStockDemands.push({
+          productType,
+          productBrand,
+          productModel,
+          totalDemandQuantity,
+          availableQuantity,
+        });
+      }
+    }
+
+    if (outOfStockDemands.length > 0) {
+      return res.status(200).json({ outOfStockDemands });
+    } else {
+      return res.status(200).json({ message: 'All demands can be fulfilled with available stock.' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
