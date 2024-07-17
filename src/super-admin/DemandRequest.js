@@ -36,13 +36,15 @@ function DemandRequest() {
   const getStatusClassName = (status) => {
     switch (status.toLowerCase()) {
       case 'approved':
-        return 'text-green-500 text-lg font-bold';
-      case 'rejected':
-        return 'text-red-500 text-lg font-bold';
-      case 'pending':
-        return 'text-blue-500 text-lg font-bold';
-      default:
-        return '';
+                return 'text-blue-500 text-lg font-bold';
+            case 'rejected':
+                return 'text-red-500 text-lg font-bold';
+            case 'pending':
+                return 'text-yellow-500 text-lg font-bold';
+            case 'completed':
+                return 'text-green-500 text-lg font-bold';
+            default:
+                return '';
     }
   };
 
