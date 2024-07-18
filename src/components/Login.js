@@ -141,6 +141,15 @@ function AdminLogin() {
                 role="menuitem"
                 tabIndex="-1"
                 id="menu-item-3"
+                onClick={() => handleOptionClick('User', '/company-login')}
+              >
+                Company
+              </button>
+              <button
+                className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
+                role="menuitem"
+                tabIndex="-1"
+                id="menu-item-3"
                 onClick={() => handleOptionClick('User', '/')}
               >
                 User

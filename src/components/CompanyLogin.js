@@ -1,24 +1,25 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import Bg from '../Images/bg1.jpg';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const LOGIN_URL = `${serverUrl}/managers/manager-login`;
+const LOGIN_URL = `${serverUrl}/companies/company-login`;
 
-function ManagerLogin() {
-  const [manager, setManager] = useState({
-    managerId: '',
-    password: '',
+function CompanyLogin() {
+  const [company, setCompany] = useState({
+    email: "",
+    password: "",
   });
 
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+    let name = e.target.name;
+    let value = e.target.value;
 
-    setManager({
-      ...manager,
+    setCompany({
+      ...company,
       [name]: value,
     });
   };
@@ -27,66 +28,42 @@ function ManagerLogin() {
     e.preventDefault();
     try {
       const response = await fetch(LOGIN_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(manager),
+        body: JSON.stringify(company),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Received:', data);
+        console.log("Received:", data);
 
-        const {
-          token,
-          managerData: {
-            managerId,
-            managerName,
-            designation,
-            section,
-            appointment,
-            allProductReport,
-            demandReceived,
-            issueProduct,
-          },
-        } = data;
+        const { companyId, companyName, email, contact_1 } = data.company;
 
-        localStorage.setItem('managerId', managerId);
-        localStorage.setItem('managerName', managerName);
-        localStorage.setItem('designation', designation);
-        localStorage.setItem('section', section);
-        localStorage.setItem('appointment', appointment);
-        localStorage.setItem('allProductReport', allProductReport);
-        localStorage.setItem('demandReceived', demandReceived);
-        localStorage.setItem('issueProduct', issueProduct);
-        localStorage.setItem('token', token);
+        localStorage.setItem('companyId', companyId);
+        localStorage.setItem('companyName', companyName);
+        localStorage.setItem('email', email);
+        localStorage.setItem('contact_1', contact_1);
 
-        console.log('ManagerId:', managerId);
-        console.log('ManagerName:', managerName);
-        console.log('Designation:', designation);
-        console.log('Section:', section);
-        console.log('Appointment:', appointment);
-        console.log('All Product Report:', allProductReport);
-        console.log('Demand Received:', demandReceived);
-        console.log('Issue Product:', issueProduct);
-        console.log('Token:', token);
+        toast.success("Login successful");
+        setCompany({ email: "", password: "" });
 
-        toast.success('Login successful');
-        setManager({ managerId: '', password: '' });
-
-        navigate('/Manager-Dashboard');
+        navigate('/company-home');
       } else {
-        toast.error('Invalid credentials');
+        toast.error("Invalid credentials");
       }
     } catch (error) {
-      toast.error('An error occurred');
+      toast.error("An error occurred");
     }
   };
 
+  
+  
+
   const Dropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Manager");
+    const [selectedOption, setSelectedOption] = useState("Company");
     const navigate = useNavigate();
 
     const toggleDropdown = () => {
@@ -159,7 +136,7 @@ function ManagerLogin() {
                 role="menuitem"
                 tabIndex="-1"
                 id="menu-item-3"
-                onClick={() => handleOptionClick('User', '/company-login')}
+                onClick={() => handleOptionClick('Company', '/company-login')}
               >
                 Company
               </button>
@@ -167,7 +144,7 @@ function ManagerLogin() {
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
                 tabIndex="-1"
-                id="menu-item-3"
+                id="menu-item-4"
                 onClick={() => handleOptionClick('User', '/')}
               >
                 User
@@ -179,52 +156,26 @@ function ManagerLogin() {
     );
   };
 
-
   return (
-    <div className="relative h-screen bg-sky-800">
-      <div className="absolute inset-0  flex items-center justify-center">
+    <div className='relative h-screen bg-sky-800'>
+      <div className='absolute inset-0 flex items-center justify-center'>
         <div className="w-4/5 md:w-1/4 border rounded-lg shadow p-5">
-        <Dropdown/>
+          <Dropdown />
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
-              Manager Login
+              Company Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="managerId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Manager ID
-                </label>
-                <input
-                  type="text"
-                  name="managerId"
-                  id="managerId"
-                  onChange={handleInput}
-                  className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white"
-                  placeholder="Manager ID"
-                  required
-                />
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Email</label>
+                <input type="email" name="email" id="email" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white" placeholder="Company Email" onChange={handleInput} required />
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={handleInput}
-                  placeholder="••••••••"
-                  className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
-                  required
-                />
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <input type="password" onChange={handleInput} name="password" id="password" placeholder="••••••••" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6" required />
               </div>
-              <div className="mt-20 flex justify-center items-center">
-                <button
-                  type="submit"
-                  className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl"
-                >
-                  Login
-                </button>
+              <div className='mt-20 flex justify-center items-center'>
+                <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">Login</button>
               </div>
             </form>
           </div>
@@ -234,4 +185,4 @@ function ManagerLogin() {
   );
 }
 
-export default ManagerLogin;
+export default CompanyLogin;

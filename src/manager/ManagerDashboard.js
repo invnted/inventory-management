@@ -1,166 +1,109 @@
-import React, { useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
-import ManagerNavbar from '../components/ManagerNavbar';
+import React, { useEffect, useState } from 'react'
+import ManagerNavbar from '../components/ManagerNavbar'
+import Store from '../Images/store1.png'
+import AddProduct from '../Images/category.png'
+import AddUser from '../Images/add1.png'
+import Demand from '../Images/demand.png'
+import OutOfStock from '../Images/OutOfStock.png'
+import { Link } from 'react-router-dom'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const productTypeListUrl = `${serverUrl}/products/productType-list`;
-const productStoreDetailUrl = `${serverUrl}/products/getProductStore`;
+const GET_OUT_OF_STOCK_URL = `${serverUrl}/products/getOutOfStock`;
+
 
 function ManagerDashboard() {
-    const [productTypes, setProductTypes] = useState([]);
-    const [selectedProductType, setSelectedProductType] = useState('');
-    const [chartData, setChartData] = useState({
-      series: [],
-      options: {
-        labels: ['BER', 'HELD', 'UNSERVICEABLE', 'SERVICEABLE', 'ISSUED'],
-        plotOptions: {
-          pie: {
-            donut: {
-              labels: {
-                show: true,
-                name: {
-                  show: true,
-                },
-                value: {
-                  show: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-  
-    useEffect(() => {
-      const fetchProductTypes = async () => {
+  const [showNotificationDot, setShowNotificationDot] = useState(false);
+  useEffect(() => {
+    const fetchOutOfStockItems = async () => {
         try {
-          const response = await fetch(productTypeListUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          const data = await response.json();
-          console.log('Fetched product types:', data);
-          setProductTypes(data);
+            const response = await fetch(GET_OUT_OF_STOCK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any headers you need, e.g., authorization token
+                },
+                // You can pass any necessary data in the body, e.g., JSON.stringify({ key: value })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            setShowNotificationDot(data.makeNotification);
         } catch (error) {
-          console.error('Error fetching product types:', error);
+            console.error('Failed to fetch out-of-stock items:', error);
         }
-      };
-  
-      fetchProductTypes();
-    }, []);
-  
-    const handleProductTypeChange = (event) => {
-      setSelectedProductType(event.target.value);
     };
-  
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      try {
-        const response = await fetch(productStoreDetailUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ productType: selectedProductType }),
-        });
-        const data = await response.json();
-        console.log('Fetched product store details:', data);
-  
-        const seriesData = [
-          parseInt(data.BER),
-          parseInt(data.HELD),
-          parseInt(data.UNSERVICEABLE),
-          parseInt(data.SERVICEABLE),
-          parseInt(data.ISSUED),
-        ];
-  
-        setChartData({
-          series: seriesData,
-          options: chartData.options,
-        });
-      } catch (error) {
-        console.error('Error fetching product store details:', error);
-      }
-    };
-  
-    useEffect(() => {
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = 'auto';
-      };
-    }, []);
-  
-    return (
-      <div className='bg-sky-400 min-h-screen'>
-        <ManagerNavbar />
-        <div className='container mx-auto p-4'>
-          <form
-            className='flex flex-col md:flex-row justify-center items-center gap-5 pt-5'
-            onSubmit={handleSubmit}
-          >
-            <select
-              id='productTypes'
-              className='text-2xl font-bold rounded-xl outline-none block p-3 bg-sky-800 text-white w-full md:w-72 cursor-pointer hover:bg-sky-900 delay-100'
-              onChange={handleProductTypeChange}
-              value={selectedProductType}
-            >
-              <option value=''>Select The Product</option>
-              {productTypes.map((productType, index) => (
-                <option
-                  value={productType}
-                  key={index}
-                  className='bg-sky-700 delay-100 h-20 flex text-white justify-center items-center rounded-xl font-bold cursor-pointer'
-                >
-                  {productType}
-                </option>
-              ))}
-            </select>
-            <button
-              type='submit'
-              className='p-4 bg-sky-800 w-full md:w-28 flex justify-center items-center text-xl font-bold text-white rounded-xl cursor-pointer hover:bg-sky-900 delay-100'
-            >
-              Submit
-            </button>
-          </form>
-          {chartData.series.length > 0 && (
-            <div className='flex flex-col lg:flex-row justify-around items-center mt-10'>
-              <Chart
-                className='w-full lg:w-1/2 h-64 md:h-96'
-                type='pie'
-                series={chartData.series}
-                options={chartData.options}
-              />
-              <div className='mt-10 lg:mt-0 lg:ml-10'>
-                <div className='grid grid-cols-2 md:grid-cols-3 gap-5 justify-center items-center'>
-                  <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
-                    <div>Issued</div>
-                    <div>{chartData.series[4]}</div>
-                  </div>
-                  <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
-                    <div>Held</div>
-                    <div>{chartData.series[1]}</div>
-                  </div>
-                  <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
-                    <div>Serviceable</div>
-                    <div>{chartData.series[3]}</div>
-                  </div>
-                  <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
-                    <div>Unserviceable</div>
-                    <div>{chartData.series[2]}</div>
-                  </div>
-                  <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
-                    <div>BER</div>
-                    <div>{chartData.series[0]}</div>
-                  </div>
-                </div>
-              </div>
+
+    fetchOutOfStockItems();
+}, []);
+  return (
+    <div>
+      <ManagerNavbar />
+      <div className='m-20 justify-between'>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 m-auto">
+            <Link to='/moderator-home/authorization-store'>
+                    <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+                        <div className='w-20  flex justify-center items-center'>
+                            <img className='color-white ' src={Store} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white text-xl font-semibold  text-center'>
+                            <h2>Authorization Store</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/manager-dashboard/manager-AddProduct'>
+                    <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+                        <div className='w-20  flex justify-center items-center'>
+                            <img className='color-white ' src={AddProduct} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white text-xl font-semibold  text-center'>
+                            <h2>Add Product</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/manager-dashboard/managerAdd-user'>
+                    <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+                        <div className='w-20  flex justify-center items-center'>
+                            <img className='color-white ' src={AddUser} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white text-xl font-semibold  text-center'>
+                            <h2>Add User</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/manager-dashboard/ManagerDemand'>
+                    <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+                        <div className='w-20  flex justify-center items-center'>
+                            <img className='color-white ' src={Demand} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white text-xl font-semibold  text-center'>
+                            <h2>Demand</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/manager-dashboard/StockRequiredInStore'>
+                    <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+                        <div className='w-20  flex justify-center items-center'>
+                            <img className='color-white ' src={OutOfStock} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white text-xl font-semibold  text-center'>
+                            <h2>Stock Required
+                        {showNotificationDot && (
+                            <span className="absolute h-3 w-3 bg-yellow-300 rounded-full"></span>
+                        )}</h2>
+                        </div>
+                    </div>
+                </Link>
+                
+                
+
+
             </div>
-          )}
-        </div>
-      </div>
-    );
+        </div >
+    </div>
+  )
 }
 
-export default ManagerDashboard;
+export default ManagerDashboard

@@ -39,6 +39,9 @@ import IssueProduct from './moderator/IssueProduct';
 import ConfirmProduct from './moderator/ConfirmProduct';
 import StockRequired from './super-admin/StockRequired';
 import StockRequiredInStore from './manager/StockRequiredInStore';
+import CompanyLogin from './components/CompanyLogin';
+import CompanyDashboard from './company/CompanyDashboard';
+import ManagerAuthorizationStore from './manager/ManagerAuthorizationStore';
 
 
 function App() {
@@ -52,6 +55,7 @@ function App() {
         <Route path="/login" element={<AdminLogin/>} />
         <Route path="/manager-login" element={<ManagerLogin/>} />
         <Route path="/moderator-login" element={<ModeratorLogin/>} />
+        <Route path="/company-login" element={<CompanyLogin/>} />
         <Route path="/" element={<UserLogin/>} />
         {/* Admin panel */}
         <Route path="/home" element={<Home />} />
@@ -89,6 +93,10 @@ function App() {
         <Route path="/moderator-home/all-moderator" element={<AllModerator/>}/>
         <Route path="/moderator-home/issue-product" element={<IssueProduct/>}/>
         <Route path="/moderator-home/confirm-product" element={<ConfirmProduct/>}/>
+        <Route path="/moderator-home/authorization-store" element={<ManagerAuthorizationStore/>}/>
+
+        {/* Company Panel */}
+        <Route path="/company-home" element={<CompanyDashboard/>}/>
         
         {/* Report Section */}
         <Route path="/reports/store-reports" element={<StoreReport/>} />

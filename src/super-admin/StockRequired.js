@@ -1,92 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import ManagerNavbar from '../components/ManagerNavbar';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getAllDemand`;
-const UPDATE_URL = `${serverUrl}/products/updateDemandStatus`;
+const REQ_URL = `${serverUrl}/products/getOutOfStock`;
 
-const userId = localStorage.getItem('userId') || 'N/A';
-
-function StockRequired() {
+function StockRequiredInStore() {
     const [demands, setDemands] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchOutOfStockDemands = async () => {
             try {
                 const response = await fetch(REQ_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ userId })
+                    body: JSON.stringify({}), // If you need to send any data, include it here
                 });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    setDemands(result.demands || []); // Ensure it uses 'demands' from response
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                if (data.outOfStockDemands) {
+                    setDemands(data.outOfStockDemands);
                 } else {
-                    setError(result.message);
+                    setDemands([]);
                 }
             } catch (error) {
-                console.error('Error fetching demands:', error);
-                setError('Error fetching demands');
+                setError(error.message);
             }
         };
 
-        fetchData();
+        fetchOutOfStockDemands();
     }, []);
-
-    const updateDemandStatus = async (demandId, status) => {
-        try {
-            const response = await fetch(UPDATE_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ demandId, status })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                setDemands(demands.map(demand =>
-                    demand.demandId === demandId ? { ...demand, status: status } : demand
-                ));
-            } else {
-                setError(result.message);
-            }
-        } catch (error) {
-            console.error('Error updating demand status:', error);
-            setError('Error updating demand status');
-        }
-    };
-
-    const getStatusClassName = (status) => {
-        switch (status.toLowerCase()) {
-            case 'approved':
-                return 'text-blue-500 text-lg font-bold';
-            case 'rejected':
-                return 'text-red-500 text-lg font-bold';
-            case 'pending':
-                return 'text-yellow-500 text-lg font-bold';
-            case 'completed':
-                return 'text-green-500 text-lg font-bold';
-            default:
-                return '';
-        }
-    };
 
     return (
         <div>
             <div className='bg-white h-screen'>
-                <Navbar/>
-                <div className='bg-sky-300 m-10 md:m-20  rounded-lg'>
+                <Navbar />
+                <div className='bg-sky-300 m-10 md:m-20 rounded-lg'>
                     <div className='flex justify-around items-center py-2 gap-6 text-center text-white font-bold text-5xl bg-sky-800'>
-                            <div className='p-6 '>Stock Required</div>
+                        <div className='p-6'>Stock Required</div>
                     </div>
                     <form className="max-w-md mx-auto md:pt-10 p-6">
                         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -109,40 +64,27 @@ function StockRequired() {
                                 <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
                                     <thead className="bg-sky-500 text-white">
                                         <tr>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Demand ID</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Name</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Model</th>
+                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Type</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Product Brand</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Quantity</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Status</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Created At</th>
+                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Model</th>
+                                            <th className="py-2 px-4 border border-gray-300 text-center">Demand Quantity</th>
+                                            <th className="py-2 px-4 border border-gray-300 text-center">Available Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {demands.length > 0 ? (
-                                            demands.map((demand) => (
-                                                <tr key={demand.demandId} className="hover:bg-sky-100">
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.demandId}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productName}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productModel}</td>
+                                            demands.map((demand, index) => (
+                                                <tr key={index} className="hover:bg-sky-100">
+                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productType}</td>
                                                     <td className="py-2 px-4 border border-gray-300 text-center">{demand.productBrand}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productQuantity}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">
-                                                        {demand.status.toLowerCase() === 'pending' ? (
-                                                            <div className='flex justify-around text-white text-xl'>
-                                                                <button className='bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-700' onClick={() => updateDemandStatus(demand.demandId, 'APPROVED')}>Approve</button>
-                                                                <button className='bg-red-500 px-2 py-1 rounded-lg hover:bg-red-700' onClick={() => updateDemandStatus(demand.demandId, 'REJECTED')}>Reject</button>
-                                                            </div>
-                                                        ) : (
-                                                            <span className={getStatusClassName(demand.status)}>{demand.status}</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.createdAt}</td>
+                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productModel}</td>
+                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.totalDemandQuantity}</td>
+                                                    <td className="py-2 px-4 border border-gray-300 text-red-500 text-center font-bold">{demand.availableQuantity}</td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="7" className="py-2 px-4 border border-gray-300 text-center">No demands found</td>
+                                                <td colSpan="5" className="py-2 px-4 border border-gray-300 text-center">No demands found</td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -156,9 +98,4 @@ function StockRequired() {
     );
 }
 
-
-
-
-
-
-export default StockRequired
+export default StockRequiredInStore;
