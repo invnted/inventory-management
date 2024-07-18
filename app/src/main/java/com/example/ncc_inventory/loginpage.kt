@@ -26,7 +26,7 @@ import retrofit2.http.POST
 
 object rFit {
     var retrofit: Retrofit? = null
-    const val BASE_URL_PLACEHOLDER = "https://d916-103-37-80-91.ngrok-free.app/"
+    const val BASE_URL_PLACEHOLDER = "https://8091-103-37-80-91.ngrok-free.app/"
 }
 
 data class managerloginrequest(

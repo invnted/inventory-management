@@ -12,6 +12,7 @@ import android.widget.TextView
 class moderatorDashboard : AppCompatActivity() {
     private lateinit var setname: TextView
     private lateinit var profile: ImageView
+    private lateinit var issueProduct : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_moderator_dashboard)
@@ -45,6 +46,11 @@ class moderatorDashboard : AppCompatActivity() {
             startActivity(it)
 
 
+        }
+        issueProduct = findViewById(R.id.categoryM)
+        issueProduct.setOnClickListener {
+            issueProduct.startAnimation(AnimationUtils.loadAnimation(this@moderatorDashboard,R.anim.click))
+            startActivity(Intent(this@moderatorDashboard,issue_product_moderator_dashboard::class.java))
         }
     }
 }

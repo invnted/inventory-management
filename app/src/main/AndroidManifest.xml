@@ -20,6 +20,12 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".filterUserAssign"
+            android:exported="false" />
+        <activity
+            android:name=".issue_product_moderator_dashboard"
+            android:exported="false" />
+        <activity
             android:name=".moderator_profile"
             android:exported="false" />
         <activity

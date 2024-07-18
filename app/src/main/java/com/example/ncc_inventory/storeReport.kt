@@ -17,6 +17,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.provider.Settings
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -60,6 +61,7 @@ class storeReport : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var downloadCsvbtn: TextView
     private lateinit var respo: List<Report>
+    private lateinit var backButton : ImageView
 
     private val REQUEST_WRITE_STORAGE_PERMISSION = 100
     private val REQUEST_CODE_PERMISSION_MANAGE_EXTERNAL_STORAGE = 102
@@ -108,6 +110,12 @@ class storeReport : AppCompatActivity() {
             btn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.click))
             handleSubmitButtonClick()
         }
+
+        backButton = findViewById(R.id.backButtonS)
+    }
+
+    fun onSimulateBackClick(view: View) {
+        onBackPressed()
     }
 
     private fun handleSubmitButtonClick() {
@@ -230,17 +238,17 @@ class storeReport : AppCompatActivity() {
 
                     // Populate nameSpinner with names for the selected type
                     val nameList = selectedObj?.name ?: emptyList()
-                    val nameAdapter = createSpinnerAdapter(nameList, "Select Name")
+                    val nameAdapter = createSpinnerAdapter(nameList.distinct(), "Select Name")
                     nameSpinner.adapter = nameAdapter
 
                     // Populate modelSpinner with models for the selected type
                     val modelList = selectedObj?.model ?: emptyList()
-                    val modelAdapter = createSpinnerAdapter(modelList, "Select Model")
+                    val modelAdapter = createSpinnerAdapter(modelList.distinct(), "Select Model")
                     modelSpinner.adapter = modelAdapter
 
                     // Populate brandSpinner with brands for the selected type
                     val brandList = selectedObj?.brand ?: emptyList()
-                    val brandAdapter = createSpinnerAdapter(brandList, "Select Brand")
+                    val brandAdapter = createSpinnerAdapter(brandList.distinct(), "Select Brand")
                     brandSpinner.adapter = brandAdapter
 
                     // Enable spinners
