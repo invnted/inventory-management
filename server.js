@@ -18,6 +18,7 @@ app.use('/products', productRoutes);
 app.use('/admins',userRoutes);
 app.use('/managers',userRoutes);
 app.use('/moderators',userRoutes)
+app.use('/companies',userRoutes)
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

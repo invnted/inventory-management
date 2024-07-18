@@ -5,6 +5,7 @@ const Admin = require('../models/Admin');
 const Manager = require('../models/Manager');
 const User = require('../models/User');
 const Moderator = require('../models/Moderator');
+const Company = require('../models/Company');
 
 // Admin methods
 exports.registerAdmin = async (req, res) => {
@@ -519,6 +520,70 @@ exports.deleteModerator = async (req, res) => {
     }
 
     res.json({ msg: 'Moderator removed successfully', success: true });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+//COMPANY 
+
+exports.registerCompany = async (req, res) => {
+  const { companyId, companyName, email, alternativeEmail, contact_1, contact_2 ,password } = req.body;
+
+  try {
+    let company = await Company.findOne({ companyId });
+
+    if (company) {
+      return res.status(400).json({ msg: 'Company already exists' });
+    }
+
+    company = new Company({ companyId, companyName, email, alternativeEmail, contact_1, contact_2 ,password});
+
+    const salt = await bcrypt.genSalt(10);
+    company.password = await bcrypt.hash(password, salt);
+
+    await company.save();
+
+    const payload = { company: { id: company.id } };
+
+    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.loginCompany = async (req, res) => {
+  const { email, password } = req.body;
+
+  console.log("login req as company", req.body)
+
+  try {
+    let company = await Company.findOne({ email });
+
+    if (!company) {
+      return res.status(401).json({ msg: 'Invalid Credentials' });
+    }
+
+    const isMatch = await bcrypt.compare(password, company.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ msg: 'Invalid Credentials' });
+    }
+
+    const payload = { company: { id: company.id } };
+
+    jwt.sign(payload,"7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+      if (err) throw err;
+      const { companyId, companyName, email, contact_1 } = company;
+      console.log({ token, company: { companyId, companyName, email, contact_1 }});
+      res.json({ token, company: { companyId, companyName, email, contact_1 } });
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

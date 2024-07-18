@@ -432,6 +432,9 @@ exports.filterProducts = async (req, res) => {
 
 exports.assignSingleProduct = async (req, res) => {
   const { productId, userId, demandId } = req.body;
+
+  console.log(req.body)
+
   try {
     // Fetch the Demand document
     let demand = await Demand.findOne({ demandId });
@@ -477,6 +480,7 @@ exports.assignSingleProduct = async (req, res) => {
 };
 
 exports.outOfStockCalculator = async (req, res) => {
+  console.log("Req come for Out of stock")
   try {
     // Aggregate demands by productType, productBrand, productModel
     const demands = await Demand.aggregate([
@@ -517,7 +521,6 @@ exports.outOfStockCalculator = async (req, res) => {
       ]);
 
       const availableQuantity = totalProductQuantity.length > 0 ? totalProductQuantity[0].totalQuantity : 0;
-
       if (totalDemandQuantity > availableQuantity) {
         outOfStockDemands.push({
           productType,
@@ -530,9 +533,10 @@ exports.outOfStockCalculator = async (req, res) => {
     }
 
     if (outOfStockDemands.length > 0) {
-      return res.status(200).json({ outOfStockDemands });
+  
+      return res.status(200).json({ outOfStockDemands, makeNotification:true });
     } else {
-      return res.status(200).json({ message: 'All demands can be fulfilled with available stock.' });
+      return res.status(200).json({ message: 'All demands can be fulfilled with available stock.', makeNotification:false});
     }
   } catch (error) {
     console.error(error);
