@@ -7,6 +7,7 @@ import Store from '../Images/store1.png'
 import DemandRequesr from '../Images/demand.png'
 import Moderator from '../Images/moderator.png'
 import PendingDemand from '../Images/clock1.png'
+import OutOfStock from '../Images/OutOfStock.png'
 import { Link } from 'react-router-dom'
 
 
@@ -15,7 +16,7 @@ function DashBoard() {
     return (
 
         <div className='m-20 justify-between'>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 m-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 m-auto">
                 <Link to='/home/add-category'>
                     <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
@@ -76,9 +77,16 @@ function DashBoard() {
                         </div>
                     </div>
                 </Link>
-                <div>
-                    {/* Tis is for extra space  */}
-                </div>
+                <Link to='/home/stock-required'>
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                        <div className='w-20 block'>
+                            <img src={OutOfStock} alt="Description" />
+                        </div>
+                        <div className='p-2'>
+                            <h2 className='text-white text-center'>Stock Required</h2>
+                        </div>
+                    </div>
+                </Link>
                 <Link to='/home/pending-demand'>
                     <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>

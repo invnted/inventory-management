@@ -37,6 +37,8 @@ import AllModerator from './super-admin/AllModerator';
 import ModeratorLogin from './components/ModeratorLogin';
 import IssueProduct from './moderator/IssueProduct';
 import ConfirmProduct from './moderator/ConfirmProduct';
+import StockRequired from './super-admin/StockRequired';
+import StockRequiredInStore from './manager/StockRequiredInStore';
 
 
 function App() {
@@ -64,6 +66,7 @@ function App() {
         <Route path="/home/demand-request" element={<DemandRequest />} />
         <Route path="/home/pending-demand" element={<PendingDemand />} />
         <Route path="/home/demand-report" element={<DemandReport />} />
+        <Route path="/home/stock-required" element={<StockRequired />} />
 
         {/* Manger Section */}
         <Route path="/manager-dashboard" element={<ManagerDashboard/>} />
@@ -72,6 +75,7 @@ function App() {
         <Route path="/manager-dashboard/manager-AddProduct" element={<ManagerAddProduct/>} />
         <Route path="/manager-dashboard/ManagerDemand" element={<ManagerDemand/>} />
         <Route path="/manager-dashboard/ManagerDemandReport" element={<ManagerDemandReport/>} />
+        <Route path="/manager-dashboard/StockRequiredInStore" element={<StockRequiredInStore/>} />
 
 
         {/* User Panel */}

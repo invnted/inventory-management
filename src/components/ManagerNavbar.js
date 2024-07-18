@@ -2,19 +2,18 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
 
+const serverUrl = process.env.REACT_APP_SERVER_URL;
+const GET_OUT_OF_STOCK_URL = `${serverUrl}/products/getOutOfStock`;
+
 function ManagerNavbar() {
     const [open, setOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [showNotificationDot, setShowNotificationDot] = useState(false);
 
-    //Profile
+    // Profile
     const managerId = localStorage.getItem('managerId') || 'N/A';
     const managerName = localStorage.getItem('managerName') || 'N/A';
     const designation = localStorage.getItem('designation') || 'N/A';
-
-    //Permission
-    const allProductReport = localStorage.getItem('allProductReport') || 'N/A';
-    const demandReceived = localStorage.getItem('demandReceived') || 'N/A';
-    const issueProduct = localStorage.getItem('issueProduct') || 'N/A';
 
     const Menus = [
         { label: "Manager ID", value: managerId },
@@ -26,16 +25,29 @@ function ManagerNavbar() {
     const imgRef = useRef();
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target) && !imgRef.current.contains(event.target)) {
-                setOpen(false);
+        const fetchOutOfStockItems = async () => {
+            try {
+                const response = await fetch(GET_OUT_OF_STOCK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any headers you need, e.g., authorization token
+                    },
+                    // You can pass any necessary data in the body, e.g., JSON.stringify({ key: value })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setShowNotificationDot(data.makeNotification);
+            } catch (error) {
+                console.error('Failed to fetch out-of-stock items:', error);
             }
         };
 
-        window.addEventListener('click', handleClickOutside);
-        return () => {
-            window.removeEventListener('click', handleClickOutside);
-        };
+        fetchOutOfStockItems();
     }, []);
 
     const logOut = () => {
@@ -48,7 +60,7 @@ function ManagerNavbar() {
     };
 
     return (
-        <div className="flex justify-around ">
+        <div className="flex justify-around">
             <div className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-sky-800 text-white w-64 z-50`}>
                 <div className="flex items-center justify-between p-4">
                     <h1 className="text-2xl font-bold">Manager</h1>
@@ -63,7 +75,7 @@ function ManagerNavbar() {
                     <Link to="/manager-dashboard/ManagerDemandReport" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Demand</Link>
                 </nav>
             </div>
-            <div className="flex-1 ">
+            <div className="flex-1 relative">
                 <nav className="bg-sky-900">
                     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                         <button
@@ -72,7 +84,7 @@ function ManagerNavbar() {
                         >
                             ☰
                         </button>
-                        <Link to='/user-home'>
+                        <Link to='/manager-dashboard'>
                             <span className="hidden sm:block self-center text-3xl font-bold whitespace-nowrap dark:text-white">Manager Dashboard</span>
                         </Link>
                         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -119,6 +131,14 @@ function ManagerNavbar() {
                             <Link to='/manager-dashboard/ManagerDemand'>
                                 <li className='hover:text-blue-500 delay-100'>Demand</li>
                             </Link>
+                            <Link to='/manager-dashboard/StockRequiredInStore'>
+                                <li className='hover:text-blue-500 delay-100'>
+                                    Stock Required
+                                    { showNotificationDot && (
+                                         <span className="absolute h-3 w-3 bg-yellow-300 rounded-full"></span>
+                                    )}
+                                </li>
+                            </Link>
                         </ul>
                     </div>
                     <div className="hidden sm:block  md:hidden justify-around py-2">
@@ -126,6 +146,12 @@ function ManagerNavbar() {
                         <Link to='/manager-dashboard/manager-AddProduct' className="text-white hover:text-blue-500 py-2 px-3">Add Product</Link>
                         <Link to='/manager-dashboard/managerAdd-user' className="text-white hover:text-blue-500 py-2 px-3">Add User</Link>
                         <Link to='/manager-dashboard/ManagerDemand' className="text-white hover:text-blue-500 py-2 px-3">Demand</Link>
+                        {/* <Link to='/manager-dashboard/StockRequiredInStore' className="text-white hover:text-blue-500 py-2 px-3">
+                            Stock Required
+                            {showNotificationDot && (
+                                <span className="absolute h-2 w-2 bg-red-600 rounded-full top-0 right-0 animate-ping slower"></span>
+                            )}
+                        </Link> */}
                     </div>
                 </nav>
             </div>
