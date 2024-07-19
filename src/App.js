@@ -42,6 +42,13 @@ import StockRequiredInStore from './manager/StockRequiredInStore';
 import CompanyLogin from './components/CompanyLogin';
 import CompanyDashboard from './company/CompanyDashboard';
 import ManagerAuthorizationStore from './manager/ManagerAuthorizationStore';
+import CompanyRaiseDemand from './company/CompanyRaiseDemand';
+import CompanyRaiseDemandReport from './company/CompanyRaiseDemandReport';
+import AddCpmpany from './super-admin/AddCpmpany';
+import CompanyList from './super-admin/CompanyList';
+import UserProductReceived from './users/UserProductReceived';
+import CompanyProductReceived from './company/CompanyProductReceived';
+
 
 
 function App() {
@@ -65,6 +72,8 @@ function App() {
         <Route path="/home/add-manager" element={<AddManager />} />
         <Route path="/home/all-managers" element={<AllManager />} />
         <Route path="/home/add-user" element={<AddUser />} />
+        <Route path="/home/add-Company" element={<AddCpmpany />} />
+        <Route path="/home/company-list" element={<CompanyList />} />
         <Route path="/home/add-user/users-list" element={<UsersList/>} />
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />
         <Route path="/home/demand-request" element={<DemandRequest />} />
@@ -86,6 +95,7 @@ function App() {
         <Route path="/user-home" element={<UserHome/>} />
         <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />
         <Route path="/user-home/raise-demand-report" element={<RaiseDemandReport/>} />
+        <Route path="/user-home/product-received" element={<UserProductReceived/>} />
 
         {/* Moderator Panel */}
         <Route path="/moderator-home" element={<ModeratorHome/>} />
@@ -97,6 +107,10 @@ function App() {
 
         {/* Company Panel */}
         <Route path="/company-home" element={<CompanyDashboard/>}/>
+        <Route path="/company-home/raise-demand" element={<CompanyRaiseDemand/>}/>
+        <Route path="/company-home/raise-demand-report" element={<CompanyRaiseDemandReport/>}/>
+        <Route path="/company-home/product-received" element={<CompanyProductReceived/>}/>
+
         
         {/* Report Section */}
         <Route path="/reports/store-reports" element={<StoreReport/>} />

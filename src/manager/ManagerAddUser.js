@@ -67,7 +67,7 @@ function ManagerAddUser() {
     <div>
       <ManagerNavbar/>
       <div className='m-4 md:m-12 border border-black justify-between'>
-        <div className='text-center bg-sky-900 text-black h-24 flex items-center justify-center'>
+        <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
 
           <div className='flex gap-10'>
 
@@ -94,11 +94,11 @@ function ManagerAddUser() {
 
           </div>
         </div>
-        <section className="bg-sky-600">
+        <section className="bg-sky-300">
           <div className="flex flex-col items-center justify-center sm:p-5  mx-auto">
             <div className="w-full bg-white rounded-md ">
               <form onSubmit={handleSubmit}>
-                <div className='grid grid-cols-1  justify-center items-center bg-sky-600 pt-10 md:p-12'>
+                <div className='grid grid-cols-1  justify-center items-center bg-sky-300 pt-10 md:p-12'>
                   <div className='grid grid-cols-1 justify-center items-center'>
                     <input
                       type='text'

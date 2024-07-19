@@ -119,7 +119,7 @@ function ManagerAddProduct() {
         <div className=' text-center bg-sky-800 text-white text-5xl h-24 flex items-center justify-center '>
           <div>Add Product</div>
         </div>
-        <div className=' bg-sky-500 h-auto'>
+        <div className=' bg-sky-300 h-auto'>
           <div className='md:px-72 md:p-10'>
             <form className='grid grid-cols-1 md:grid-cols-1' onSubmit={handleSubmit}>
               <input type='text' name="productType" placeholder='Product Type' className='m-5 p-2 outline-none rounded-xl' value={product.productType} onChange={handleInput} required />

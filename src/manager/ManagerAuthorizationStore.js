@@ -93,7 +93,7 @@ function ManagerAuthorizationStore() {
     }, []);
   
     return (
-      <div className='bg-sky-400 min-h-screen'>
+      <div className='bg-sky-300 min-h-screen'>
         <ManagerNavbar />
         <div className='container mx-auto p-4'>
           <form

@@ -35,11 +35,11 @@ function PendingDemand() {
   return (
     <div>
     <Navbar />
-    <div className='m-4 md:m-12 border border-black justify-between'>
-      <div className='flex justify-center items-center text-5xl p-6 bg-gray-800 text-white font-bold'>
+    <div className='m-4 md:m-12  justify-between'>
+      <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
         Pending Demand
       </div>
-      <div className='bg-gray-500'>
+      <div className='bg-sky-300'>
         <form className="max-w-md mx-auto md:pt-20 p-6">
           <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
           <div className="relative">
@@ -48,11 +48,11 @@ function PendingDemand() {
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
               </svg>
             </div>
-            <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-gray-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
+            <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
           </div>
         </form>
         <div className="p-2 md:p-10">
-          <button className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
+          <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
           <div className="overflow-x-auto mt-4">
             <table className="min-w-full bg-white border border-gray-300">
               <thead>

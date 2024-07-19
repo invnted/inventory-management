@@ -114,11 +114,11 @@ function AddProduct() {
   return (
     <div>
       <Navbar />
-      <div className='m-4 md:m-12 border border-black '>
-        <div className=' text-center bg-gray-800 text-white text-5xl h-24 flex items-center justify-center '>
+      <div className='m-4 md:m-12  '>
+        <div className=' text-center bg-sky-800 text-white text-5xl h-24 flex items-center justify-center '>
           <div>Add Product</div>
         </div>
-        <div className=' bg-gray-500 h-auto'>
+        <div className=' bg-sky-300 h-auto'>
           <div className='md:px-72 md:p-10'>
             <form className='grid grid-cols-1 md:grid-cols-1' onSubmit={handleSubmit} autoComplete="off" >
               <input type='text' name="productType" placeholder='Product Type' className='m-5 p-2 outline-none rounded-xl' value={product.productType} onChange={handleInput} required />
@@ -133,12 +133,12 @@ function AddProduct() {
               <input type='text' name="additionalDetail" placeholder='Additional Details' className='m-5 p-2 outline-none border rounded-xl' value={product.additionalDetail} onChange={handleInput} required />
 
               <div className='grid grid-cols-1 md:grid-cols-3'>
-                <button type="submit" className='m-5 p-2 outline-none rounded-xl  bg-gray-800  font-bold text-white'>Submit Form</button>
-                <label className='m-5 p-2 outline-none rounded-xl  bg-gray-800  font-bold text-white text-center cursor-pointer'>
+                <button type="submit" className='m-5 p-2 outline-none rounded-xl  bg-sky-800  font-bold text-white'>Submit Form</button>
+                <label className='m-5 p-2 outline-none rounded-xl  bg-sky-800  font-bold text-white text-center cursor-pointer'>
                   Choose CSV File
                   <input type="file" accept=".csv" onChange={handleFileChange} className="hidden" />
                 </label>
-                <button type="button" onClick={handleCSVUpload} className='m-5 p-2 outline-none rounded-xl  bg-gray-800  font-bold text-white'>Submit CSV File
+                <button type="button" onClick={handleCSVUpload} className='m-5 p-2 outline-none rounded-xl  bg-sky-800  font-bold text-white'>Submit CSV File
                 </button>
               </div>
               {csvFileName && (

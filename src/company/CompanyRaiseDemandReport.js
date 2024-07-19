@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UserNavbar from '../components/UserNavbar';
 import { Link } from 'react-router-dom';
+import CompanyNavbar from './CompanyNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getUserDemand`;
@@ -10,7 +11,7 @@ const userId = localStorage.getItem('userId');
 console.log("ID Picked for local storage: ",userId)
 
 
-function RaiseDemandReport() {
+function CompanyRaiseDemandReport() {
     const [demands, setDemands] = useState([]);
 
     
@@ -47,13 +48,13 @@ function RaiseDemandReport() {
     return (
         <div>
             <div className='bg-sky-300 h-screen'>
-                <UserNavbar />
+                <CompanyNavbar />
                 <div className='flex justify-center items-center h-auto pb-5 gap-6 text-center text-blue-700 font-bold text-5xl m-10 md:mx-20'>
-                    <Link to='/user-home/raise-demand'>
+                    <Link to='/company-home/raise-demand'>
                         <div>Raise Demand</div>
                     </Link>
-                    <Link to='/user-home/raise-demand-report'>
-                        <div className='border-4 p-2 border-sky-700 rounded-xl'>Raise Demand Report</div>
+                    <Link to='/company-home/raise-demand-report'>
+                        <div className='border-4 p-2 border-sky-800 rounded-xl'>Raise Demand Report</div>
                     </Link>
                 </div>
 
@@ -113,5 +114,6 @@ function RaiseDemandReport() {
     );
 }
 
-export default RaiseDemandReport;
 
+
+export default CompanyRaiseDemandReport

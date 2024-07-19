@@ -73,8 +73,8 @@ function AddManager() {
   return (
     <div className='h-auto'>
       <Navbar />
-      <div className='m-4 md:m-12 border border-black justify-between'>
-        <div className='text-center bg-gray-800 text-black h-24 flex items-center justify-center'>
+      <div className='m-4 md:m-12  justify-between'>
+        <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
               <div className='w-10 block'>
@@ -98,9 +98,9 @@ function AddManager() {
         </div>
         <form onSubmit={handleSubmit}>
           
-          <div className=' justify-center items-center bg-gray-500 p-12'>
+          <div className=' justify-center items-center bg-sky-300 p-12'>
           
-          <div className='flex flex-col md:flex-row justify-center items-center text-gray-200 font-bold'>
+          <div className='flex flex-col md:flex-row justify-center items-center text-black font-bold'>
               <div className='flex gap-5 justify-center items-center'>
                 <div>All Product Reports</div>
                 <div>
@@ -196,21 +196,21 @@ function AddManager() {
           <div className='md:flex justify-around items-center '>
             <button
               type='submit'
-              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
+              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
             >
               Submit
             </button>
 
             <button
               
-              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
+              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
             >
               Choose CSV File
             </button>
 
             <button
               
-              className='flex justify-center items-center cursor-pointer bg-gray-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
+              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
             >
               Submit CSV File
             </button>

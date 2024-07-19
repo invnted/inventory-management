@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar'
 import AddUsers from '../Images/add-user.png'
 import List from '../Images/list.png'
+import AddCompany from '../Images/AddCompany1.png'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
-function AddUser() {
+function AddCpmpany() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const registrationURL = `${serverUrl}/users/user-register`;
+  const registrationURL = `${serverUrl}/companies/company-register`;
 
   const [user, setUser] = useState({
     userId: '',
@@ -69,20 +70,20 @@ function AddUser() {
 
             <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
               <div className='w-10 block'>
-                <img src={AddUsers} alt='Description' />
+                <img src={AddCompany} alt='Description' />
               </div>
               <div>
-                <p>Add User</p>
+                <p>Add Company</p>
               </div>
 
             </div>
-            <Link to='/home/add-user/users-list'>
+            <Link to='/home/company-list'>
               <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                 <div className='w-10 block'>
                   <img src={List} alt='Description' />
                 </div>
                 <div>
-                  <p>User List</p>
+                  <p>Company List</p>
                 </div>
 
               </div>
@@ -188,4 +189,4 @@ function AddUser() {
   )
 }
 
-export default AddUser
+export default AddCpmpany

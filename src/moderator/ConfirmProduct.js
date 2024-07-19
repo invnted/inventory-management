@@ -12,6 +12,8 @@ function ConfirmProduct() {
   const productType = localStorage.getItem('productType');
   const productModel = localStorage.getItem('productModel');
   const productBrand = localStorage.getItem('productBrand');
+  const quantity = localStorage.getItem('productQuantity');
+  
 
   useEffect(() => {
     fetchFilteredProducts();
@@ -24,7 +26,7 @@ function ConfirmProduct() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productType, productModel, productBrand })
+        body: JSON.stringify({ productType, productModel, productBrand, quantity })
       });
 
       if (!response.ok) {

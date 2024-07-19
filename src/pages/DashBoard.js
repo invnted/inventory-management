@@ -8,6 +8,7 @@ import DemandRequesr from '../Images/demand.png'
 import Moderator from '../Images/moderator.png'
 import PendingDemand from '../Images/clock1.png'
 import OutOfStock from '../Images/OutOfStock.png'
+import Company from '../Images/AddCompany.png'
 import { Link } from 'react-router-dom'
 
 
@@ -54,6 +55,16 @@ function DashBoard() {
                         </div>
                         <div className='p-2 text-white'>
                             <h2>Add User</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/home/add-Company'>
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                        <div className='w-20 block'>
+                            <img src={Company} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white'>
+                            <h2>Add Company</h2>
                         </div>
                     </div>
                 </Link>

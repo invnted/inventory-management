@@ -56,8 +56,8 @@ function CompanyNavbar() {
                         <span className="hidden sm:block self-center text-2xl font-bold whitespace-nowrap dark:text-white">Company Dashboard</span>
                         
                         <div className="hidden md:flex space-x-4">
-                            <Link to='/home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
-                            <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
+                            <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
+                            <Link to='' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
                         </div>
 
                         <div className="flex items-center md:order-2 space-x-3 md:space-x-0">
@@ -89,7 +89,7 @@ function CompanyNavbar() {
                         </div>
                     </div>
                     <div className="hidden sm:block  md:hidden justify-around py-2">
-                        <Link to='/home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
+                        <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
                         <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
                     </div>
                 </nav>
