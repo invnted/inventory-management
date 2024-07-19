@@ -20,6 +20,7 @@ router.post('/getPendingDemand',productController.getPendingDemand);          //
 router.post('/unissuedDemandList',productController.getUnissuedDemandList)    // Used in Moderator Panel to get unissued demand list
 router.post('/filterProducts',productController.filterProducts)               // Used in Moderator Panel to get filtered product 
 router.post('/getOutOfStock',productController.outOfStockCalculator)          // Used in Manager Panel to check for OUT OF STOCK product
+router.post('/getProductReceived',productController.productReceived)          // Used in User Panel to get product that issued to him
 
 
 //For Sending CSV Files

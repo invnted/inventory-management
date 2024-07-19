@@ -35,6 +35,9 @@ router.post('/moderator-delete',userController.deleteModerator);
 //Company Routes
 router.post('/company-register', userController.registerCompany);
 router.post('/company-login', userController.loginCompany);
+router.post('/company-getAll',userController.getAllCompanies);
+router.post('/company-update',userController.updateCompany);
+router.post('/company-delete',userController.deleteCompany);
 
 
 module.exports = router;

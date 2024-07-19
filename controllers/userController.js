@@ -582,8 +582,79 @@ exports.loginCompany = async (req, res) => {
       if (err) throw err;
       const { companyId, companyName, email, contact_1 } = company;
       console.log({ token, company: { companyId, companyName, email, contact_1 }});
-      res.json({ token, company: { companyId, companyName, email, contact_1 } });
+      res.json({ token,success:true, company: { companyId, companyName, email, contact_1 } });
     });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.getAllCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find();
+    res.json(companies);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+exports.updateCompany = async (req, res) => {
+
+  const {
+    companyId,
+    companyName,
+    email,
+    alternativeEmail,
+    contact_1,
+    contact_2,
+  } = req.body;
+
+  const updateFields = {
+    companyId,
+    companyName,
+    email,
+    alternativeEmail,
+    contact_1,
+    contact_2,
+  };
+
+  try {
+    let company = await Company.findOne({ companyId: updateFields.companyId });
+
+    if (!company) {
+      console.log("Company not found")
+      return res.status(404).json({ msg: 'Company not found' });
+    }
+
+    // Update the company document with the new fields
+    company = await Company.findOneAndUpdate(
+      { companyId: updateFields.companyId },
+      { $set: updateFields },
+      { new: true }
+    );
+
+    res.json({company,success:true});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.deleteCompany = async (req, res) => {
+  const { companyId } = req.body;  // Assuming the companyId is sent in the body
+
+  try {
+    const company = await Company.findOneAndDelete({companyId });
+
+    if (!company) {
+      console.log("Company not found");
+      return res.status(404).json({ msg: 'Company not found' });
+    }
+
+    res.json({ msg: 'Company removed successfully', success:true });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

@@ -409,9 +409,9 @@ exports.getUnissuedDemandList = async (req, res) => {
 };
 
 exports.filterProducts = async (req, res) => {
-  const { productType, productModel, productBrand } = req.body;
+  const { productType, productModel, productBrand, quantity } = req.body;
   console.log(req.body);
-  const issuedTo = 'NONE'
+  const issuedTo = 'NONE';
   let query = {}; // Initialize query with issuedTo condition
   if (productType) query.productType = productType;
   if (productModel) query.productModel = productModel;
@@ -422,13 +422,17 @@ exports.filterProducts = async (req, res) => {
 
   try {
     const filteredProducts = await Product.find(query);
-    console.log("Returning: ",filteredProducts)
-    res.status(200).json({ filteredProducts, success:true });
+    const limitedProducts = filteredProducts.slice(0, quantity);
+    console.log("Returning: ", limitedProducts);
+
+    res.status(200).json({ filteredProducts: limitedProducts, success: true });
   } catch (error) {
     console.error("Error fetching filtered products:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 exports.assignSingleProduct = async (req, res) => {
   const { productId, userId, demandId } = req.body;
@@ -534,7 +538,7 @@ exports.outOfStockCalculator = async (req, res) => {
 
     if (outOfStockDemands.length > 0) {
   
-      return res.status(200).json({ outOfStockDemands, makeNotification:true });
+      return res.status(200).json({ outOfStockDemands, makeNotification:true, success:true });
     } else {
       return res.status(200).json({ message: 'All demands can be fulfilled with available stock.', makeNotification:false});
     }
@@ -544,3 +548,17 @@ exports.outOfStockCalculator = async (req, res) => {
   }
 };
 
+exports.productReceived = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const products = await Product.find({ issuedTo: userId }, 'productId productType productName productBrand productModel updatedAt');
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No products found for this user.' });
+    }
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
