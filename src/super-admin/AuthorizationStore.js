@@ -93,16 +93,13 @@ function AuthorizationStore() {
   }, []);
 
   return (
-    <div className='bg-sky-400 h-screen'>
+    <div className='bg-sky-400 min-h-screen'>
       <Navbar />
-      <div>
-        <form
-          className='flex justify-center items-center gap-5 pt-5'
-          onSubmit={handleSubmit}
-        >
+      <div className='flex flex-col items-center'>
+        <form className='flex flex-col md:flex-row justify-center items-center gap-5 pt-5' onSubmit={handleSubmit}>
           <select
             id='productTypes'
-            className='text-2xl font-bold rounded-xl outline-none block p-3 bg-sky-700 dark:text-white w-72 cursor-pointer hover:bg-sky-900 delay-100'
+            className='text-xl md:text-2xl font-bold rounded-xl outline-none block p-3 bg-sky-700 dark:text-white w-72 md:w-80 cursor-pointer hover:bg-sky-900 delay-100'
             onChange={handleProductTypeChange}
             value={selectedProductType}
           >
@@ -119,43 +116,46 @@ function AuthorizationStore() {
           </select>
           <button
             type='submit'
-            className='p-4 bg-sky-700 w-28 flex justify-center items-center text-xl font-bold text-white rounded-xl cursor-pointer hover:bg-sky-900 delay-100'
+            className='p-3 md:p-4 bg-sky-700 w-28 md:w-32 flex justify-center items-center text-lg md:text-xl font-bold text-white rounded-xl cursor-pointer hover:bg-sky-900 delay-100'
           >
             Submit
           </button>
         </form>
-        {chartData.series.length > 0 && ( // Conditionally render when chartData.series has values
-          <div className='flex justify-around items-center h-screen bg-sky-400'>
+        {chartData.series.length > 0 && (
+          <div className='flex flex-col md:flex-row justify-around items-center w-full bg-sky-400 mt-5'>
             <Chart
-              className='w-2/3 md:w-1/2 lg:w-1/3 h-3/4 '
+              className='w-11/12 md:w-1/2 lg:w-1/3 mb-5 md:mb-0'
               type='pie'
               series={chartData.series}
               options={chartData.options}
             />
-            <div className='h-3/4'>
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-5 m-10 justify-center items-center'>
-                <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
+            <div className='flex flex-col w-11/12 md:w-1/2 lg:w-1/3 p-5'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+                <div className='text-center bg-sky-700 p-5 rounded-xl text-lg md:text-xl font-bold text-white'>
                   <div>Issued</div>
                   <div>{chartData.series[4]}</div>
                 </div>
-                <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
+                <div className='text-center bg-sky-700 p-5 rounded-xl text-lg md:text-xl font-bold text-white'>
                   <div>Held</div>
                   <div>{chartData.series[1]}</div>
                 </div>
-                <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
+                <div className='text-center bg-sky-700 p-5 rounded-xl text-lg md:text-xl font-bold text-white'>
                   <div>Serviceable</div>
                   <div>{chartData.series[3]}</div>
                 </div>
-                <div className='text-center bg-sky-700 p-5 rounded-xl text-xl font-bold text-white'>
+                <div className='text-center bg-sky-700 p-5 rounded-xl text-lg md:text-xl font-bold text-white'>
                   <div>Unserviceable</div>
                   <div>{chartData.series[2]}</div>
+                </div>
+                <div className='text-center bg-sky-700 p-5 rounded-xl text-lg md:text-xl font-bold text-white'>
+                  <div>BER</div>
+                  <div>{chartData.series[0]}</div>
                 </div>
               </div>
             </div>
           </div>
         )}
       </div>
-
     </div>
   );
 }

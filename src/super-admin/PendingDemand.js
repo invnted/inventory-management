@@ -36,7 +36,7 @@ function PendingDemand() {
     <div>
     <Navbar />
     <div className='m-4 md:m-12  justify-between'>
-      <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
+      <div className='flex justify-center items-center text-center text-5xl p-6 bg-sky-800 text-white font-bold'>
         Pending Demand
       </div>
       <div className='bg-sky-300'>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Manager from '../Images/add.png';
-import ListManager from '../Images/list.png'
+import ListManager from '../Images/list.png';
 import { Switch } from 'antd';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
@@ -73,69 +73,58 @@ function AddManager() {
   return (
     <div className='h-auto'>
       <Navbar />
-      <div className='m-4 md:m-12  justify-between'>
+      <div className='m-4 md:m-12 justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
               <div className='w-10 block'>
-                <img src={Manager} alt='Description' />
+                <img src={Manager} alt='Add Manager' />
               </div>
               <div>
                 <p>Add <br /> Manager</p>
               </div>
             </div>
             <Link to='/home/all-managers'>
-              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer '>
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                 <div className='w-10 block'>
-                  <img src={ListManager} alt='Description' />
+                  <img src={ListManager} alt='List of Managers' />
                 </div>
                 <div>
-                  <p>All <br /> managers</p>
+                  <p>All <br /> Managers</p>
                 </div>
               </div>
             </Link>
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          
-          <div className=' justify-center items-center bg-sky-300 p-12'>
-          
-          <div className='flex flex-col md:flex-row justify-center items-center text-black font-bold'>
+          <div className='bg-sky-300 p-12'>
+            <div className='flex flex-col md:flex-row justify-center items-center text-black font-bold'>
               <div className='flex gap-5 justify-center items-center'>
                 <div>All Product Reports</div>
-                <div>
-                  <Switch
-                    name='allProductReport'
-                    onChange={(checked) => handleSwitch(checked, 'allProductReport')}
-                    checked={manager.allProductReport}
-                  />
-                </div>
+                <Switch
+                  name='allProductReport'
+                  onChange={(checked) => handleSwitch(checked, 'allProductReport')}
+                  checked={manager.allProductReport}
+                />
               </div>
-
               <div className='flex gap-5 justify-center items-center p-5 md:p-10'>
                 <div>Demand Reports</div>
-                <div>
-                  <Switch
-                    name='demandReceived'
-                    onChange={(checked) => handleSwitch(checked, 'demandReceived')}
-                    checked={manager.demandReceived}
-                  />
-                </div>
+                <Switch
+                  name='demandReceived'
+                  onChange={(checked) => handleSwitch(checked, 'demandReceived')}
+                  checked={manager.demandReceived}
+                />
               </div>
-
               <div className='flex gap-5 justify-center items-center'>
                 <div>Issue Product</div>
-                <div>
-                  <Switch
-                    name='issueProduct'
-                    onChange={(checked) => handleSwitch(checked, 'issueProduct')}
-                    checked={manager.issueProduct}
-                  />
-                </div>
+                <Switch
+                  name='issueProduct'
+                  onChange={(checked) => handleSwitch(checked, 'issueProduct')}
+                  checked={manager.issueProduct}
+                />
               </div>
             </div>
-
-            <div className=' grid grid-cols-1 justify-center items-center'>
+            <div className='grid grid-cols-1 gap-4 justify-center items-center'>
               <input
                 type='text'
                 name='managerId'
@@ -155,7 +144,7 @@ function AddManager() {
                 required
               />
               <input
-                type='text'
+                type='password'
                 name='password'
                 onChange={handleInput}
                 value={manager.password}
@@ -190,37 +179,29 @@ function AddManager() {
                 className='m-3 p-2 outline-none border rounded-xl'
                 required
               />
-
             </div>
-            
-          <div className='md:flex justify-around items-center '>
-            <button
-              type='submit'
-              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
-            >
-              Submit
-            </button>
-
-            <button
-              
-              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
-            >
-              Choose CSV File
-            </button>
-
-            <button
-              
-              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-5 w-full md:w-1/3 p-2 md:p-3 my-8 rounded-xl'
-            >
-              Submit CSV File
-            </button>
-
-           
+            <div className='flex flex-col md:flex-row justify-around items-center mt-8 md:gap-10'>
+              <button
+                type='submit'
+                className='bg-sky-800 text-white w-full md:w-1/3 p-2 md:p-3 rounded-xl mb-4 md:mb-0'
+              >
+                Submit
+              </button>
+              <button
+                type='button'
+                className='bg-sky-800 text-white w-full md:w-1/3 p-2 md:p-3 rounded-xl mb-4 md:mb-0'
+              >
+                Choose CSV File
+              </button>
+              <button
+                type='button'
+                className='bg-sky-800 text-white w-full md:w-1/3 p-2 md:p-3 rounded-xl mb-4 md:mb-0'
+              >
+                Submit CSV File
+              </button>
             </div>
-
           </div>
         </form>
-        <div></div>
       </div>
     </div>
   );

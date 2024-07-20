@@ -52,7 +52,7 @@ function DemandRequest() {
     <div>
       <Navbar />
       <div className='m-4 md:m-12  justify-between'>
-        <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
+        <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-center text-white font-bold'>
           Demand Requested
         </div>
         <div className='bg-sky-300'>
@@ -64,7 +64,7 @@ function DemandRequest() {
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
               </div>
-              <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-600 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
+              <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
             </div>
           </form>
           <div className="p-2 md:p-10">

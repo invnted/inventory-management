@@ -6,7 +6,7 @@ function Reports() {
   return (
     <div>
       <Navbar />
-      <div className='m-4 md:m-12 border border-black justify-between bg-sky-200'>
+      <div className='m-4 md:m-12 border  justify-between bg-sky-200'>
         <div className='text-center bg-sky-800 text-white text-5xl h-24 flex items-center justify-center '>
           <div>Reports</div>
         </div>

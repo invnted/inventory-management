@@ -34,14 +34,14 @@ function Navbar() {
 
     return (
         <div className="flex">
-            <div className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-gray-800 text-white w-64 z-50`}>
+            <div className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-sky-700 text-white w-64 z-50`}>
                 <div className="flex items-center justify-between p-4">
-                    <h1 className="text-2xl font-bold">Super Admin</h1>
+                    <h1 className="text-2xl font-bold">Admin Dashboard</h1>
                     <button onClick={toggleSidebar} className="text-white focus:outline-none">
                         ✕
                     </button>
                 </div>
-                <nav className="mt-10">
+                <nav className="mt-10 ">
                     <Link to="/home" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Dashboard</Link>
                     <Link to="/reports" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Reports</Link>
                 </nav>
@@ -55,11 +55,11 @@ function Navbar() {
                         >
                             ☰
                         </button>
-                        <span className="hidden sm:block self-center text-2xl font-bold whitespace-nowrap dark:text-white">Super Admin Dashboard</span>
+                        <span className="hidden sm:block self-center text-3xl font-bold whitespace-nowrap dark:text-white">Admin Dashboard</span>
                         
                         <div className="hidden md:flex space-x-4">
-                            <Link to='/home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
-                            <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
+                            <Link to='/home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 text-xl py-2 px-3">Dashboard</Link>
+                            <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 text-xl py-2 px-3">Reports</Link>
                         </div>
 
                         <div className="flex items-center md:order-2 space-x-3 md:space-x-0">

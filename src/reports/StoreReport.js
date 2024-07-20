@@ -155,10 +155,10 @@ function StoreReport() {
   
 
   return (
-    <div className='h-cover'>
+    <div className='h-cover '>
       <Navbar />
       <div className=''>
-        <div className=' inset-0 m-20'>
+        <div className=' inset-0 md:m-20 m-4'>
           <div className='bg-sky-300'>
             <div className='flex justify-center items-center bg-sky-800 p-8 tex-bold text-white  text-4xl'>Store Report</div>
             <form className='flex flex-wrap justify-center items-center text-center text-white m-10 '>
@@ -229,18 +229,20 @@ function StoreReport() {
                   </div>
                 </div>
               </div>
-              <div className='w-full md:w-1/4 p-2'>
+              <div className='w-full md:w-1/4 p-2 flex gap-4'>
+                <div className='flex justify-center items-center text-black text-lg font-semibold'>From Date :</div>
                 <input
                   type='date'
-                  className='appearance-none block w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
+                  className='appearance-none block  bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
                 />
               </div>
-              <div className='w-full md:w-1/4 p-2'>
+              <div className='w-full md:w-1/4 p-2 flex gap-4'>
+              <div className='flex justify-center items-center text-black text-lg font-semibold'>To Date :</div>
                 <input
                   type='date'
-                  className='appearance-none block w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
+                  className='appearance-none block  bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
                 />
@@ -264,20 +266,20 @@ function StoreReport() {
                 </button>
               </div>
             </form>
-            <div className='overflow-auto bg-white text-black p-10'>
+            <div className='overflow-auto bg-sky-300 text-black md:p-10 p-4'>
               <table className='min-w-full divide-y divide-gray-200'>
                 <thead className='bg-gray-50'>
                   <tr>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
                       Product Type
                     </th>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
                       Product Model
                     </th>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
                       Product Brand
                     </th>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
                       Date & Time
                     </th>
                   </tr>
@@ -285,10 +287,10 @@ function StoreReport() {
                 <tbody className='bg-white divide-y divide-gray-200'>
                   {reportData.map((report, index) => (
                     <tr key={index}>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{report.productType}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{report.productModel}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{report.productBrand}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{formatDate(report.createdAt)}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{report.productType}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{report.productModel}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{report.productBrand}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{formatDate(report.createdAt)}</td>
                     </tr>
                   ))}
                 </tbody>

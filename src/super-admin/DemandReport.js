@@ -84,12 +84,12 @@ function DemandReport() {
     ];
 
     return (
-        <div className='min-h-screen bg-gray-100'>
+        <div className='min-h-screen '>
             <Navbar />
-            <div className='container mx-auto px-4 py-8'>
-                <div className='bg-sky-300 rounded-lg shadow-md'>
+            <div className='md:m-10 m-4'>
+                <div className='bg-sky-300 '>
                     <div className='flex justify-center items-center bg-sky-800 p-8 text-white text-4xl font-bold'>
-                        Store Report
+                        Demand Report
                     </div>
                     <form className='flex flex-wrap justify-center items-center text-center text-white m-10'>
                         <div className='w-full md:w-1/4 p-2'>
@@ -152,27 +152,27 @@ function DemandReport() {
                             </div>
                         </div>
                     </form>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full leading-normal">
+                    <div className="overflow-x-auto md:p-10 p-4">
+                        <table className="min-w-full leading-normal border border-black">
                             <thead>
                                 <tr>
-                                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Demand ID</th>
-                                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">User ID</th>
-                                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">User Name</th>
-                                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Product</th>
-                                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Quantity</th>
-                                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Date & Time</th>
+                                    <th className="px-5 py-3 border border-black bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Demand ID</th>
+                                    <th className="px-5 py-3 border border-black bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">User ID</th>
+                                    <th className="px-5 py-3 border border-black bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">User Name</th>
+                                    <th className="px-5 py-3 border border-black bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Product</th>
+                                    <th className="px-5 py-3 border border-black bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Quantity</th>
+                                    <th className="px-5 py-3 border border-black bg-sky-700 text-left text-xs font-semibold text-white uppercase tracking-wider">Date & Time</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.map((demand, index) => (
                                     <tr key={index}>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-sky-300 text-sm">{demand.demandId}</td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-sky-300 text-sm">{demand.userId}</td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-sky-300 text-sm">{demand.userName}</td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-sky-300 text-sm">{demand.product}</td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-sky-300 text-sm">{demand.quantity}</td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-sky-300 text-sm">{new Date(demand.dateTime).toLocaleString()}</td>
+                                        <td className="px-5 py-5 border border-black bg-white text-sm">{demand.demandId}</td>
+                                        <td className="px-5 py-5 border border-black bg-white text-sm">{demand.userId}</td>
+                                        <td className="px-5 py-5 border border-black bg-white text-sm">{demand.userName}</td>
+                                        <td className="px-5 py-5 border border-black bg-white text-sm">{demand.product}</td>
+                                        <td className="px-5 py-5 border border-black bg-white text-sm">{demand.quantity}</td>
+                                        <td className="px-5 py-5 border border-black bg-white text-sm">{new Date(demand.dateTime).toLocaleString()}</td>
                                     </tr>
                                 ))}
                             </tbody>
