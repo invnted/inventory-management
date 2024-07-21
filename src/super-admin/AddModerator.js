@@ -9,7 +9,7 @@ function AddModerator() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/moderators/register`;
   const uploadCSVURL = `${serverUrl}/moderators/upload-moderator-csv`;
-  const MODERATOR_CSV_URL = `${serverUrl}/moderators/download-moderator-csv`;
+  
 
 
   const [moderator, setModerator] = useState({

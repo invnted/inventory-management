@@ -15,6 +15,7 @@ function UsersList() {
   const userListURL = `${serverUrl}/users/user-getAll`;
   const userEditURL = `${serverUrl}/users/user-update`;
   const userDeleteURL = `${serverUrl}/users/user-delete`;
+  const userCSV = `${serverUrl}/users/download-user-csv`;
 
   // Function to fetch all users
   const fetchUsers = async () => {
@@ -127,6 +128,36 @@ function UsersList() {
     user.userName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+   // Function to handle CSV download
+   const handleDownloadCSV = async () => {
+    try {
+        const response = await fetch(userCSV, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // This is typically optional for downloads
+            },
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'users.csv'; // Ensure filename is correct
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            toast.success('CSV file downloaded successfully');
+        } else {
+            console.error('Failed to download CSV:', response.statusText);
+            toast.error('Failed to download CSV');
+        }
+    } catch (error) {
+        console.error('Error while downloading CSV:', error);
+        toast.error('An error occurred while downloading CSV');
+    }
+};
+
   return (
     <div>
       <Navbar />
@@ -169,6 +200,8 @@ function UsersList() {
           </form>
           <div className="p-2 md:p-10">
             <button onClick={fetchUsers} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
+            &nbsp;&nbsp;&nbsp;
+            <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
             {filteredUsers.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">

@@ -8,15 +8,20 @@ import { toast } from 'react-toastify';
 function AddCompany() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/companies/company-register`;
+  const uploadCSVURL = `${serverUrl}/companies/upload-company-csv`;
 
   const [company, setCompany] = useState({
-    userId: '',
-    userName: '',
-    password: '',
-    designation: '',
-    section: '',
-    appointment: '',
+    companyId: '',
+    companyName: '',
+    email: '',
+    alternativeEmail: '',
+    contact_1: '',
+    contact_2: '',
+    password: ''
   });
+
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvFileName, setCsvFileName] = useState("");
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -40,12 +45,13 @@ function AddCompany() {
       if (response.ok) {
         toast.success('Successfully registered');
         setCompany({
-          userId: '',
-          userName: '',
-          password: '',
-          designation: '',
-          section: '',
-          appointment: '',
+          companyId: '',
+          companyName: '',
+          email: '',
+          alternativeEmail: '',
+          contact_1: '',
+          contact_2: '',
+          password: ''
         });
       } else {
         toast.error('Invalid details');
@@ -53,6 +59,45 @@ function AddCompany() {
     } catch (error) {
       console.error('Error while registration:', error);
       toast.error('An error occurred');
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCsvFile(file);
+      setCsvFileName(file.name);
+    }
+  };
+
+  const handleCSVUpload = async (e) => {
+    e.preventDefault();
+
+    if (!csvFile) {
+      toast.error("Please select a CSV file to upload");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('csvFile', csvFile);
+
+    try {
+      const response = await fetch(uploadCSVURL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        toast.success("CSV file uploaded successfully");
+        setCsvFile(null);
+        setCsvFileName("");
+      } else {
+        const data = await response.json();
+        toast.error(data.msg || "Failed to upload CSV file");
+      }
+    } catch (error) {
+      console.error("Error uploading CSV:", error);
+      toast.error("An error occurred while uploading CSV");
     }
   };
 
@@ -89,19 +134,37 @@ function AddCompany() {
                 <div className='grid grid-cols-1 gap-4 justify-center items-center bg-sky-300 p-5 md:p-12 rounded-md'>
                   <input
                     type='text'
-                    name='userId'
+                    name='companyId'
                     onChange={handleInput}
-                    value={company.userId}
-                    placeholder='User ID'
+                    value={company.companyId}
+                    placeholder='Company ID'
                     className='m-2 p-2 outline-none border rounded-xl w-full'
                     required
                   />
                   <input
                     type='text'
-                    name='userName'
+                    name='companyName'
                     onChange={handleInput}
-                    value={company.userName}
-                    placeholder='User Name'
+                    value={company.companyName}
+                    placeholder='Company Name'
+                    className='m-2 p-2 outline-none border rounded-xl w-full'
+                    required
+                  />
+                  <input
+                    type='email'
+                    name='email'
+                    onChange={handleInput}
+                    value={company.email}
+                    placeholder='Company Email'
+                    className='m-2 p-2 outline-none border rounded-xl w-full'
+                    required
+                  />
+                  <input
+                    type='text'
+                    name='alternativeEmail'
+                    onChange={handleInput}
+                    value={company.alternativeEmail}
+                    placeholder='Alternative Email'
                     className='m-2 p-2 outline-none border rounded-xl w-full'
                     required
                   />
@@ -110,37 +173,29 @@ function AddCompany() {
                     name='password'
                     onChange={handleInput}
                     value={company.password}
-                    placeholder='User Password'
+                    placeholder='Password'
                     className='m-2 p-2 outline-none border rounded-xl w-full'
                     required
                   />
                   <input
                     type='text'
-                    name='designation'
+                    name='contact_1'
                     onChange={handleInput}
-                    value={company.designation}
-                    placeholder='User Designation'
+                    value={company.contact_1}
+                    placeholder='Company Contact Number'
                     className='m-2 p-2 outline-none border rounded-xl w-full'
                     required
                   />
                   <input
                     type='text'
-                    name='section'
+                    name='contact_2'
                     onChange={handleInput}
-                    value={company.section}
-                    placeholder='User Section'
+                    value={company.contact_2}
+                    placeholder='Alternative Contact Number'
                     className='m-2 p-2 outline-none border rounded-xl w-full'
                     required
                   />
-                  <input
-                    type='text'
-                    name='appointment'
-                    onChange={handleInput}
-                    value={company.appointment}
-                    placeholder='User Appointment'
-                    className='m-2 p-2 outline-none border rounded-xl w-full'
-                    required
-                  />
+                  
                   <div className='flex flex-col md:flex-row justify-around items-center mt-4 md:gap-10'>
                     <button
                       type='submit'
@@ -148,15 +203,25 @@ function AddCompany() {
                     >
                       Submit
                     </button>
-                    <button
-                      type='button'
-                      className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-2 w-full md:w-1/3 p-2 md:p-3 mt-2 md:mt-0 rounded-xl'
-                    >
+                    <input
+                      type='file'
+                      accept='.csv'
+                      onChange={handleFileChange}
+                      className='hidden'
+                      id='csvFileInput'
+                    />
+                    <label htmlFor='csvFileInput' className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-2 w-full md:w-1/3 p-2 md:p-3 mt-2 md:mt-0 rounded-xl text-center'>
                       Choose CSV File
-                    </button>
+                    </label>
+                    {csvFileName && (
+                      <div className='text-center text-black'>
+                        <p>Selected file: {csvFileName}</p>
+                      </div>
+                    )}
                     <button
                       type='button'
                       className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-2 w-full md:w-1/3 p-2 md:p-3 mt-2 md:mt-0 rounded-xl'
+                      onClick={handleCSVUpload}
                     >
                       Submit CSV File
                     </button>

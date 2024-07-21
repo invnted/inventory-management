@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 function AddUser() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/users/user-register`;
+  const uploadCSVURL = `${serverUrl}/users/upload-user-csv`;
 
   const [user, setUser] = useState({
     userId: '',
@@ -17,6 +18,9 @@ function AddUser() {
     section: '',
     appointment: '',
   });
+
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvFileName, setCsvFileName] = useState("");
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -53,6 +57,45 @@ function AddUser() {
     } catch (error) {
       console.error('Error while registration:', error);
       toast.error('An error occurred');
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCsvFile(file);
+      setCsvFileName(file.name);
+    }
+  };
+
+  const handleCSVUpload = async (e) => {
+    e.preventDefault();
+
+    if (!csvFile) {
+      toast.error("Please select a CSV file to upload");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('csvFile', csvFile);
+
+    try {
+      const response = await fetch(uploadCSVURL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        toast.success("CSV file uploaded successfully");
+        setCsvFile(null);
+        setCsvFileName("");
+      } else {
+        const data = await response.json();
+        toast.error(data.msg || "Failed to upload CSV file");
+      }
+    } catch (error) {
+      console.error("Error uploading CSV:", error);
+      toast.error("An error occurred while uploading CSV");
     }
   };
 
@@ -141,22 +184,32 @@ function AddUser() {
                     className='m-3 p-2 outline-none border rounded-xl'
                     required
                   />
-                  <div className='flex flex-col md:flex-row md:gap-10 justify-around items-center'>
+                  <div className='flex flex-col md:flex-row justify-around items-center md:gap-10'>
                     <button
                       type='submit'
                       className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl'
                     >
                       Submit
                     </button>
-                    <button
-                      type='button'
-                      className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl'
-                    >
+                    <input
+                      type='file'
+                      accept='.csv'
+                      onChange={handleFileChange}
+                      className='hidden'
+                      id='csvFileInput'
+                    />
+                    <label htmlFor='csvFileInput' className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl text-center'>
                       Choose CSV File
-                    </button>
+                    </label>
+                    {csvFileName && (
+                      <div className='text-center text-black'>
+                        <p>Selected file: {csvFileName}</p>
+                      </div>
+                    )}
                     <button
                       type='button'
                       className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl'
+                      onClick={handleCSVUpload}
                     >
                       Submit CSV File
                     </button>
