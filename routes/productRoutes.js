@@ -30,7 +30,7 @@ router.post('/getStoreReportCSV',productController.getstoreReportCSV);          
 
 
 //For Receiving CSV Files
-router.post('/upload-product-csv', upload.single('csvFile'), productController.uploadCSV);  //Used in Admin Panel to upload CSV
+router.post('/upload-product-csv', upload.single('csvFile'), productController.receiveProductCSV); // Used to add product via CSV
 
 
 // Operation routes

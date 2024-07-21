@@ -7,6 +7,20 @@ const User = require('../models/User');
 const Moderator = require('../models/Moderator');
 const Company = require('../models/Company');
 
+
+
+//CSV Handlers
+const { receiveManagerCSV } = require('../csv_handlers/users/addManagerCSV');
+const { sendManagerCSV } = require('../csv_handlers/users/sendManagerCSV');
+const { receiveModeratorCSV } = require('../csv_handlers/users/addModeratorCSV');
+const { sendModeratorCSV } = require('../csv_handlers/users/sendModeratorCSV');
+
+//CSV Caller
+exports.receiveManagerCSV = receiveManagerCSV;
+exports.sendManagerCSV  = sendManagerCSV;
+exports.receiveModeratorCSV = receiveModeratorCSV;
+exports.sendModeratorCSV  = sendModeratorCSV;
+
 // Admin methods
 exports.registerAdmin = async (req, res) => {
   const { profileId, adminName, role, department, email, password } = req.body;

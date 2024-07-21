@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const auth = require('../middlewares/auth');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 // Admins Routes
 router.post('/admin-register', userController.registerAdmin);
@@ -14,6 +16,10 @@ router.post('/manager-login', userController.loginManager);
 router.post('/manager-getAll',userController.getAllManagers);
 router.post('/manager-update',userController.updateManager);
 router.post('/manager-delete',userController.deleteManager);
+router.post('/download-manager-csv',userController.sendManagerCSV);
+router.post('/upload-manager-csv', upload.single('csvFile'), userController.receiveManagerCSV); 
+
+
 
 
 // Users Routes
@@ -30,6 +36,8 @@ router.post('/login', userController.loginModerator);
 router.post('/moderator-getAll',userController.getAllModerator);
 router.post('/moderator-update',userController.updateModerator);
 router.post('/moderator-delete',userController.deleteModerator);
+router.post('/download-moderator-csv',userController.sendModeratorCSV);
+router.post('/upload-moderator-csv', upload.single('csvFile'), userController.receiveModeratorCSV); 
 
 
 //Company Routes
