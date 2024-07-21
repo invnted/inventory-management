@@ -115,7 +115,7 @@ function ManagerAddProduct() {
   return (
     <div>
       <ManagerNavbar/>
-      <div className='m-4 md:m-12 border border-black '>
+      <div className='m-4 md:m-12 '>
         <div className=' text-center bg-sky-800 text-white text-5xl h-24 flex items-center justify-center '>
           <div>Add Product</div>
         </div>

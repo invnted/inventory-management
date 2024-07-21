@@ -3,6 +3,7 @@ import UserNavbar from '../components/UserNavbar'
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import CompanyNavbar from './CompanyNavbar';
+import Demand from '../Images/demand1.png'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = ` ${serverUrl}/products/makeDemand`
@@ -18,7 +19,7 @@ function CompanyRaiseDemand() {
     return result;
   }
 
-  
+
 
   const userId = localStorage.getItem('userId') || 'N/A';
   const designation = localStorage.getItem('designation') || 'N/A';
@@ -91,17 +92,33 @@ function CompanyRaiseDemand() {
 
       <form onSubmit={handleSubmit}>
 
-        <div className='grid grid-cols-1  justify-center items-center bg-sky-300 '>
-          <div className='grid grid-cols-1 justify-center items-center m-10 md:mx-20 '>
-            <div className='flex justify-center items-center h-auto pb-5 gap-6 text-center text-blue-700  font-bold text-5xl'>
-              <Link to='/company-home/raise-demand'>
-                <div className='border-4 p-2 border-sky-800 rounded-xl'>Raise Demand</div>
-              </Link>
-              <Link to='/company-home/raise-demand-report'>
-                <div>Raise Demand Report</div>
-              </Link>
+        <div className='grid grid-cols-1  justify-center items-center bg-white '>
+          <div className='grid grid-cols-1 justify-center items-center m-4 md:m-10 md:mx-20 bg-sky-300'>
+            <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
+              <div className='flex gap-10'>
+                <Link to='/company-home/raise-demand'>
+                <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
+                  <div className='w-14 block'>
+                    <img src={Demand} alt='Description' />
+                  </div>
+                  <div className='text-lg font-semibold'>
+                    Raise Demand
+                  </div>
+                </div>
+                </Link>
+                <Link to='/company-home/raise-demand-report'>
+                  <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
+                    <div className='w-14 block'>
+                      <img src={Demand} alt='Description' />
+                    </div>
+                    <div className='text-lg font-semibold'>
+                      Demand Reports
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </div>
-            <div className='grid '>
+            <div className='grid mt-8 md:m-20 '>
               <input
                 onChange={handleInput}
                 type='text'
@@ -153,7 +170,7 @@ function CompanyRaiseDemand() {
             </div>
             <button
               type='submit'
-              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-auto w-1/2 md:w-1/3 p-3 m-10 rounded-xl'
+              className='flex justify-center items-center cursor-pointer bg-sky-800 text-white mx-auto w-1/2 md:w-1/3 p-3 mb-10 rounded-xl'
             >
               Submit
             </button>

@@ -14,6 +14,7 @@ function AllModerator() {
   const moderatorListURL = `${serverUrl}/moderators/moderator-getAll`;
   const moderatorEditURL = `${serverUrl}/moderators/moderator-update`;
   const moderatorDeleteURL = `${serverUrl}/moderators/moderator-delete`;
+  const downloadCSVURL = `${serverUrl}/moderators/download-moderator-csv`; // CSV download URL
 
   // Function to fetch all moderators
   const fetchModerators = async () => {
@@ -38,7 +39,6 @@ function AllModerator() {
       toast.error('An error occurred');
     }
   };
-  
 
   useEffect(() => {
     fetchModerators();
@@ -122,10 +122,42 @@ function AllModerator() {
     moderator.moderatorName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Function to handle CSV download
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await fetch(downloadCSVURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Get the blob from the response
+        const blob = await response.blob();
+        // Create a link element
+        const link = document.createElement('a');
+        // Set the URL using the blob
+        link.href = URL.createObjectURL(blob);
+        link.download = 'moderators.csv'; // Filename
+        // Append to the DOM and trigger click
+        document.body.appendChild(link);
+        link.click();
+        // Clean up
+        document.body.removeChild(link);
+      } else {
+        toast.error('Failed to download CSV');
+      }
+    } catch (error) {
+      console.error('Error while downloading CSV:', error);
+      toast.error('An error occurred');
+    }
+  };
+
   return (
     <div>
       <Navbar />
-      <div className='m-4 md:m-12  justify-between'>
+      <div className='m-4 md:m-12 justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <Link to='/moderator-home/add-moderator'>
@@ -139,7 +171,7 @@ function AllModerator() {
               </div>
             </Link>
             <Link to='/moderator-home/all-moderator'>
-              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
                 <div className='w-10 block'>
                   <img src={List} alt='Description' />
                 </div>
@@ -164,6 +196,7 @@ function AllModerator() {
           </form>
           <div className="p-2 md:p-10">
             <button onClick={fetchModerators} className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
+            <button onClick={handleDownloadCSV} className="bg-green-500 text-white p-2 rounded-md ml-4">Download CSV</button> {/* Download CSV Button */}
             {filteredModerators.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">

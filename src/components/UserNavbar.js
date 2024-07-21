@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
+import MoreOptionsImage from '../Images/aside.png'; 
 
 function UserNavbar() {
     const [open, setOpen] = useState(false);
@@ -42,14 +43,10 @@ function UserNavbar() {
             <nav className="bg-sky-800">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <button className="md:hidden text-white" onClick={() => setMenuOpen(!menuOpen)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
+                        <img src={MoreOptionsImage} alt="More options" className="w-6 h-6" />
                     </button>
                     <div className="hidden md:block">
-                        <Link to='/user-home'>
-                            <span className="self-center text-3xl font-bold whitespace-nowrap text-white hover:text-blue-900 delay-100">User Dashboard</span>
-                        </Link>
+                            <span className="self-center text-3xl font-bold whitespace-nowrap text-white">User Dashboard</span>
                     </div>
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         <div className="relative flex text-sm rounded-full md:me-0 focus:ring-4 focus:ring-blue-600">
@@ -79,31 +76,48 @@ function UserNavbar() {
                         </div>
                     </div>
                     <ul className='hidden md:flex gap-10 text-xl font-semibold text-white'>
-                        <Link to='/user-home/raise-demand' className='hover:text-blue-900 delay-100'>
-                            <li>Raise Demand</li>
+                        <Link to='/user-home' className='hover:text-blue-300'>
+                            <li className=''>Dashboard</li>
                         </Link>
-                        <li>Product Received</li>
-                        <li>Product Use</li>
+                        <Link to='/user-home/raise-demand' className='hover:text-blue-300'>
+                            <li className=''>Raise Demand</li>
+                        </Link>
+                        <Link to='/user-home/product-received' className='hover:text-blue-300'>
+                            <li className=''>Product Received</li>
+                        </Link>
+                        <Link to='' className='hover:text-blue-300'>
+                            <li className=''>Product in Use</li>
+                        </Link>
                     </ul>
                 </div>
             </nav>
             {menuOpen && (
-                <aside className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-start md:hidden">
-                    <div className="bg-white w-64 p-4">
-                        <button className="text-black mb-4" onClick={() => setMenuOpen(false)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                        <ul className='mt-4 space-y-4 text-black'>
-                            <Link to='/user-home/raise-demand' className='hover:text-blue-900 delay-100' onClick={() => setMenuOpen(false)}>
-                                <li>Raise Demand</li>
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-40">
+                    <aside className="fixed top-0 left-0 h-full w-64 bg-sky-800 p-4 shadow-lg">
+                        <div className="flex justify-between items-center">
+                            <span className="text-white text-2xl font-bold">User Dashboard</span>
+                            <button className="text-white" onClick={() => setMenuOpen(false)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <ul className='mt-6 space-y-4 text-white'>
+                            <Link to='/user-home' className='hover:text-blue-300' onClick={() => setMenuOpen(false)}>
+                                <li className='pt-4'>Dashboard</li>
                             </Link>
-                            <li>Product Received</li>
-                            <li>Product Use</li>
+                            <Link to='/user-home/raise-demand' className='hover:text-blue-300' onClick={() => setMenuOpen(false)}>
+                                <li className='pt-4'>Raise Demand</li>
+                            </Link>
+                            <Link to='/user-home/product-received' className='hover:text-blue-300' onClick={() => setMenuOpen(false)}>
+                                <li className='pt-4'>Product Received</li>
+                            </Link>
+                            <Link to=''  className='hover:text-blue-300' onClick={() => setMenuOpen(false)}>
+                                <li className='pt-4'>Product in Use</li>
+                            </Link>
                         </ul>
-                    </div>
-                </aside>
+                    </aside>
+                </div>
             )}
         </div>
     );

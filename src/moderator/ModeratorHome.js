@@ -15,7 +15,7 @@ function ModeratorHome() {
                         <div className='w-20 block'>
                             <img className='color-white' src={Issue} alt="Description" />
                         </div>
-                        <div className='p-2 text-white text-3xl font-mono'>
+                        <div className='p-2 text-white text-3xl font-mono text-center'>
                             Issue Product
                         </div>
                     </div>

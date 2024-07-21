@@ -13,6 +13,7 @@ function AllManager() {
     const managerListURL = `${serverUrl}/managers/manager-getAll`;
     const managerEditURL = `${serverUrl}/managers/manager-update`;
     const managerDeleteURL = `${serverUrl}/managers/manager-delete`;
+    const managerCSV = `${serverUrl}/managers/download-manager-csv`;
 
     // Function to fetch all managers
     const fetchManagers = async () => {
@@ -62,7 +63,6 @@ function AllManager() {
             });
         }
     };
-
 
     const handleSaveClick = async (managerId) => {
         try {
@@ -133,6 +133,37 @@ function AllManager() {
         manager.managerName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Function to handle CSV download
+    const handleDownloadCSV = async () => {
+        try {
+            const response = await fetch(managerCSV, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // This is typically optional for downloads
+                },
+            });
+    
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'managers.csv'; // Ensure filename is correct
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                toast.success('CSV file downloaded successfully');
+            } else {
+                console.error('Failed to download CSV:', response.statusText);
+                toast.error('Failed to download CSV');
+            }
+        } catch (error) {
+            console.error('Error while downloading CSV:', error);
+            toast.error('An error occurred while downloading CSV');
+        }
+    };
+    
+
     return (
         <div>
             <Navbar />
@@ -142,19 +173,19 @@ function AllManager() {
                         <Link to='/home/add-manager'>
                             <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                                 <div className='w-10 block'>
-                                    <img src={Manager} alt='Description' />
+                                    <img src={Manager} alt='Add Manager' />
                                 </div>
                                 <div>
                                     <p>Add <br /> Manager</p>
                                 </div>
                             </div>
                         </Link>
-                        <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
+                        <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
                             <div className='w-10 block'>
-                                <img src={Manager} alt='Description' />
+                                <img src={Manager} alt='All Managers' />
                             </div>
                             <div>
-                                <p>All <br /> managers</p>
+                                <p>All <br /> Managers</p>
                             </div>
                         </div>
                     </div>
@@ -169,11 +200,11 @@ function AllManager() {
                                 </svg>
                             </div>
                             <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" value={searchTerm} onChange={handleSearchChange} required />
-                            {/* <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button> */}
                         </div>
                     </form>
                     <div className="p-2 md:p-10">
-                        <button onClick={fetchManagers} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
+                        <button onClick={fetchManagers} className="bg-sky-800 text-white p-2 rounded-md mr-4">Refresh</button>
+                        <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
                         {filteredManagers.length > 0 && (
                             <div className="overflow-x-auto mt-4">
                                 <table className="min-w-full bg-white border border-gray-300">

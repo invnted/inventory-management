@@ -44,8 +44,8 @@ import CompanyDashboard from './company/CompanyDashboard';
 import ManagerAuthorizationStore from './manager/ManagerAuthorizationStore';
 import CompanyRaiseDemand from './company/CompanyRaiseDemand';
 import CompanyRaiseDemandReport from './company/CompanyRaiseDemandReport';
-import AddCpmpany from './super-admin/AddCpmpany';
 import CompanyList from './super-admin/CompanyList';
+import AddCompany from './super-admin/AddCompany';
 import UserProductReceived from './users/UserProductReceived';
 import CompanyProductReceived from './company/CompanyProductReceived';
 
@@ -72,7 +72,7 @@ function App() {
         <Route path="/home/add-manager" element={<AddManager />} />
         <Route path="/home/all-managers" element={<AllManager />} />
         <Route path="/home/add-user" element={<AddUser />} />
-        <Route path="/home/add-Company" element={<AddCpmpany />} />
+        <Route path="/home/add-Company" element={<AddCompany/>} />
         <Route path="/home/company-list" element={<CompanyList />} />
         <Route path="/home/add-user/users-list" element={<UsersList/>} />
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />

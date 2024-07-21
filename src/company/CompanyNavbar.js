@@ -31,21 +31,29 @@ function CompanyNavbar() {
     };
 
     return (
-        <div className="flex">
-            <div className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-gray-800 text-white w-64 z-50`}>
+        <div className="relative flex">
+            {/* Overlay */}
+            {sidebarOpen && (
+                <div className="fixed inset-0 bg-gray-900 opacity-50 z-40" onClick={toggleSidebar}></div>
+            )}
+
+            <div className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-sky-800 shadow-lg text-white w-64 z-50`}>
                 <div className="flex items-center justify-between p-4">
-                    <h1 className="text-2xl font-bold">Company</h1>
+                    <h1 className="text-2xl font-bold">Company Dashboard</h1>
                     <button onClick={toggleSidebar} className="text-white focus:outline-none">
                         ✕
                     </button>
                 </div>
                 <nav className="mt-10">
-                    <Link to="/home" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Dashboard</Link>
-                    <Link to="/reports" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Reports</Link>
+                    <Link to="/company-home" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Dashboard</Link>
+                    <Link to="/company-home/raise-demand" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Raise Demand</Link>
+                    <Link to="/company-home/product-received" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Product Received</Link>
+                    <Link to="" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Product in Use</Link>
+                    
                 </nav>
             </div>
             <div className="flex-1">
-                <nav className=" border-gray-200 bg-sky-900">
+                <nav className="border-gray-200 bg-sky-900">
                     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                         <button
                             className="text-gray-800 dark:text-gray-200 hover:text-blue-600 md:hidden"
@@ -56,8 +64,10 @@ function CompanyNavbar() {
                         <span className="hidden sm:block self-center text-2xl font-bold whitespace-nowrap dark:text-white">Company Dashboard</span>
                         
                         <div className="hidden md:flex space-x-4">
-                            <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
-                            <Link to='' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
+                            <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Dashboard</Link>
+                            <Link to='/company-home/raise-demand' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Raise Demand</Link>
+                            <Link to='/company-home/product-received' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Product Received</Link>
+                            <Link to='' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Product in Use</Link>
                         </div>
 
                         <div className="flex items-center md:order-2 space-x-3 md:space-x-0">
@@ -88,7 +98,7 @@ function CompanyNavbar() {
                             </div>
                         </div>
                     </div>
-                    <div className="hidden sm:block  md:hidden justify-around py-2">
+                    <div className="hidden sm:block md:hidden justify-around py-2">
                         <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
                         <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
                     </div>
@@ -98,7 +108,4 @@ function CompanyNavbar() {
     );
 }
 
-
-
-
-export default CompanyNavbar
+export default CompanyNavbar;

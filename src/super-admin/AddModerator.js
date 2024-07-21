@@ -8,6 +8,9 @@ import { toast } from 'react-toastify';
 function AddModerator() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/moderators/register`;
+  const uploadCSVURL = `${serverUrl}/moderators/upload-moderator-csv`;
+  const MODERATOR_CSV_URL = `${serverUrl}/moderators/download-moderator-csv`;
+
 
   const [moderator, setModerator] = useState({
     moderatorId: '',
@@ -17,6 +20,9 @@ function AddModerator() {
     section: '',
     appointment: '',
   });
+
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvFileName, setCsvFileName] = useState("");
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -55,6 +61,47 @@ function AddModerator() {
       toast.error('An error occurred');
     }
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCsvFile(file);
+      setCsvFileName(file.name);
+    }
+  };
+
+  const handleCSVUpload = async (e) => {
+    e.preventDefault();
+
+    if (!csvFile) {
+      toast.error("Please select a CSV file to upload");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('csvFile', csvFile);
+
+    try {
+      const response = await fetch(uploadCSVURL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        toast.success("CSV file uploaded successfully");
+        setCsvFile(null);
+        setCsvFileName("");
+      } else {
+        const data = await response.json();
+        toast.error(data.msg || "Failed to upload CSV file");
+      }
+    } catch (error) {
+      console.error("Error uploading CSV:", error);
+      toast.error("An error occurred while uploading CSV");
+    }
+  };
+
+  
 
   return (
     <div>
@@ -148,18 +195,29 @@ function AddModerator() {
                     >
                       Submit
                     </button>
-                    <button
-                      type='button'
-                      className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl'
-                    >
+                    <input
+                      type='file'
+                      accept='.csv'
+                      onChange={handleFileChange}
+                      className='hidden'
+                      id='csvFileInput'
+                    />
+                    <label htmlFor='csvFileInput' className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl text-center'>
                       Choose CSV File
-                    </button>
+                    </label>
+                    {csvFileName && (
+                      <div className='text-center text-black'>
+                        <p>Selected file: {csvFileName}</p>
+                      </div>
+                    )}
                     <button
                       type='button'
                       className='flex justify-center items-center cursor-pointer bg-sky-800 text-white w-full md:w-1/3 p-2 mt-5 rounded-xl'
+                      onClick={handleCSVUpload}
                     >
                       Submit CSV File
                     </button>
+                    
                   </div>
                 </div>
               </form>

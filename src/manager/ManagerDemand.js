@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ManagerNavbar from '../components/ManagerNavbar';
+import DemandRequested from '../Images/demand1.png';
 import { Link } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -26,7 +27,7 @@ function ManagerDemand() {
                 const result = await response.json();
 
                 if (result.success) {
-                    setDemands(result.demands || []); // Ensure it uses 'demands' from response
+                    setDemands(result.demands || []);
                 } else {
                     setError(result.message);
                 }
@@ -80,79 +81,92 @@ function ManagerDemand() {
     };
 
     return (
-        <div>
-            <div className='bg-white h-screen'>
-                <ManagerNavbar />
-                <div className='bg-sky-300 m-10 md:m-20  rounded-lg'>
-                    <div className='flex justify-around items-center py-2 gap-6 text-center text-white font-bold text-5xl bg-sky-800'>
+        <div className='bg-white min-h-screen'>
+            <ManagerNavbar />
+            <div className='bg-sky-300 m-4 md:m-20 '>
+                <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
+                    <div className='flex gap-4 md:gap-10'>
                         <Link to='/manager-dashboard/ManagerDemand'>
-                            <div className='p-6 underline'>Demand Requested</div>
+                            <div className='bg-gray-200 p-2 md:p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
+                                <div className='w-10 md:w-14 block'>
+                                    <img src={DemandRequested} alt='Description' />
+                                </div>
+                                <div className='text-center text-sm md:text-lg font-semibold'>
+                                    Demand Requested
+                                </div>
+                            </div>
                         </Link>
                         <Link to='/manager-dashboard/ManagerDemandReport'>
-                            <div className='p-6 rounded-xl'>Demand Reports</div>
+                            <div className='bg-gray-200 p-2 md:p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
+                                <div className='w-10 md:w-14 block'>
+                                    <img src={DemandRequested} alt='Description' />
+                                </div>
+                                <div className='text-center text-sm md:text-lg font-semibold'>
+                                    Demand Reports
+                                </div>
+                            </div>
                         </Link>
                     </div>
-                    <form className="max-w-md mx-auto md:pt-10 p-6">
-                        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                            </div>
-                            <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-900 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
+                </div>
+                <form className="max-w-md mx-auto md:pt-10 p-6">
+                    <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg className="w-4 h-4 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
                         </div>
-                    </form>
-                    <div className="p-2 md:p-10">
-                        <button className="bg-sky-900 text-white p-2 rounded-md" onClick={() => window.location.reload()}>Refresh</button>
-
-                        <div className="overflow-x-auto mt-4">
-                            {error ? (
-                                <div className="text-red-500 text-center">{error}</div>
-                            ) : (
-                                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-                                    <thead className="bg-sky-500 text-white">
-                                        <tr>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Demand ID</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Name</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Model</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Brand</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Quantity</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Status</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Created At</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {demands.length > 0 ? (
-                                            demands.map((demand) => (
-                                                <tr key={demand.demandId} className="hover:bg-sky-100">
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.demandId}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productName}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productModel}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productBrand}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.productQuantity}</td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">
-                                                        {demand.status.toLowerCase() === 'pending' ? (
-                                                            <div className='flex justify-around text-white text-xl'>
-                                                                <button className='bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-700' onClick={() => updateDemandStatus(demand.demandId, 'APPROVED')}>Approve</button>
-                                                                <button className='bg-red-500 px-2 py-1 rounded-lg hover:bg-red-700' onClick={() => updateDemandStatus(demand.demandId, 'REJECTED')}>Reject</button>
-                                                            </div>
-                                                        ) : (
-                                                            <span className={getStatusClassName(demand.status)}>{demand.status}</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="py-2 px-4 border border-gray-300 text-center">{demand.createdAt}</td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="7" className="py-2 px-4 border border-gray-300 text-center">No demands found</td>
+                        <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-900 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
+                    </div>
+                </form>
+                <div className="p-2 md:p-10">
+                    <button className="bg-sky-900 text-white p-2 rounded-md" onClick={() => window.location.reload()}>Refresh</button>
+                    <div className="overflow-x-auto mt-4">
+                        {error ? (
+                            <div className="text-red-500 text-center">{error}</div>
+                        ) : (
+                            <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+                                <thead className="bg-sky-500 text-white">
+                                    <tr>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Demand ID</th>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Name</th>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Model</th>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Brand</th>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Quantity</th>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Status</th>
+                                        <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {demands.length > 0 ? (
+                                        demands.map((demand) => (
+                                            <tr key={demand.demandId} className="hover:bg-sky-100">
+                                                <td className=" md:py-2  md:px-4 border border-black text-center">{demand.demandId}</td>
+                                                <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productName}</td>
+                                                <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productModel}</td>
+                                                <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productBrand}</td>
+                                                <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productQuantity}</td>
+                                                <td className="py-1 md:py-2 px-2 md:px-4 border border-black text-center">
+                                                    {demand.status.toLowerCase() === 'pending' ? (
+                                                        <div className='flex justify-around text-white text-sm md:text-xl'>
+                                                            <button className='bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-700' onClick={() => updateDemandStatus(demand.demandId, 'APPROVED')}>Approve</button>
+                                                            <button className='bg-red-500 px-2 py-1 rounded-lg hover:bg-red-700' onClick={() => updateDemandStatus(demand.demandId, 'REJECTED')}>Reject</button>
+                                                        </div>
+                                                    ) : (
+                                                        <span className={getStatusClassName(demand.status)}>{demand.status}</span>
+                                                    )}
+                                                </td>
+                                                <td className=" md:py-2  md:px-4 border border-black text-center">{demand.createdAt}</td>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="7" className=" md:py-2 md:px-4 border border-black text-center">No demands found</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        )}
                     </div>
                 </div>
             </div>
@@ -160,7 +174,4 @@ function ManagerDemand() {
     );
 }
 
-
-
-
-export default ManagerDemand
+export default ManagerDemand;

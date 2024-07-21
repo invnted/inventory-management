@@ -36,9 +36,9 @@ function CompanyProductReceived() {
     }, []);
 
     return (
-        <div className='bg-sky-300 h-screen'>
+        <div className='bg-white h-screen'>
             <CompanyNavbar />
-            <div className='bg-sky-500 m-4 md:m-20'>
+            <div className='bg-sky-300 m-4 md:m-20'>
                 <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold text-center'>
                     Product Received
                 </div>
@@ -56,7 +56,7 @@ function CompanyProductReceived() {
                 <div className="p-2 md:p-10">
                     <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
                     <div className="overflow-x-auto mt-4">
-                        <table className="min-w-full bg-sky-200 border">
+                        <table className="min-w-full bg-white border">
                             <thead>
                                 <tr>
                                     <th className="py-2 px-4 border border-black text-center">Product ID</th>
