@@ -21,13 +21,14 @@ router.post('/upload-manager-csv', upload.single('csvFile'), userController.rece
 
 
 
-
 // Users Routes
 router.post('/user-register', userController.registerUser);
 router.post('/user-login', userController.loginUser);
 router.post('/user-getAll',userController.getAllUsers);
 router.post('/user-update',userController.updateUser);
 router.post('/user-delete',userController.deleteUser);
+router.post('/download-user-csv',userController.sendUserCSV);
+router.post('/upload-user-csv', upload.single('csvFile'), userController.receiveUserCSV); 
 
 
 // Moderators Routes
@@ -46,6 +47,7 @@ router.post('/company-login', userController.loginCompany);
 router.post('/company-getAll',userController.getAllCompanies);
 router.post('/company-update',userController.updateCompany);
 router.post('/company-delete',userController.deleteCompany);
-
+router.post('/download-company-csv',userController.sendCompanyCSV);
+router.post('/upload-company-csv', upload.single('csvFile'), userController.receiveCompanyCSV); 
 
 module.exports = router;

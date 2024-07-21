@@ -14,12 +14,20 @@ const { receiveManagerCSV } = require('../csv_handlers/users/addManagerCSV');
 const { sendManagerCSV } = require('../csv_handlers/users/sendManagerCSV');
 const { receiveModeratorCSV } = require('../csv_handlers/users/addModeratorCSV');
 const { sendModeratorCSV } = require('../csv_handlers/users/sendModeratorCSV');
+const { receiveUserCSV } = require('../csv_handlers/users/addUserCSV');
+const { sendUserCSV } = require('../csv_handlers/users/sendUserCSV');
+const { receiveCompanyCSV } = require('../csv_handlers/users/addCompanyCSV');
+const { sendCompanyCSV } = require('../csv_handlers/users/sendCompanyCSV');
 
 //CSV Caller
 exports.receiveManagerCSV = receiveManagerCSV;
 exports.sendManagerCSV  = sendManagerCSV;
 exports.receiveModeratorCSV = receiveModeratorCSV;
 exports.sendModeratorCSV  = sendModeratorCSV;
+exports.receiveUserCSV = receiveUserCSV;
+exports.sendUserCSV  = sendUserCSV;
+exports.receiveCompanyCSV = receiveCompanyCSV;
+exports.sendCompanyCSV  = sendCompanyCSV;
 
 // Admin methods
 exports.registerAdmin = async (req, res) => {
