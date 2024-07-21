@@ -1,5 +1,4 @@
 const Product = require('../../models/Product');
-const Demand = require('../../models/Demand');
 const csvParser = require('csv-parser');
 const fs = require('fs');
 const { createObjectCsvStringifier } = require('csv-writer');
