@@ -48,6 +48,7 @@ import CompanyList from './super-admin/CompanyList';
 import AddCompany from './super-admin/AddCompany';
 import UserProductReceived from './users/UserProductReceived';
 import CompanyProductReceived from './company/CompanyProductReceived';
+import ManagerProductReport from './manager/ManagerProductReport';
 
 
 
@@ -86,6 +87,7 @@ function App() {
         <Route path="/manager-dashboard/managerAdd-user" element={<ManagerAddUser/>} />
         <Route path="/manager-dashboard/manager-UserList" element={<ManagerUserList/>} />
         <Route path="/manager-dashboard/manager-AddProduct" element={<ManagerAddProduct/>} />
+        <Route path="/manager-dashboard/manager-ProductReport" element={<ManagerProductReport/>} />
         <Route path="/manager-dashboard/ManagerDemand" element={<ManagerDemand/>} />
         <Route path="/manager-dashboard/ManagerDemandReport" element={<ManagerDemandReport/>} />
         <Route path="/manager-dashboard/StockRequiredInStore" element={<StockRequiredInStore/>} />

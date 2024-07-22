@@ -5,6 +5,7 @@ import AddProduct from '../Images/category.png'
 import AddUser from '../Images/add1.png'
 import Demand from '../Images/demand.png'
 import OutOfStock from '../Images/OutOfStock.png'
+import ProductReport from '../Images/ProductReport.png'
 import { Link } from 'react-router-dom'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -68,6 +69,16 @@ function ManagerDashboard() {
               </div>
               <div className='p-2 text-white text-xl font-semibold  text-center'>
                 <h2>Add Product</h2>
+              </div>
+            </div>
+          </Link>
+          <Link to='/manager-dashboard/manager-ProductReport'>
+            <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+              <div className='w-20  flex justify-center items-center'>
+                <img className='color-white ' src={ProductReport} alt="Description" />
+              </div>
+              <div className='p-2 text-white text-xl font-semibold  text-center'>
+                <h2>Product Report</h2>
               </div>
             </div>
           </Link>
