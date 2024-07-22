@@ -109,7 +109,9 @@ class managerDashboard : AppCompatActivity() {
 
         navigationView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-
+            R.id.outOfStock -> {
+                startActivity(Intent(this@managerDashboard,outofstock::class.java))
+            }
 
                 // Add other cases for other menu items as needed
             }

@@ -43,7 +43,7 @@ class filterUserAssign : AppCompatActivity() {
         val productBrand = intent.getStringExtra("brand")
         val userId = intent.getStringExtra("userId")
         val demandId = intent.getStringExtra("demandId")
-        val quantity = intent.getStringExtra("quantity")
+        val quantity = intent.getIntExtra("quantity",0)
 
         back = findViewById(R.id.filterBack)
         back.setOnClickListener {
@@ -63,7 +63,7 @@ class filterUserAssign : AppCompatActivity() {
                     productModel?.let { it2 ->
                         filterProductRequest(
                             it1,
-                            it2, it
+                            it2, it,quantity
                         )
                     }
                 }
@@ -76,15 +76,19 @@ class filterUserAssign : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val respo = response.body()
                         if (respo?.success == true) {
-                            adapter = filterItem_adapter(
-                                this@filterUserAssign,
-                                respo.filteredProducts,
-                                retrofit,
-                                demandId,userId
-                            ){
-                                vb()
+                            var newList = respo.filteredProducts
+                            if (newList != null) {
+                                adapter = filterItem_adapter(
+                                    this@filterUserAssign,
+                                    newList,
+                                    retrofit,
+                                    demandId,
+                                    userId
+                                ) {
+                                    vb()
+                                }
+                                recyclerview.adapter = adapter
                             }
-                            recyclerview.adapter = adapter
                         }
                         if(respo?.filteredProducts.isNullOrEmpty()){
                             textView.visibility = View.VISIBLE

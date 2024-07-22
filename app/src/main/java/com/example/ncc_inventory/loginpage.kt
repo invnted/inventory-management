@@ -26,7 +26,7 @@ import retrofit2.http.POST
 
 object rFit {
     var retrofit: Retrofit? = null
-    const val BASE_URL_PLACEHOLDER = "https://8091-103-37-80-91.ngrok-free.app/"
+    const val BASE_URL_PLACEHOLDER = "https://a7cd-103-37-80-91.ngrok-free.app/"
 }
 
 data class managerloginrequest(
@@ -36,7 +36,8 @@ data class managerloginrequest(
 class loginpage : AppCompatActivity() {
     private lateinit var spinner: Spinner
     private lateinit var adapter: ArrayAdapter<String>
-    private val items = mutableListOf("Select one", "Admin", "Manager", "Moderator", "User")
+    private val items =
+        mutableListOf("Select one", "Admin", "Manager", "Organization", "Moderator", "User")
     private lateinit var identity: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -301,6 +302,48 @@ class loginpage : AppCompatActivity() {
 
             })
 
+        } else if (identity == "Organization") {
+            var request = orgLoginRequest(email, password)
+            val service = retrofit.create(OrganizationLoginService::class.java)
+            service.orgLogin(request).enqueue(object : Callback<orgLoginResponse> {
+                override fun onResponse(
+                    call: Call<orgLoginResponse>,
+                    response: Response<orgLoginResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val respo = response.body()
+                        if (respo?.success == true) {
+                            Toast.makeText(this@loginpage, "Login Successful", Toast.LENGTH_SHORT)
+                                .show()
+                            val it = Intent(this@loginpage, organizationDashboard::class.java)
+
+                            startActivity(it)
+                        } else {
+                            Toast.makeText(
+                                this@loginpage,
+                                "Invalid Credentials",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(
+                            this@loginpage,
+                            "Invalid Credentials",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<orgLoginResponse>, t: Throwable) {
+                    Toast.makeText(
+                        this@loginpage,
+                        "Some Error Occurred",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+
+            })
         } else {
             Toast.makeText(
                 this@loginpage,

@@ -20,6 +20,21 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".addOrganization"
+            android:exported="false" />
+        <activity
+            android:name=".adminModeratorProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Moderator_list"
+            android:exported="false" />
+        <activity
+            android:name=".outofstock"
+            android:exported="false" />
+        <activity
+            android:name=".organizationDashboard"
+            android:exported="false" />
+        <activity
             android:name=".filterUserAssign"
             android:exported="false" />
         <activity

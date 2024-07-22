@@ -119,6 +119,15 @@ class Dashboard : AppCompatActivity() {
                     val intent = Intent(this,add_tech_person::class.java)
                     startActivity(intent)
                 }
+                R.id.Itml -> {
+                    startActivity(Intent(this@Dashboard,Moderator_list::class.java))
+                }
+                R.id.outOfStockA ->{
+                    startActivity(Intent(this,outofstock::class.java))
+                }
+                R.id.addOrg ->{
+                    startActivity(Intent(this,addOrganization::class.java))
+                }
 
                 // Add other cases for other menu items as needed
             }
