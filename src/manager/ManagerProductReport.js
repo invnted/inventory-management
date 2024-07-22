@@ -1,312 +1,183 @@
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import AddUsers from '../Images/add-user.png'
-import List from '../Images/list.png'
+import { useState, useEffect } from 'react';
 import ManagerNavbar from '../components/ManagerNavbar';
+import { toast } from 'react-toastify';
 
 function ManagerProductReport() {
-    const [users, setUsers] = useState([]);
-    const [editingUser, setEditingUser] = useState(null);
-    const [editedUser, setEditedUser] = useState({});
-    const [searchTerm, setSearchTerm] = useState('');
     const serverUrl = process.env.REACT_APP_SERVER_URL;
-    const userListURL = `${serverUrl}/users/user-getAll`;
-    const userEditURL = `${serverUrl}/users/user-update`;
-    const userDeleteURL = `${serverUrl}/users/user-delete`;
+    const REPORT_URL = `${serverUrl}/products/getProductReport`;
+    const CSV_URL = `${serverUrl}/products/get-products-csv`;
 
-    // Function to fetch all users
-    const fetchUsers = async () => {
-        try {
-            const response = await fetch(userListURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Received:", data);
-                setUsers(data);
-                toast.success('Successfully fetched data');
-            } else {
-                toast.error('Failed to fetch data');
-            }
-        } catch (error) {
-            console.error('Error while fetching:', error);
-            toast.error('An error occurred');
-        }
-    };
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        fetchUsers();
+        fetchProducts();
     }, []);
 
-    const handleEditClick = (user) => {
-        setEditingUser(user.userId);
-        setEditedUser(user);
-    };
+    useEffect(() => {
+        filterProducts();
+    }, [searchTerm, products]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-
-
-        setEditedUser({
-            ...editedUser,
-            [name]: value
-        });
-    };
-
-
-    const handleSaveClick = async (userId) => {
+    const fetchProducts = async () => {
         try {
-            const response = await fetch(userEditURL, {
+            const response = await fetch(REPORT_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(editedUser),
+                // Body can be added if needed (e.g., { someKey: 'someValue' })
             });
 
-            if (response.ok) {
-                const updatedUsers = users.map((user) =>
-                    user.userId === userId ? editedUser : user
-                );
-                setUsers(updatedUsers);
-                setEditingUser(null);
-                toast.success('User updated successfully');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                setProducts(data.products);
             } else {
-                toast.error('Failed to update user');
+                throw new Error('Failed to fetch products');
             }
         } catch (error) {
-            console.error('Error while updating:', error);
-            toast.error('An error occurred');
+            console.error('Fetch products error:', error);
+            setError(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleDeleteClick = async (userId) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this user?');
-        if (confirmDelete) {
-            try {
-                const response = await fetch(userDeleteURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ userId }),
-                });
+    const filterProducts = () => {
+        const lowercasedSearchTerm = searchTerm.toLowerCase();
+        const filtered = products.filter(product =>
+            (product.productId && product.productId.toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.productType && product.productType.toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.productName && product.productName.toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.productModel && product.productModel.toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.productBrand && product.productBrand.toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.productPrice && product.productPrice.toString().toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.issuedTo && product.issuedTo.toLowerCase().includes(lowercasedSearchTerm)) ||
+            (product.status && product.status.toLowerCase().includes(lowercasedSearchTerm))
+        );
+        setFilteredProducts(filtered);
+    };
 
-                if (response.ok) {
-                    const updatedUsers = users.filter(
-                        (user) => user.userId !== userId
-                    );
-                    setUsers(updatedUsers);
-                    toast.success('User deleted successfully');
-                } else {
-                    toast.error('Failed to delete User');
-                }
-            } catch (error) {
-                console.error('Error while deleting:', error);
-                toast.error('An error occurred');
+    const handleRefresh = () => {
+        setSearchTerm('');
+        setFilteredProducts(products);
+    };
+
+    const handleDownloadCSV = async () => {
+        try {
+            const response = await fetch(CSV_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Include body if necessary
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            // Create a Blob from the response
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'products-report.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Download CSV error:', error);
+            toast.error('Failed to download CSV');
         }
     };
 
-
-
-    // Function to handle search input change
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
+    // Function to determine row background color
+    const getRowBackgroundColor = (product) => {
+        if (product.issuedTo === 'NONE' || product.status === 'held') {
+            return 'bg-yellow-400'; // Golden background color
+        }
+        return 'bg-green-400'; // Green background color
     };
-
-    // Filter users based on search term
-    const filteredUsers = users.filter((user) =>
-        user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.userName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
         <div>
             <ManagerNavbar />
-            <div className='m-4 md:m-12  justify-between'>
+            <div className='m-4 md:m-12 justify-between'>
                 <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
                     <div className='flex gap-10'>
-                        <div className='text-4xl text-white font-semibold'>Product Report</div>
+                        <div className='text-4xl text-white font-semibold'>All Products Report</div>
                     </div>
                 </div>
                 <div className='bg-sky-300'>
-                    <form className="max-w-md mx-auto md:pt-20 p-6">
-                        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                            </div>
-                            <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" value={searchTerm} onChange={handleSearchChange} required />
-                        </div>
-                    </form>
                     <div className="p-2 md:p-10">
-                        <button onClick={fetchUsers} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
-                        {filteredUsers.length > 0 && (
+                        {loading && <p>Loading...</p>}
+                        {error && <p className="text-red-600">Error: {error}</p>}
+                        <div className="mb-4 flex justify-center gap-4">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="p-2 border border-gray-300 rounded-md w-full max-w-xs"
+                                style={{ backgroundColor: '#e0f2fe', color: '#000' }}
+                            />
+                            <button
+                                onClick={handleRefresh}
+                                className="p-2 border border-gray-300 rounded-md bg-sky-800 text-white hover:bg-sky-600"
+                            >
+                                Refresh
+                            </button>
+                            <button
+                                onClick={handleDownloadCSV}
+                                className="p-2 border border-gray-300 rounded-md bg-sky-800 text-white hover:bg-sky-600"
+                            >
+                                Download CSV
+                            </button>
+                        </div>
+                        {!loading && !error && filteredProducts.length > 0 && (
                             <div className="overflow-x-auto mt-4">
-                                <table className="min-w-full bg-white border border-gray-300">
+                                <table className="min-w-full bg-white border-2 border-gray-400">
                                     <thead>
                                         <tr>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product ID</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Type</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Name</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Model</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Brand</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Product Price</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">additional Details</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Issued To</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Status</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Product ID</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Product Type</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Product Name</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Product Model</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Product Brand</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Product Price</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Issued To</th>
+                                            <th className="py-2 px-4 border-2 border-gray-400 text-center font-bold">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredUsers.map((user) => (
-                                            <tr key={user.userId}>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">{user.userId}</td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="userName"
-                                                            value={editedUser.userName}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.userName
-                                                    )}
-                                                </td>
-
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="designation"
-                                                            value={editedUser.designation}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.designation
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="appointment"
-                                                            value={editedUser.appointment}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.appointment
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="section"
-                                                            value={editedUser.section}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.section
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="password"
-                                                            value={editedUser.password}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.password
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="password"
-                                                            value={editedUser.password}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.password
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="password"
-                                                            value={editedUser.password}
-                                                            onChange={handleInputChange}
-                                                            className="bg-gray-200"
-                                                        />
-                                                    ) : (
-                                                        user.password
-                                                    )}
-                                                </td>
-
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingUser === user.userId ? (
-                                                        <>
-                                                            <button
-                                                                className="text-green-600 hover:text-green-900 mr-2"
-                                                                onClick={() => handleSaveClick(user.userId)}
-                                                            >
-                                                                Save
-                                                            </button>
-                                                            <button
-                                                                className="text-gray-600 hover:text-gray-900"
-                                                                onClick={() => setEditingUser(null)}
-                                                            >
-                                                                Cancel
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <button
-                                                                className="text-blue-600 hover:text-blue-900 mr-2"
-                                                                onClick={() => handleEditClick(user)}
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <button
-                                                                className="text-red-600 hover:text-red-900"
-                                                                onClick={() => handleDeleteClick(user.userId)}
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                </td>
+                                        {filteredProducts.map((product) => (
+                                            <tr key={product.productId} className={getRowBackgroundColor(product)}>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productId}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productType}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productName}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productModel}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productBrand}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productPrice}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.issuedTo}</td>
+                                                <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.status}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
                         )}
+                        {!loading && !error && filteredProducts.length === 0 && <p className="text-center">No products found</p>}
                     </div>
                 </div>
             </div>
         </div>
     );
 }
-export default ManagerProductReport
+
+export default ManagerProductReport;
