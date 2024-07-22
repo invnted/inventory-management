@@ -4,9 +4,13 @@ const { createObjectCsvStringifier } = require('csv-writer');
 
 //CSV Locators
 const { receiveProductCSV } = require('../csv_handlers/products/addProductCSV');
+const { sendProductCSV } = require('../csv_handlers/products/sendProductCSV');
 
 //CSV Caller
 exports.receiveProductCSV = receiveProductCSV;
+
+exports.sendProductCSV = sendProductCSV;
+
 
 
 
@@ -478,3 +482,13 @@ exports.productReceived = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.allProductReport = async (req, res) => {
+  try{
+    const products = await Product.find({});
+    return res.status(200).json({products, success:true});
+  }
+  catch (error){
+    return res.status(500).json({ message: 'Server error' });
+  }
+}

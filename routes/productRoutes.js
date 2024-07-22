@@ -21,11 +21,14 @@ router.post('/unissuedDemandList',productController.getUnissuedDemandList)    //
 router.post('/filterProducts',productController.filterProducts)               // Used in Moderator Panel to get filtered product 
 router.post('/getOutOfStock',productController.outOfStockCalculator)          // Used in Manager Panel to check for OUT OF STOCK product
 router.post('/getProductReceived',productController.productReceived)          // Used in User Panel to get product that issued to him
+router.post('/getProductReport',productController.allProductReport)
+
+
 
 
 //For Sending CSV Files
-router.post('/getStoreReportCSV',productController.getstoreReportCSV);                      //Used in Store Report panel to download CSV
-// router.get('/get-products-csv',productController.getProductCSV)
+router.post('/getStoreReportCSV',productController.getstoreReportCSV);     // Used in Store Report panel to download CSV
+router.post('/get-products-csv',productController.sendProductCSV)            // Used in all product report panel to get CSV
 
 
 
