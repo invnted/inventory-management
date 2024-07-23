@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import Bg from '../Images/bg1.jpg';
+import { Link, useNavigate } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const LOGIN_URL = `${serverUrl}/companies/company-login`;
+const LOGIN_URL = `${serverUrl}/admins/admin-login`;
 
-function CompanyLogin() {
-  const [company, setCompany] = useState({
+function AdminLogin() {
+  const [admin, setUser] = useState({
     email: "",
     password: "",
   });
@@ -18,8 +17,8 @@ function CompanyLogin() {
     let name = e.target.name;
     let value = e.target.value;
 
-    setCompany({
-      ...company,
+    setUser({
+      ...admin,
       [name]: value,
     });
   };
@@ -32,24 +31,25 @@ function CompanyLogin() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(company),
+        body: JSON.stringify(admin),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log("Received:", data);
 
-        const { companyId, companyName, email, contact_1 } = data.company;
+        const { adminName, email, department, profileId, role } = data.admin;
 
-        localStorage.setItem('companyId', companyId);
-        localStorage.setItem('companyName', companyName);
+        localStorage.setItem('adminName', adminName);
         localStorage.setItem('email', email);
-        localStorage.setItem('contact_1', contact_1);
+        localStorage.setItem('department', department);
+        localStorage.setItem('profileId', profileId);
+        localStorage.setItem('role', role);
 
         toast.success("Login successful");
-        setCompany({ email: "", password: "" });
+        setUser({ email: "", password: "" });
 
-        navigate('/company-home');
+        navigate('/home', { state: { adminName, email, department, profileId, role } });
       } else {
         toast.error("Invalid credentials");
       }
@@ -58,12 +58,16 @@ function CompanyLogin() {
     }
   };
 
-  
-  
+  const videoRef = useRef(null);
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.8; // Adjust the playback rate here (0.8 means 80% speed)
+    }
+  }, []);
 
   const Dropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Company");
+    const [selectedOption, setSelectedOption] = useState("Admin");
     const navigate = useNavigate();
 
     const toggleDropdown = () => {
@@ -136,7 +140,7 @@ function CompanyLogin() {
                 role="menuitem"
                 tabIndex="-1"
                 id="menu-item-3"
-                onClick={() => handleOptionClick('Company', '/company-login')}
+                onClick={() => handleOptionClick('User', '/company-login')}
               >
                 Company
               </button>
@@ -144,7 +148,7 @@ function CompanyLogin() {
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
                 tabIndex="-1"
-                id="menu-item-4"
+                id="menu-item-3"
                 onClick={() => handleOptionClick('User', '/')}
               >
                 User
@@ -163,12 +167,12 @@ function CompanyLogin() {
           <Dropdown />
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
-              Company Login
+              Admin Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Email</label>
-                <input type="email" name="email" id="email" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white" placeholder="Company Email" onChange={handleInput} required />
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                <input type="email" name="email" id="email" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white" placeholder="name@company.com" onChange={handleInput} required />
               </div>
               <div>
                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -185,4 +189,4 @@ function CompanyLogin() {
   );
 }
 
-export default CompanyLogin;
+export default AdminLogin;

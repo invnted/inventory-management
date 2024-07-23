@@ -1,9 +1,10 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-import UserNavbar from '../components/UserNavbar';
+import Navbar from '../super-admin/Navbar';
+import UserNavbar from './UserNavbar';
 import RaiseDemand from '../Images/raise.png';
 import ProductReceived from '../Images/product-received.png';
 import ProductInUse from '../Images/product-in-use.png';
+import RaiseTicket from '../Images/RaiseTicket.png'
 import { Link } from 'react-router-dom';
 
 function UserHome() {
@@ -21,6 +22,16 @@ function UserHome() {
                         </div>
                     </div>
                 </Link>
+                {/* <Link to='/user-home/raise-ticket'>
+                    <div className='w-72 h-40 bg-sky-800 hover:bg-sky-500 transition duration-300 flex justify-center items-center rounded-3xl cursor-pointer shadow-2xl'>
+                        <div className='flex flex-col justify-center items-center'>
+                            <div className='w-16'>
+                                <img src={RaiseTicket} alt="Raise Demand" />
+                            </div>
+                            <div className='text-3xl text-white'>Raise Ticket</div>
+                        </div>
+                    </div>
+                </Link> */}
                 <Link to='/user-home/product-received'>
                     <div className='w-72 h-40 bg-sky-800 hover:bg-sky-500 transition duration-300 flex justify-center items-center rounded-3xl cursor-pointer shadow-2xl'>
                         <div className='flex flex-col justify-center items-center'>

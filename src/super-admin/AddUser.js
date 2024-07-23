@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from './Navbar';
 import AddUsers from '../Images/add-user.png';
 import List from '../Images/list.png';
 import { Link } from 'react-router-dom';

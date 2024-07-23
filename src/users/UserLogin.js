@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Bg from '../Images/bg1.jpg'
 import { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 

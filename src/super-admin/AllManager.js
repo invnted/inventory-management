@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import Manager from '../Images/add.png';
 import { toast } from 'react-toastify';
+import Navbar from './Navbar';
 
 function AllManager() {
     const [managers, setManagers] = useState([]);

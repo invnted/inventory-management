@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from './Navbar';
 import AddCompany from '../Images/AddCompany1.png';
 import List from '../Images/list.png';
 

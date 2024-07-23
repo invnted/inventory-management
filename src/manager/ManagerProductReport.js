@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ManagerNavbar from '../components/ManagerNavbar';
+import ManagerNavbar from './ManagerNavbar';
 import { toast } from 'react-toastify';
 
 function ManagerProductReport() {
@@ -28,7 +28,7 @@ function ManagerProductReport() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // Body can be added if needed (e.g., { someKey: 'someValue' })
+                
             });
 
             if (!response.ok) {
@@ -118,27 +118,28 @@ function ManagerProductReport() {
                     <div className="p-2 md:p-10">
                         {loading && <p>Loading...</p>}
                         {error && <p className="text-red-600">Error: {error}</p>}
-                        <div className="mb-4 flex justify-center gap-4">
+                        <div className="m-4 flex flex-col md:flex-row justify-center gap-4">
                             <input
                                 type="text"
                                 placeholder="Search..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="p-2 border border-gray-300 rounded-md w-full max-w-xs"
-                                style={{ backgroundColor: '#e0f2fe', color: '#000' }}
+                                className="p-2 rounded-md w-full max-w-xs bg-sky-600 outline-none text-white placeholder:text-gray-700 text-xl mb-4 md:mb-0"
                             />
-                            <button
-                                onClick={handleRefresh}
-                                className="p-2 border border-gray-300 rounded-md bg-sky-800 text-white hover:bg-sky-600"
-                            >
-                                Refresh
-                            </button>
-                            <button
-                                onClick={handleDownloadCSV}
-                                className="p-2 border border-gray-300 rounded-md bg-sky-800 text-white hover:bg-sky-600"
-                            >
-                                Download CSV
-                            </button>
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <button
+                                    onClick={handleRefresh}
+                                    className="p-2 rounded-md bg-sky-800 text-white hover:bg-sky-600 outline-none text-xl"
+                                >
+                                    Refresh
+                                </button>
+                                <button
+                                    onClick={handleDownloadCSV}
+                                    className="p-2 rounded-md bg-sky-800 text-white hover:bg-sky-600 outline-none text-xl"
+                                >
+                                    Download CSV
+                                </button>
+                            </div>
                         </div>
                         {!loading && !error && filteredProducts.length > 0 && (
                             <div className="overflow-x-auto mt-4">

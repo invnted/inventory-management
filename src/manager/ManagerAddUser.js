@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from '../super-admin/Navbar';
 import AddUsers from '../Images/add-user.png';
 import List from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import ManagerNavbar from '../components/ManagerNavbar';
+import ManagerNavbar from './ManagerNavbar';
 
 function ManagerAddUser() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;

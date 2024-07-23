@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from '../super-admin/Navbar';
 import ModeratorNavbar from './ModeratorNavbar';
 import { Link } from 'react-router-dom';
 

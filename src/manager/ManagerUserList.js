@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from '../super-admin/Navbar';
 import AddUsers from '../Images/add-user.png'
 import List from '../Images/list.png'
-import ManagerNavbar from '../components/ManagerNavbar';
+import ManagerNavbar from './ManagerNavbar';
 
 function ManagerUserList() {
   const [users, setUsers] = useState([]);

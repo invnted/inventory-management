@@ -11,15 +11,7 @@ import AddUser from './super-admin/AddUser';
 import AuthorizationStore from './super-admin/AuthorizationStore';
 import DemandRequest from './super-admin/DemandRequest';
 import PendingDemand from './super-admin/PendingDemand';
-import Reports from './pages/Reports';
-import RadioButton from './components/RadioButton';
-import AllManager from './components/AllManager';
 import UsersList from './super-admin/UsersList';
-import StoreReport from './reports/StoreReport';
-import LoginOption from './components/LoginOption';
-import AdminLogin from './components/Login';
-import ManagerLogin from './components/ManagerLogin';
-import UserLogin from './components/UserLogin';
 import UserHome from './users/UserHome';
 import RaiseDemand from './users/RaiseDemand';
 import RaiseDemandReport from './users/RaiseDemandReport';
@@ -34,12 +26,10 @@ import ManagerReport from './manager/ManagerReport';
 import ModeratorHome from './moderator/ModeratorHome';
 import AddModerator from './super-admin/AddModerator';
 import AllModerator from './super-admin/AllModerator';
-import ModeratorLogin from './components/ModeratorLogin';
 import IssueProduct from './moderator/IssueProduct';
 import ConfirmProduct from './moderator/ConfirmProduct';
 import StockRequired from './super-admin/StockRequired';
 import StockRequiredInStore from './manager/StockRequiredInStore';
-import CompanyLogin from './components/CompanyLogin';
 import CompanyDashboard from './company/CompanyDashboard';
 import ManagerAuthorizationStore from './manager/ManagerAuthorizationStore';
 import CompanyRaiseDemand from './company/CompanyRaiseDemand';
@@ -49,6 +39,16 @@ import AddCompany from './super-admin/AddCompany';
 import UserProductReceived from './users/UserProductReceived';
 import CompanyProductReceived from './company/CompanyProductReceived';
 import ManagerProductReport from './manager/ManagerProductReport';
+import UserRaiseTicket from './users/UserRaiseTicket';
+import CompanyRaiseTicket from './company/CompanyRaiseTicket';
+import Reports from './super-admin/Reports';
+import StoreReport from './super-admin/StoreReport';
+import AllManager from './super-admin/AllManager';
+import CompanyLogin from './company/CompanyLogin';
+import AdminLogin from './super-admin/Login';
+import UserLogin from './users/UserLogin';
+import ManagerLogin from './manager/ManagerLogin';
+import ModeratorLogin from './moderator/ModeratorLogin';
 
 
 
@@ -58,8 +58,6 @@ function App() {
     <Router>
       <div>
       <Routes>
-        {/* Login Options */}
-        {/* <Route path="" element={<LoginOption />} /> */}
         <Route path="/login" element={<AdminLogin/>} />
         <Route path="/manager-login" element={<ManagerLogin/>} />
         <Route path="/moderator-login" element={<ModeratorLogin/>} />
@@ -69,9 +67,10 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/reports/manager-report" element={<ManagerReport />} />
+        <Route path="/reports/store-reports" element={<StoreReport/>} />
         <Route path="/home/add-category" element={<AddCategory />} />
         <Route path="/home/add-manager" element={<AddManager />} />
-        <Route path="/home/all-managers" element={<AllManager />} />
+        <Route path="/home/all-managers" element={<AllManager/>} />
         <Route path="/home/add-user" element={<AddUser />} />
         <Route path="/home/add-Company" element={<AddCompany/>} />
         <Route path="/home/company-list" element={<CompanyList />} />
@@ -96,6 +95,7 @@ function App() {
         {/* User Panel */}
         <Route path="/user-home" element={<UserHome/>} />
         <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />
+        <Route path="/user-home/raise-ticket" element={<UserRaiseTicket/>} />
         <Route path="/user-home/raise-demand-report" element={<RaiseDemandReport/>} />
         <Route path="/user-home/product-received" element={<UserProductReceived/>} />
 
@@ -110,15 +110,11 @@ function App() {
         {/* Company Panel */}
         <Route path="/company-home" element={<CompanyDashboard/>}/>
         <Route path="/company-home/raise-demand" element={<CompanyRaiseDemand/>}/>
+        <Route path="/company-home/raise-ticket" element={<CompanyRaiseTicket/>}/>
         <Route path="/company-home/raise-demand-report" element={<CompanyRaiseDemandReport/>}/>
         <Route path="/company-home/product-received" element={<CompanyProductReceived/>}/>
 
         
-        {/* Report Section */}
-        <Route path="/reports/store-reports" element={<StoreReport/>} />
-
-        
-
       </Routes>
       <ToastContainer />
       </div>

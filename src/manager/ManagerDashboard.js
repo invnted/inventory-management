@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ManagerNavbar from '../components/ManagerNavbar'
+import ManagerNavbar from './ManagerNavbar'
 import Store from '../Images/store1.png'
 import AddProduct from '../Images/category.png'
 import AddUser from '../Images/add1.png'

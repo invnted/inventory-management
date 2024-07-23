@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from './Navbar';
 import AddCompanyIcon from '../Images/AddCompany1.png';
 import ListIcon from '../Images/list.png';
 import { Link } from 'react-router-dom';

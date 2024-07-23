@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ManagerNavbar from '../components/ManagerNavbar';
+import ManagerNavbar from './ManagerNavbar';
 import DemandRequested from '../Images/demand1.png';
 import { Link } from 'react-router-dom';
 

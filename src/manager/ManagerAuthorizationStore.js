@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import ManagerNavbar from '../components/ManagerNavbar';
+import ManagerNavbar from './ManagerNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const productTypeListUrl = `${serverUrl}/products/productType-list`;

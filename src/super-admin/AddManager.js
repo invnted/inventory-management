@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from './Navbar';
 import Manager from '../Images/add.png';
 import ListManager from '../Images/list.png';
 import { Switch } from 'antd';

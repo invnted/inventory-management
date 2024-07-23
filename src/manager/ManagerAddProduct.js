@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import Navbar from '../components/Navbar';
-import ManagerNavbar from '../components/ManagerNavbar';
+import Navbar from '../super-admin/Navbar';
+import ManagerNavbar from './ManagerNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const ADDPRODUCTURL = `${serverUrl}/products/add`;

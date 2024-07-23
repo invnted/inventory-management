@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import UserNavbar from '../components/UserNavbar';
+import UserNavbar from '../users/UserNavbar';
 import { Link } from 'react-router-dom';
 import CompanyNavbar from './CompanyNavbar';
 import Demand from '../Images/demand1.png'

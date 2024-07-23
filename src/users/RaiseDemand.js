@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import UserNavbar from '../components/UserNavbar'
+import UserNavbar from './UserNavbar'
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import Demand from '../Images/demand1.png'

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import UserNavbar from '../components/UserNavbar';
+import UserNavbar from './UserNavbar';
+import { Link } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getProductReceived`;
@@ -57,7 +58,7 @@ function UserProductReceived() {
       <UserNavbar />
       <div className='container mx-auto p-6'>
         <div className='bg-sky-300'>
-          <div className='flex justify-center items-center bg-sky-800 p-8 text-4xl font-semibold text-white'>
+          <div className='flex justify-center items-center bg-sky-800 p-8 text-4xl font-semibold text-white text-center'>
             Product Received
           </div>
 
@@ -96,6 +97,7 @@ function UserProductReceived() {
                     <th className="py-3 px-4 border border-black text-left">Product Brand</th>
                     <th className="py-3 px-4 border border-black text-left">Product Model</th>
                     <th className="py-3 px-4 border border-black text-left">Updated At</th>
+                    <th className="py-3 px-4 border border-black text-left">Raise Ticket</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -108,11 +110,19 @@ function UserProductReceived() {
                         <td className="py-2 px-4 border text-black border-black">{product.productBrand}</td>
                         <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
                         <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
+                        <td className="py-2 px-4 border text-black border-black ">
+                          <Link to='/user-home/raise-ticket'>
+                            <div className=' bg-sky-800 text-white p-2 rounded-lg text-center'>Raise Ticket</div>
+                          </Link>
+                        </td>
+
+
+
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6" className="py-2 px-4 text-center text-black">No products found</td>
+                      <td colSpan="7" className="py-2 px-4 text-center text-black">No products found</td>
                     </tr>
                   )}
                 </tbody>

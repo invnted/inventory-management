@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ManagerNavbar from '../components/ManagerNavbar';
+import ManagerNavbar from './ManagerNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getOutOfStock`;
