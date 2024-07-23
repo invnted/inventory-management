@@ -6,6 +6,8 @@ const Manager = require('../models/Manager');
 const User = require('../models/User');
 const Moderator = require('../models/Moderator');
 const Company = require('../models/Company');
+const Product = require('../models/Product');
+const Ticket = require('../models/Ticket');
 
 
 
@@ -18,6 +20,9 @@ const { receiveUserCSV } = require('../csv_handlers/users/addUserCSV');
 const { sendUserCSV } = require('../csv_handlers/users/sendUserCSV');
 const { receiveCompanyCSV } = require('../csv_handlers/users/addCompanyCSV');
 const { sendCompanyCSV } = require('../csv_handlers/users/sendCompanyCSV');
+const { sendUserDemandCSV } = require('../csv_handlers/users/sendUserDemandCSV');
+const { sendCompanyDemandCSV } = require('../csv_handlers/users/sendCompanyDemandCSV');
+
 
 //CSV Caller
 exports.receiveManagerCSV = receiveManagerCSV;
@@ -28,6 +33,9 @@ exports.receiveUserCSV = receiveUserCSV;
 exports.sendUserCSV  = sendUserCSV;
 exports.receiveCompanyCSV = receiveCompanyCSV;
 exports.sendCompanyCSV  = sendCompanyCSV;
+exports.sendUserDemandCSV  = sendUserDemandCSV;
+exports.sendCompanyDemandCSV  = sendCompanyDemandCSV;
+
 
 // Admin methods
 exports.registerAdmin = async (req, res) => {
@@ -424,6 +432,29 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+exports.userRaiseTicket = async (req, res) => {
+  const { ticketId , issueType , message , issuedBy , productId } = req.body;
+  try {
+    
+    // Convert specific fields to lowercase
+    const lowercaseFields = ['issueType', 'message',];
+    lowercaseFields.forEach(field => {
+      if (req.body[field]) {
+        req.body[field] = req.body[field].toLowerCase();
+      }
+    });
+
+    const ticket = new Ticket(req.body);
+    await ticket.save();
+    console.log("Ticket Raised Successfully");
+    res.status(200).json({ success: true });
+
+  } catch (err) {
+    console.error("Error while raising ticket:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 
 //Moderator 
 exports.registerModerator = async (req, res) => {
@@ -572,7 +603,7 @@ exports.registerCompany = async (req, res) => {
 
     jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      res.json({ token , success:true});
     });
   } catch (err) {
     console.error(err.message);
@@ -615,7 +646,7 @@ exports.loginCompany = async (req, res) => {
 exports.getAllCompanies = async (req, res) => {
   try {
     const companies = await Company.find();
-    res.json(companies);
+    res.json({companies,success:true});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -682,3 +713,4 @@ exports.deleteCompany = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+

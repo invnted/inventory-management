@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Demand = require('../models/Demand');
+const companyDemand = require('../models/companyDemand');
 const { createObjectCsvStringifier } = require('csv-writer');
 
 //CSV Locators
@@ -119,8 +120,9 @@ exports.getProductStore = async (req, res) => {
 };
 
 exports.makeDemand = async (req, res) => {
+  console.log(req.body)
   try {
-    
+  
     // Convert specific fields to lowercase
     const lowercaseFields = ['productType', 'productName', 'productModel', 'productBrand', 'additionalDetail' , /* add other fields here */];
     lowercaseFields.forEach(field => {
@@ -171,10 +173,19 @@ exports.getUserDemands = async (req, res) => {
   }
 };
 
-
 exports.getAllDemand = async (req, res) => {
   try {
     const demands = await Demand.find({});
+    res.status(200).json({demands,success:true});
+  } catch (error) {
+    console.error("Error fetching demands:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.allCompanyDemand = async (req, res) => {
+  try {
+    const demands = await companyDemand.find({});
     res.status(200).json({demands,success:true});
   } catch (error) {
     console.error("Error fetching demands:", error);
@@ -308,6 +319,29 @@ exports.updateDemandStatus = async (req, res) => {                //UPADTE ATTRI
   }
 };
 
+exports.updateCompanyDemandStatus = async (req, res) => {                //UPADTE ATTRIBUTES: APPROVED, REJECTED
+  try {
+    const { demandId, status } = req.body;
+
+    const updatedDemand = await companyDemand.findOneAndUpdate(
+      { demandId: demandId }, 
+      { status: status }, 
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedDemand) {
+      return res.status(404).json({ success: false, message: 'Demand not found' });
+    }
+
+    console.log("Successfully updated demand status");
+    res.status(200).json({ success: true, status: updatedDemand.status });
+
+  } catch (err) {
+    console.log("Error while updating demand status", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 exports.productTypesInDemand = async (req, res) => {
   try {
     const { userId } = req.body; 
@@ -328,11 +362,21 @@ exports.getUnissuedDemandList = async (req, res) => {
   }
 };
 
+exports.getUnissuedCompanyDemandList = async (req, res) => {
+  try {
+    const demands = await companyDemand.find({ status: "APPROVED" });
+    res.status(200).json({ demands, success: true });
+  } catch (error) {
+    console.error("Error fetching demands:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.filterProducts = async (req, res) => {
   const { productType, productModel, productBrand, quantity } = req.body;
   console.log(req.body);
   const issuedTo = 'NONE';
-  let query = {}; // Initialize query with issuedTo condition
+  let query = {}; 
   if (productType) query.productType = productType;
   if (productModel) query.productModel = productModel;
   if (productBrand) query.productBrand = productBrand;
@@ -351,6 +395,8 @@ exports.filterProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 
 
@@ -403,11 +449,13 @@ exports.assignSingleProduct = async (req, res) => {
   }
 };
 
+
 exports.outOfStockCalculator = async (req, res) => {
-  console.log("Req come for Out of stock")
+  console.log("Request received for Out of Stock calculation");
+
   try {
-    // Aggregate demands by productType, productBrand, productModel
-    const demands = await Demand.aggregate([
+    // Aggregate demands by productType, productBrand, productModel from both Demand and companyDemand collections
+    const demandAggregation = [
       {
         $group: {
           _id: {
@@ -418,14 +466,36 @@ exports.outOfStockCalculator = async (req, res) => {
           totalQuantity: { $sum: '$productQuantity' },
         },
       },
-    ]);
+    ];
+
+    const demandsFromDemand = await Demand.aggregate(demandAggregation);
+    const demandsFromCompanyDemand = await companyDemand.aggregate(demandAggregation);
+
+    // Combine demands from both collections
+    const combinedDemands = {};
+
+    demandsFromDemand.forEach(demand => {
+      const key = JSON.stringify(demand._id);
+      if (!combinedDemands[key]) {
+        combinedDemands[key] = { ...demand._id, totalQuantity: 0 };
+      }
+      combinedDemands[key].totalQuantity += demand.totalQuantity;
+    });
+
+    demandsFromCompanyDemand.forEach(demand => {
+      const key = JSON.stringify(demand._id);
+      if (!combinedDemands[key]) {
+        combinedDemands[key] = { ...demand._id, totalQuantity: 0 };
+      }
+      combinedDemands[key].totalQuantity += demand.totalQuantity;
+    });
 
     const outOfStockDemands = [];
 
-    // Iterate through each demand to check against product inventory
-    for (const demand of demands) {
-      const { productType, productBrand, productModel } = demand._id;
-      const totalDemandQuantity = demand.totalQuantity;
+    // Iterate through each combined demand to check against product inventory
+    for (const key in combinedDemands) {
+      const demand = combinedDemands[key];
+      const { productType, productBrand, productModel, totalQuantity: totalDemandQuantity } = demand;
 
       // Fetch total quantity of products from Product collection
       const totalProductQuantity = await Product.aggregate([
@@ -457,16 +527,16 @@ exports.outOfStockCalculator = async (req, res) => {
     }
 
     if (outOfStockDemands.length > 0) {
-  
-      return res.status(200).json({ outOfStockDemands, makeNotification:true, success:true });
+      return res.status(200).json({ outOfStockDemands, makeNotification: true, success: true });
     } else {
-      return res.status(200).json({ message: 'All demands can be fulfilled with available stock.', makeNotification:false});
+      return res.status(200).json({ message: 'All demands can be fulfilled with available stock.', makeNotification: false });
     }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 exports.productReceived = async (req, res) => {
   try {
@@ -476,8 +546,8 @@ exports.productReceived = async (req, res) => {
       return res.status(404).json({ message: 'No products found for this user.' });
     }
 
-    return res.status(200).json(products);
-  } catch (error) {
+    return res.status(200).json({products,success:true});
+  } catch (error){
     console.error('Error fetching products:', error);
     return res.status(500).json({ message: 'Server error' });
   }
@@ -492,3 +562,26 @@ exports.allProductReport = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 }
+
+exports.makeDemandCompany = async (req, res) => {
+  console.log(req.body);
+  try {
+  
+    // Convert specific fields to lowercase
+    const lowercaseFields = ['productType', 'productName', 'productModel', 'productBrand', 'additionalDetail' , /* add other fields here */];
+    lowercaseFields.forEach(field => {
+      if (req.body[field]) {
+        req.body[field] = req.body[field].toLowerCase();
+      }
+    });
+
+    const demand = new companyDemand(req.body);
+    await demand.save();
+    console.log("Successfully added new demand");
+    res.status(200).json({ success: true });
+
+  } catch (err) {
+    console.error("Error while adding demand:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
