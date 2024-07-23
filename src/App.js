@@ -49,6 +49,9 @@ import AdminLogin from './super-admin/Login';
 import UserLogin from './users/UserLogin';
 import ManagerLogin from './manager/ManagerLogin';
 import ModeratorLogin from './moderator/ModeratorLogin';
+import CompanyDemandRequest from './super-admin/CompanyDemandRequest';
+import CompanyDemand from './manager/CompanyDemand';
+import CompanyDemandReport from './manager/CompanyDemandReport';
 
 
 
@@ -77,6 +80,7 @@ function App() {
         <Route path="/home/add-user/users-list" element={<UsersList/>} />
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />
         <Route path="/home/demand-request" element={<DemandRequest />} />
+        <Route path="/home/company-demand-request" element={<CompanyDemandRequest />} />
         <Route path="/home/pending-demand" element={<PendingDemand />} />
         <Route path="/home/demand-report" element={<DemandReport />} />
         <Route path="/home/stock-required" element={<StockRequired />} />
@@ -88,6 +92,8 @@ function App() {
         <Route path="/manager-dashboard/manager-AddProduct" element={<ManagerAddProduct/>} />
         <Route path="/manager-dashboard/manager-ProductReport" element={<ManagerProductReport/>} />
         <Route path="/manager-dashboard/ManagerDemand" element={<ManagerDemand/>} />
+        <Route path="/manager-dashboard/CompanyDemand" element={<CompanyDemand/>} />
+        <Route path="/manager-dashboard/CompanyDemandReport" element={<CompanyDemandReport/>} />
         <Route path="/manager-dashboard/ManagerDemandReport" element={<ManagerDemandReport/>} />
         <Route path="/manager-dashboard/StockRequiredInStore" element={<StockRequiredInStore/>} />
 

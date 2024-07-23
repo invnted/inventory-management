@@ -99,11 +99,22 @@ function ManagerDashboard() {
                   <img className='color-white ' src={Demand} alt="Description" />
                 </div>
                 <div className='p-2 text-white text-xl font-semibold  text-center'>
-                  <h2>Demand</h2>
+                  User Demand
                 </div>
               </div>
             </Link>
+            
           )}
+          <Link to='/manager-dashboard/CompanyDemand'>
+              <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
+                <div className='w-20  flex justify-center items-center'>
+                  <img className='color-white ' src={Demand} alt="Description" />
+                </div>
+                <div className='p-2 text-white text-xl font-semibold  text-center'>
+                  Company Demand
+                </div>
+              </div>
+            </Link>
           <Link to='/manager-dashboard/StockRequiredInStore'>
             <div className="bg-sky-800 p-4 h-44 flex flex-col justify-center items-center cursor-pointer rounded-lg">
               <div className='w-20  flex justify-center items-center'>

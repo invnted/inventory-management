@@ -28,7 +28,6 @@ function ManagerProductReport() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                
             });
 
             if (!response.ok) {

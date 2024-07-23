@@ -6,7 +6,7 @@ import CompanyNavbar from './CompanyNavbar';
 import Demand from '../Images/demand1.png'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = ` ${serverUrl}/products/makeDemand`
+const REQ_URL = ` ${serverUrl}/products/company-makeDemand`
 
 function CompanyRaiseDemand() {
 
@@ -21,13 +21,10 @@ function CompanyRaiseDemand() {
 
 
 
-  const userId = localStorage.getItem('userId') || 'N/A';
-  const designation = localStorage.getItem('designation') || 'N/A';
-
+  const companyId = localStorage.getItem('companyId');
   const [demand, setDemand] = useState({
     demandId: generateRandomString(),
-    userId: userId,
-    designation: designation,
+    companyId: companyId,
     productType: "",
     productName: "",
     productModel: "",
@@ -67,8 +64,7 @@ function CompanyRaiseDemand() {
 
         setDemand({
           demandId: generateRandomString(),
-          userId: userId,
-          designation: designation,
+          companyId: companyId,
           productType: "",
           productName: "",
           productModel: "",

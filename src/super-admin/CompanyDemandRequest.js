@@ -6,9 +6,9 @@ import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllDemand`;
-const downloadCSVURL = `${serverUrl}/users/download-userDemand-csv`; // CSV download URL
+const downloadCSVURL = `${serverUrl}/users/download-companyDemand-csv`; // CSV download URL
 
-function DemandRequest() {
+function CompanyDemandRequest() {
   const [demandData, setDemandData] = useState([]);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ function DemandRequest() {
     }
   };
 
+  
     // Function to handle CSV download
     const handleDownloadCSV = async () => {
       try {
@@ -67,7 +68,7 @@ function DemandRequest() {
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = 'user_Demands.csv'; // Ensure filename is correct
+              a.download = 'company_Demands.csv'; // Ensure filename is correct
               document.body.appendChild(a);
               a.click();
               a.remove();
@@ -89,7 +90,7 @@ function DemandRequest() {
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <Link to='/home/demand-request'>
-              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer '>
                 <div className='w-14 block'>
                   <img src={Demand} alt='Description' />
                 </div>
@@ -99,7 +100,7 @@ function DemandRequest() {
               </div>
             </Link>
             <Link to='/home/company-demand-request'>
-              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
                 <div className='w-14 block'>
                   <img src={Demand} alt='Description' />
                 </div>
@@ -173,4 +174,4 @@ function DemandRequest() {
   );
 }
 
-export default DemandRequest;
+export default CompanyDemandRequest

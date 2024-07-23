@@ -20,16 +20,20 @@ function CompanyList() {
   const fetchCompanies = async () => {
     try {
       const response = await fetch(companyListURL, {
-        method: 'POST',  
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        setCompanies(data);
-        toast.success('Successfully fetched data');
+        if (data.success) {  // Check for success flag
+          setCompanies(data.companies);
+          toast.success('Successfully fetched data');
+        } else {
+          toast.error('Failed to fetch data');
+        }
       } else {
         toast.error('Failed to fetch data');
       }
@@ -38,6 +42,7 @@ function CompanyList() {
       toast.error('An error occurred');
     }
   };
+  
 
   useEffect(() => {
     fetchCompanies();

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from './Navbar';
+
 import { Link } from 'react-router-dom';
 import Demand from '../Images/demand1.png'
-import { toast } from 'react-toastify';
+import Navbar from '../super-admin/Navbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getAllDemand`;
-const downloadCSVURL = `${serverUrl}/users/download-userDemand-csv`; // CSV download URL
+const REQ_URL = `${serverUrl}/products/getAllCompanyDemand`;
 
-function DemandRequest() {
+function CompanyDemandReport() {
   const [demandData, setDemandData] = useState([]);
 
   useEffect(() => {
@@ -52,36 +51,6 @@ function DemandRequest() {
     }
   };
 
-    // Function to handle CSV download
-    const handleDownloadCSV = async () => {
-      try {
-          const response = await fetch(downloadCSVURL, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json', // This is typically optional for downloads
-              },
-          });
-  
-          if (response.ok) {
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'user_Demands.csv'; // Ensure filename is correct
-              document.body.appendChild(a);
-              a.click();
-              a.remove();
-              toast.success('CSV file downloaded successfully');
-          } else {
-              console.error('Failed to download CSV:', response.statusText);
-              toast.error('Failed to download CSV');
-          }
-      } catch (error) {
-          console.error('Error while downloading CSV:', error);
-          toast.error('An error occurred while downloading CSV');
-      }
-  };
-
   return (
     <div>
       <Navbar />
@@ -89,7 +58,7 @@ function DemandRequest() {
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <Link to='/home/demand-request'>
-              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer '>
                 <div className='w-14 block'>
                   <img src={Demand} alt='Description' />
                 </div>
@@ -99,7 +68,7 @@ function DemandRequest() {
               </div>
             </Link>
             <Link to='/home/company-demand-request'>
-              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
                 <div className='w-14 block'>
                   <img src={Demand} alt='Description' />
                 </div>
@@ -124,14 +93,12 @@ function DemandRequest() {
           </form>
           <div className="p-2 md:p-10">
             <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
-            &nbsp;&nbsp;&nbsp;
-            <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
             <div className="overflow-x-auto mt-4">
               <table className="min-w-full bg-sky-100 border border-black">
                 <thead>
                   <tr>
                     <th className="py-2 px-4 border border-black text-center">Demand ID</th>
-                    <th className="py-2 px-4 border border-black text-center">User ID</th>
+                    <th className="py-2 px-4 border border-black text-center">Company ID</th>
                     <th className="py-2 px-4 border border-black text-center">Designation</th>
                     <th className="py-2 px-4 border border-black text-center">Product Type</th>
                     <th className="py-2 px-4 border border-black text-center">Product Name</th>
@@ -173,4 +140,4 @@ function DemandRequest() {
   );
 }
 
-export default DemandRequest;
+export default CompanyDemandReport
