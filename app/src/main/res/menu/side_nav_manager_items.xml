@@ -2,13 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/report"
-        android:title="Reports"
+        android:visible="false"
+        android:title="All Product Reports"
         android:icon="@drawable/baseline_store_24"/>
     <item
         android:id="@+id/outOfStock"
         android:title="Out of stock"
         android:icon="@drawable/baseline_add_outofstock_24"/>
 
+    <item
+        android:id="@+id/orgDemands"
+        android:title="Organization Demands"
+        android:icon="@drawable/baseline_app_registration_24"
+        android:visible="false"/>
     <item
         android:id="@+id/issueReportM"
         android:title="Issue"

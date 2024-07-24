@@ -7,4 +7,6 @@ import retrofit2.http.POST
 interface demandAcceptOrRejectService {
     @POST("${rFit.BASE_URL_PLACEHOLDER}products/updateDemandStatus")
     fun updateStatus (@Body demandAcptOrRjct: demandAcptOrRjct) : Call<managerDemandAcceptOrrejectResponse>
+    @POST("${rFit.BASE_URL_PLACEHOLDER}products/updateCompanyDemandStatus")
+    fun updateStatusOrg (@Body demandAcptOrRjct: demandAcptOrRjct) : Call<managerDemandAcceptOrrejectResponse>
 }

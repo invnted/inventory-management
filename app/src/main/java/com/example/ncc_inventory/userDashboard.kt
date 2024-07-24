@@ -17,6 +17,9 @@ import androidx.appcompat.app.AlertDialog
 class userDashboard : AppCompatActivity() {
     private lateinit var raiseDemand : ImageView
     private lateinit var click : Animation
+    private lateinit var rcvd : ImageView
+    private lateinit var cp : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_dashboard)
@@ -31,6 +34,12 @@ class userDashboard : AppCompatActivity() {
         val sc = intent.getStringExtra("section")
         val apt = intent.getStringExtra("appointment")
 
+        cp = findViewById(R.id.cp)
+        cp.text = "WElCOME, ${name}"
+
+
+        rcvd = findViewById(R.id.rcvd)
+
         click = AnimationUtils.loadAnimation(this,R.anim.click)
         raiseDemand = findViewById(R.id.userRaiseDemand)
         raiseDemand.setOnClickListener {
@@ -40,6 +49,12 @@ class userDashboard : AppCompatActivity() {
             intent.putExtra("desig",dsg)
             startActivity(intent)
 
+        }
+        rcvd.setOnClickListener {
+            rcvd.startAnimation(click)
+            val intent = Intent(this,userReceivedProductsPanel::class.java)
+            intent.putExtra("id",id)
+            startActivity(intent)
         }
 
     }

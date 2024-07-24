@@ -128,6 +128,9 @@ class Dashboard : AppCompatActivity() {
                 R.id.addOrg ->{
                     startActivity(Intent(this,addOrganization::class.java))
                 }
+                R.id.Org ->{
+                    startActivity(Intent(this,organization_list_panel::class.java))
+                }
 
                 // Add other cases for other menu items as needed
             }

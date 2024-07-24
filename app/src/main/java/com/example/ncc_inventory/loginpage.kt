@@ -26,7 +26,7 @@ import retrofit2.http.POST
 
 object rFit {
     var retrofit: Retrofit? = null
-    const val BASE_URL_PLACEHOLDER = "https://a7cd-103-37-80-91.ngrok-free.app/"
+    const val BASE_URL_PLACEHOLDER = "https://4be1-103-37-80-91.ngrok-free.app/"
 }
 
 data class managerloginrequest(
@@ -195,6 +195,7 @@ class loginpage : AppCompatActivity() {
                                 it.putExtra("issue", respo.managerData.issueProduct)
                                 it.putExtra("demand", respo.managerData.demandReceived)
                                 startActivity(it)
+                                finish()
                             }
                         } else {
                             Toast.makeText(
@@ -316,8 +317,12 @@ class loginpage : AppCompatActivity() {
                             Toast.makeText(this@loginpage, "Login Successful", Toast.LENGTH_SHORT)
                                 .show()
                             val it = Intent(this@loginpage, organizationDashboard::class.java)
-
+                            it.putExtra("name",respo.company.companyName)
+                            it.putExtra("id",respo.company.companyId)
+                            it.putExtra("email",respo.company.email)
+                            it.putExtra("contact",respo.company.contact_1)
                             startActivity(it)
+                            finish()
                         } else {
                             Toast.makeText(
                                 this@loginpage,

@@ -1,2 +1,2 @@
 package com.example.ncc_inventory
-data class orgLoginResponse(val success : Boolean)
+data class orgLoginResponse(val success : Boolean,val company: company)

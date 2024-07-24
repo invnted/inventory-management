@@ -353,7 +353,7 @@
             android:layout_gravity="center"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center"
-            android:text="Demand Received"
+            android:text="User Demands"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>

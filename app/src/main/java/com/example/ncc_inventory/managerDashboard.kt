@@ -47,6 +47,7 @@ class managerDashboard : AppCompatActivity() {
         val appt = intent.getStringExtra("appt")
         val section = intent.getStringExtra("section")
         val issue = intent.getBooleanExtra("issue",false)
+        val allreport = intent.getBooleanExtra("allreport",false)
 
 
         click = AnimationUtils.loadAnimation(this, R.anim.click)
@@ -106,13 +107,22 @@ class managerDashboard : AppCompatActivity() {
         val menu: Menu = navigationView.menu
         val specialItem: MenuItem = menu.findItem(R.id.issueReportM)
         specialItem.isVisible = issue
+        val specialItem2 : MenuItem = menu.findItem(R.id.orgDemands)
+        specialItem2.isVisible = check
+        val specialItem3 : MenuItem = menu.findItem(R.id.report)
+        specialItem3.isVisible = allreport
 
         navigationView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
             R.id.outOfStock -> {
                 startActivity(Intent(this@managerDashboard,outofstock::class.java))
             }
-
+            R.id.orgDemands ->{
+                startActivity(Intent(this@managerDashboard,orgDemands_panel::class.java))
+            }
+            R.id.report ->{
+                startActivity(Intent(this@managerDashboard,allproductreportpanel::class.java))
+            }
                 // Add other cases for other menu items as needed
             }
             drawer.closeDrawer(GravityCompat.START)
