@@ -20,6 +20,12 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".issurOrgFilter"
+            android:exported="false" />
+        <activity
+            android:name=".issueOrg"
+            android:exported="false" />
+        <activity
             android:name=".allproductreportpanel"
             android:exported="false" />
         <activity

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".issue_product_moderator_dashboard">
+    tools:context=".issueOrg">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline001"
@@ -31,7 +31,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_medium"
         android:gravity="center"
-        android:text="Issue User"
+        android:text="Issue Org"
         android:textColor="@color/white"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -99,7 +99,7 @@
         tools:layout_editor_absoluteX="12dp" />
 
     <androidx.appcompat.widget.SearchView
-        android:id="@+id/isp_searchview"
+        android:id="@+id/Isearchview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
@@ -122,7 +122,7 @@
         app:layout_constraintGuide_percent="0.13" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/totalrequestRecyclerViewModerator"
+        android:id="@+id/IRecyclerViewModerator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="12dp"
@@ -130,7 +130,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isp_searchview" />
+        app:layout_constraintTop_toBottomOf="@+id/Isearchview" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline87"
@@ -147,7 +147,7 @@
         app:layout_constraintGuide_percent="0.75" />
 
     <ImageView
-        android:id="@+id/bckaaaaM"
+        android:id="@+id/Iback"
         android:layout_width="27dp"
         android:layout_height="27dp"
         android:layout_marginTop="16dp"
@@ -158,7 +158,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline81" />
 
     <TextView
-        android:id="@+id/nodemandMo"
+        android:id="@+id/InodemandMo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fontFamily="@font/poppins_medium"
@@ -170,7 +170,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isp_searchview" />
+        app:layout_constraintTop_toBottomOf="@+id/Isearchview" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,27 +59,6 @@ class issue_demand_adapter(val context: Context , val adapterItems : List<demand
             context.startActivity(intent)
 
 
-//            val filterProductRequest = filterProductRequest(currentItem.productType,currentItem.productModel,currentItem.productBrand)
-//            val service = retrofit.create(filterproductService::class.java)
-//            service.getItems(filterProductRequest).enqueue(object : Callback<fResponse>{
-//                override fun onResponse(call: Call<fResponse>, response: Response<fResponse>) {
-//                    if(response.isSuccessful){
-//                        val respo = response.body()
-//                        if(respo?.success==true){
-//
-//                        }
-//                    }
-//                    else{
-//                        Toast.makeText(context,"Response unsuccessful",Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<fResponse>, t: Throwable) {
-//                    Toast.makeText(context,"Response unsuccessful",Toast.LENGTH_SHORT).show()
-//                }
-//
-//            })
-
         }
     }
 

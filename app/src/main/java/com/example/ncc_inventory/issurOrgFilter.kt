@@ -17,41 +17,38 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class filterUserAssign : AppCompatActivity() {
+class issurOrgFilter : AppCompatActivity() {
     private lateinit var recyclerview: RecyclerView
-    private lateinit var adapter: filterItem_adapter
+    private lateinit var adapter: filterOrgAdapter
     private lateinit var back: ImageView
     private lateinit var retrofit: Retrofit
     private lateinit var textView: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_filter_user_assign)
+        setContentView(R.layout.activity_issur_org_filter)
 
-
-        //For transparent status bar
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
 
-
-
         retrofit = rFit.retrofit!!
 
-        textView = findViewById(R.id.nodemandfil)
+        textView = findViewById(R.id.Inodemandfil)
         val productType = intent.getStringExtra("type")
         val productModel = intent.getStringExtra("model")
         val productBrand = intent.getStringExtra("brand")
-        val userId = intent.getStringExtra("userId")
+        val companyId = intent.getStringExtra("companyId")
         val demandId = intent.getStringExtra("demandId")
         val quantity = intent.getIntExtra("quantity",0)
 
-        back = findViewById(R.id.filterBack)
+
+        back = findViewById(R.id.filterBackIs)
         back.setOnClickListener {
             onBackPressed()
         }
-        recyclerview = findViewById(R.id.filterItemRV)
+        recyclerview = findViewById(R.id.filterItemRVOrg)
         recyclerview.layoutManager = LinearLayoutManager(this)
-        adapter = filterItem_adapter(this, emptyList(), retrofit,demandId!!,userId!!
+        adapter = filterOrgAdapter(this, emptyList(), retrofit,demandId!!,companyId!!
         ){
             vb()
         }
@@ -67,7 +64,6 @@ class filterUserAssign : AppCompatActivity() {
                     }
                 }
             }
-
         val service = retrofit.create(filterproductService::class.java)
         if (filterProductRequest != null) {
             service.getItems(filterProductRequest).enqueue(object : Callback<fResponse> {
@@ -77,13 +73,7 @@ class filterUserAssign : AppCompatActivity() {
                         if (respo?.success == true) {
                             var newList = respo.filteredProducts
                             if (newList != null) {
-                                adapter = filterItem_adapter(
-                                    this@filterUserAssign,
-                                    newList,
-                                    retrofit,
-                                    demandId,
-                                    userId
-                                ) {
+                                adapter = filterOrgAdapter(this@issurOrgFilter,newList,retrofit,demandId,companyId){
                                     vb()
                                 }
                                 recyclerview.adapter = adapter
@@ -96,7 +86,7 @@ class filterUserAssign : AppCompatActivity() {
                         }
                     } else {
                         Toast.makeText(
-                            this@filterUserAssign,
+                            this@issurOrgFilter,
                             "Response unsuccessful",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -105,7 +95,7 @@ class filterUserAssign : AppCompatActivity() {
 
                 override fun onFailure(call: Call<fResponse>, t: Throwable) {
                     Toast.makeText(
-                        this@filterUserAssign,
+                        this@issurOrgFilter,
                         "Response unsuccessful",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -113,16 +103,16 @@ class filterUserAssign : AppCompatActivity() {
 
             })
         }
-        textView.visibility = View.VISIBLE
-    }
 
+    }
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        val intent = Intent(this@filterUserAssign,issue_product_moderator_dashboard::class.java)
+        val intent = Intent(this@issurOrgFilter,issueOrg::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()
     }
+
     fun vb(){
         textView.visibility = View.VISIBLE
     }

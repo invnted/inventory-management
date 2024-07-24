@@ -209,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
-                android:text="Issue Product"
+                android:text="Issue User"
                 android:textColor="#bebebe"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -264,6 +264,41 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.9" />
+
+        <LinearLayout
+            android:id="@+id/issueOrg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/gridbg"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline32"
+            app:layout_constraintEnd_toStartOf="@+id/guideline30"
+            app:layout_constraintStart_toStartOf="@+id/guideline31"
+            app:layout_constraintTop_toTopOf="@+id/guideline26">
+
+            <ImageView
+                android:id="@+id/issueO"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/organization" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="Issue Org"
+                android:textColor="#bebebe"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
