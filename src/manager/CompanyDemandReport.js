@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Demand from '../Images/demand1.png'
 import Navbar from '../super-admin/Navbar';
+import ManagerNavbar from './ManagerNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllCompanyDemand`;
@@ -53,7 +54,7 @@ function CompanyDemandReport() {
 
   return (
     <div>
-      <Navbar />
+      <ManagerNavbar/>
       <div className='m-4 md:m-12  justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
@@ -63,7 +64,7 @@ function CompanyDemandReport() {
                   <img src={Demand} alt='Description' />
                 </div>
                 <div className='text-xl font-semibold'>
-                  User Demand
+                  Demand Requested
                 </div>
               </div>
             </Link>
@@ -73,7 +74,7 @@ function CompanyDemandReport() {
                   <img src={Demand} alt='Description' />
                 </div>
                 <div className='text-xl font-semibold'>
-                  Company Demand
+                  Demand Reports
                 </div>
               </div>
             </Link>

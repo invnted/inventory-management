@@ -10,7 +10,6 @@ import AddManager from './super-admin/AddManager';
 import AddUser from './super-admin/AddUser';
 import AuthorizationStore from './super-admin/AuthorizationStore';
 import DemandRequest from './super-admin/DemandRequest';
-import PendingDemand from './super-admin/PendingDemand';
 import UsersList from './super-admin/UsersList';
 import UserHome from './users/UserHome';
 import RaiseDemand from './users/RaiseDemand';
@@ -54,6 +53,8 @@ import CompanyDemand from './manager/CompanyDemand';
 import CompanyDemandReport from './manager/CompanyDemandReport';
 import IssueForCompany from './moderator/IssueForCompany';
 import ConfirmCompanyProduct from './moderator/ConfirmCompanyProduct';
+import PendingCompanyDemand from './super-admin/PendingCompanyDemand';
+import PendingUserDemand from './super-admin/PendingUserDemand';
 
 
 
@@ -83,7 +84,9 @@ function App() {
         <Route path="/home/authorization-store" element={<AuthorizationStore />} />
         <Route path="/home/demand-request" element={<DemandRequest />} />
         <Route path="/home/company-demand-request" element={<CompanyDemandRequest />} />
-        <Route path="/home/pending-demand" element={<PendingDemand />} />
+
+        <Route path="/home/pending-company-demand" element={<PendingCompanyDemand />} />
+        <Route path="/home/pending-user-demand" element={<PendingUserDemand/>} />
         <Route path="/home/demand-report" element={<DemandReport />} />
         <Route path="/home/stock-required" element={<StockRequired />} />
 

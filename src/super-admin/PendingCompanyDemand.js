@@ -3,8 +3,8 @@ import Navbar from './Navbar';
 
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getPendingDemand`;
-function PendingDemand() {
+const REQ_URL = `${serverUrl}/products/getCompanyPendingDemand`;
+function PendingCompanyDemand() {
   const [demandData, setDemandData] = useState([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function PendingDemand() {
     <Navbar />
     <div className='m-4 md:m-12  justify-between'>
       <div className='flex justify-center items-center text-center text-5xl p-6 bg-sky-800 text-white font-bold'>
-        Pending Demand
+        Pending Company Demand
       </div>
       <div className='bg-sky-300'>
         <form className="max-w-md mx-auto md:pt-20 p-6">
@@ -58,8 +58,7 @@ function PendingDemand() {
               <thead>
                 <tr>
                   <th className="py-2 px-4 border border-gray-300 text-center">Demand ID</th>
-                  <th className="py-2 px-4 border border-gray-300 text-center">User ID</th>
-                  <th className="py-2 px-4 border border-gray-300 text-center">Designation</th>
+                  <th className="py-2 px-4 border border-gray-300 text-center">Company ID</th>
                   <th className="py-2 px-4 border border-gray-300 text-center">Product Type</th>
                   <th className="py-2 px-4 border border-gray-300 text-center">Product Name</th>
                   <th className="py-2 px-4 border border-gray-300 text-center">Model</th>
@@ -73,8 +72,7 @@ function PendingDemand() {
                   demandData.map((demand) => (
                     <tr key={demand.demandId}>
                       <td className="py-2 px-4 border border-gray-300 text-center">{demand.demandId}</td>
-                      <td className="py-2 px-4 border border-gray-300 text-center">{demand.userId}</td>
-                      <td className="py-2 px-4 border border-gray-300 text-center">{demand.designation}</td>
+                      <td className="py-2 px-4 border border-gray-300 text-center">{demand.companyId}</td>
                       <td className="py-2 px-4 border border-gray-300 text-center">{demand.productType}</td>
                       <td className="py-2 px-4 border border-gray-300 text-center">{demand.productName}</td>
                       <td className="py-2 px-4 border border-gray-300 text-center">{demand.productModel}</td>
@@ -100,4 +98,4 @@ function PendingDemand() {
   )
 }
 
-export default PendingDemand
+export default PendingCompanyDemand

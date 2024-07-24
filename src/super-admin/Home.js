@@ -99,13 +99,23 @@ function Home() {
                         </div>
                     </div>
                 </Link>
-                <Link to='/home/pending-demand'>
+                <Link to='/home/pending-user-demand'>
                     <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
                         <div className='w-20 block'>
                             <img src={PendingDemand} alt="Description" />
                         </div>
                         <div className='p-2'>
-                            <h2 className='text-white'>Pending Demand</h2>
+                            <h2 className='text-white'>Pending User Demand</h2>
+                        </div>
+                    </div>
+                </Link>
+                <Link to='/home/pending-company-demand'>
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer">
+                        <div className='w-20 block'>
+                            <img src={PendingDemand} alt="Description" />
+                        </div>
+                        <div className='p-2'>
+                            <h2 className='text-white'>Pending Company Demand</h2>
                         </div>
                     </div>
                 </Link>

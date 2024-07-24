@@ -13,29 +13,31 @@ console.log("ID Picked for local storage: ", companyId);
 function CompanyRaiseDemandReport() {
     const [demands, setDemands] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(REQ_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ companyId })
-                });
+    const fetchData = async () => {
+        try {
+            const response = await fetch(REQ_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ companyId })
+            });
 
-                const result = await response.json();
+            const result = await response.json();
 
-                if (result.success) {
-                    setDemands(Array.isArray(result.data) ? result.data : []);
-                } else {
-                    console.error(result.message);
-                }
-            } catch (error) {
-                console.error('Error fetching demands:', error);
+            console.log(result);
+
+            if (result.success) {
+                setDemands(Array.isArray(result.data) ? result.data : []);
+            } else {
+                console.error(result.message);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching demands:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -81,7 +83,7 @@ function CompanyRaiseDemandReport() {
                             </div>
                         </form>
                         <div className="p-4 md:p-10">
-                            <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
+                            <button onClick={fetchData} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
                             <div className="overflow-x-auto mt-4">
                                 <table className="min-w-full bg-sky-200 border">
                                     <thead>

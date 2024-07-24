@@ -95,7 +95,7 @@ function CompanyDemandRequest() {
                   <img src={Demand} alt='Description' />
                 </div>
                 <div className='text-xl font-semibold'>
-                  Company Demand
+                  User Demand
                 </div>
               </div>
             </Link>
