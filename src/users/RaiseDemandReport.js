@@ -1,47 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import UserNavbar from './UserNavbar';
 import { Link } from 'react-router-dom';
-import Demand from '../Images/demand1.png'
+import Demand from '../Images/demand1.png';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getUserDemand`;
 
 const userId = localStorage.getItem('userId');
 
-console.log("ID Picked for local storage: ", userId)
-
+console.log("ID Picked for local storage: ", userId);
 
 function RaiseDemandReport() {
     const [demands, setDemands] = useState([]);
 
+    const fetchData = async () => {
+        try {
+            const response = await fetch(REQ_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId })
+            });
 
+            const result = await response.json();
+
+            if (result.success) {
+                setDemands(result.data);
+            } else {
+                console.error(result.message);
+            }
+        } catch (error) {
+            console.error('Error fetching demands:', error);
+        }
+    };
 
     useEffect(() => {
-
-
-
-        const fetchData = async () => {
-            try {
-                const response = await fetch(REQ_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userId })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    setDemands(result.data);
-                } else {
-                    console.error(result.message);
-                }
-            } catch (error) {
-                console.error('Error fetching demands:', error);
-            }
-        };
-
         fetchData();
     }, []);
 
@@ -49,11 +43,11 @@ function RaiseDemandReport() {
         <div>
             <div className='bg-white h-screen'>
                 <UserNavbar />
-                <div className=' m-4 md:m-10'>
+                <div className='m-4 md:m-10'>
                     <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
                         <div className='flex gap-10'>
                             <Link to='/user-home/raise-demand'>
-                                <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer '>
+                                <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                                     <div className='w-14 block'>
                                         <img src={Demand} alt='Description' />
                                     </div>
@@ -74,7 +68,7 @@ function RaiseDemandReport() {
                             </Link>
                         </div>
                     </div>
-                    <div className='bg-sky-300 '>
+                    <div className='bg-sky-300'>
                         <form className="max-w-md mx-auto md:pt-20 p-6">
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                             <div className="relative">
@@ -87,7 +81,7 @@ function RaiseDemandReport() {
                             </div>
                         </form>
                         <div className="p-2 md:p-10">
-                            <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
+                            <button onClick={fetchData} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
 
                             <div className="overflow-x-auto mt-4">
                                 <table className="min-w-full bg-sky-200 border">
@@ -132,4 +126,3 @@ function RaiseDemandReport() {
 }
 
 export default RaiseDemandReport;
-
