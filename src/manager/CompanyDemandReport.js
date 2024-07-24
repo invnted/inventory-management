@@ -57,7 +57,7 @@ function CompanyDemandReport() {
       <div className='m-4 md:m-12  justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
-            <Link to='/home/demand-request'>
+            <Link to='/manager-dashboard/CompanyDemand'>
               <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer '>
                 <div className='w-14 block'>
                   <img src={Demand} alt='Description' />
@@ -67,7 +67,7 @@ function CompanyDemandReport() {
                 </div>
               </div>
             </Link>
-            <Link to='/home/company-demand-request'>
+            <Link to='/manager-dashboard/CompanyDemandReport'>
               <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
                 <div className='w-14 block'>
                   <img src={Demand} alt='Description' />
@@ -99,7 +99,6 @@ function CompanyDemandReport() {
                   <tr>
                     <th className="py-2 px-4 border border-black text-center">Demand ID</th>
                     <th className="py-2 px-4 border border-black text-center">Company ID</th>
-                    <th className="py-2 px-4 border border-black text-center">Designation</th>
                     <th className="py-2 px-4 border border-black text-center">Product Type</th>
                     <th className="py-2 px-4 border border-black text-center">Product Name</th>
                     <th className="py-2 px-4 border border-black text-center">Model</th>
@@ -113,8 +112,7 @@ function CompanyDemandReport() {
                     demandData.map((demand) => (
                       <tr key={demand.demandId}>
                         <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
-                        <td className="py-2 px-4 border border-black text-center">{demand.userId}</td>
-                        <td className="py-2 px-4 border border-black text-center">{demand.designation}</td>
+                        <td className="py-2 px-4 border border-black text-center">{demand.companyId}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.productType}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.productModel}</td>

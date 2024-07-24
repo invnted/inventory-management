@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getProductReceived`;
 
-// Use the same user ID logic as in UserProductReceived
-const userId = '1';
+const userId = localStorage.getItem('companyId');
+console.log('User ID:', userId);
 
 function CompanyProductReceived() {
   const [products, setProducts] = useState([]);
@@ -23,16 +23,14 @@ function CompanyProductReceived() {
           body: JSON.stringify({ userId }),
         });
 
-        if (response.ok) {
-          const result = await response.json();
-          console.log('Fetched products:', result); // Debug log
-          if (Array.isArray(result) && result.length > 0) {
-            setProducts(result);
-          } else {
-            console.log('No products found for this user.');
-          }
+        const result = await response.json();
+        console.log('Fetched products:', result); // Debug log
+
+        if (response.ok && result.success) {
+          setProducts(result.products);
         } else {
-          console.error('Failed to fetch products');
+          console.error('Failed to fetch products:', result.message);
+          setProducts([]);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -110,9 +108,8 @@ function CompanyProductReceived() {
                         <td className="py-2 px-4 border text-black border-black">{product.productName}</td>
                         <td className="py-2 px-4 border text-black border-black">{product.productBrand}</td>
                         <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
-                       
                         <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
-                        <td className="py-2 px-4 border text-black border-black ">
+                        <td className="py-2 px-4 border text-black border-black">
                           <Link to='/company-home/raise-ticket'>
                             <div className=' bg-sky-800 text-white p-2 rounded-lg text-center'>Raise Ticket</div>
                           </Link>
@@ -121,7 +118,7 @@ function CompanyProductReceived() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6" className="py-2 px-4 text-center text-black">No products found</td>
+                      <td colSpan="7" className="py-2 px-4 text-center text-black">No products found</td>
                     </tr>
                   )}
                 </tbody>

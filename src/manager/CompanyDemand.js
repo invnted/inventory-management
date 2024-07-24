@@ -96,7 +96,7 @@ function CompanyDemand() {
                                 </div>
                             </div>
                         </Link>
-                        <Link to='/manager-dashboard/ManagerDemandReport'>
+                        <Link to='/manager-dashboard/CompanyDemandReport'>
                             <div className='bg-gray-200 p-2 md:p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                                 <div className='w-10 md:w-14 block'>
                                     <img src={Demand} alt='Description' />

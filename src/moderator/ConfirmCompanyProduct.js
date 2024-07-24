@@ -3,17 +3,16 @@ import ModeratorNavbar from './ModeratorNavbar';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const FILTER_URL = `${serverUrl}/products/filterProducts`;
-const ASSIGN_URL = `${serverUrl}/products/assignSingleProduct`;
+const ASSIGN_URL = `${serverUrl}/products/assignSingleCompanyProduct`;
 
 function ConfirmCompanyProduct() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const demandId = localStorage.getItem('demandId');
-  const userId = localStorage.getItem('userId');
+  const companyId = localStorage.getItem('companyId'); // Changed to companyId for company user
   const productType = localStorage.getItem('productType');
   const productModel = localStorage.getItem('productModel');
   const productBrand = localStorage.getItem('productBrand');
   const quantity = localStorage.getItem('productQuantity');
-  
 
   useEffect(() => {
     fetchFilteredProducts();
@@ -53,7 +52,7 @@ function ConfirmCompanyProduct() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ demandId, productId, userId })
+        body: JSON.stringify({ demandId, productId, companyId })
       });
       
       const data = await response.json();
@@ -85,7 +84,7 @@ function ConfirmCompanyProduct() {
                     <th className="py-2 px-4 border border-black text-center">Product Brand</th>
                     <th className="py-2 px-4 border border-black text-center">Product Model</th>
                     <th className="py-2 px-4 border border-black text-center">Demand ID</th>
-                    <th className="py-2 px-4 border border-black text-center">User ID</th>
+                    <th className="py-2 px-4 border border-black text-center">Company ID</th>
                     <th className="py-2 px-4 border border-black text-center">Action</th>
                   </tr>
                 </thead>
@@ -96,7 +95,7 @@ function ConfirmCompanyProduct() {
                       <td className="py-2 px-4 border border-black text-center">{product.productBrand}</td>
                       <td className="py-2 px-4 border border-black text-center">{product.productModel}</td>
                       <td className="py-2 px-4 border border-black text-center">{demandId}</td>
-                      <td className="py-2 px-4 border border-black text-center">{userId}</td>
+                      <td className="py-2 px-4 border border-black text-center">{companyId}</td>
                       <td className="py-2 px-4 border border-black text-center">
                         <button
                           className="bg-sky-800 text-white px-2 py-1 rounded active:bg-sky-900"
@@ -124,4 +123,4 @@ function ConfirmCompanyProduct() {
   );
 }
 
-export default ConfirmCompanyProduct
+export default ConfirmCompanyProduct;
