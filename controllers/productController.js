@@ -173,6 +173,37 @@ exports.getUserDemands = async (req, res) => {
   }
 };
 
+exports.getCompanyDemands = async (req, res) => {
+  try {
+    const { companyId } = req.body;
+    const companyDemands = await companyDemand.find({ companyId }).select('-companyId -additionalDetail -updatedAt');
+    // Map userDemands to format the response as needed
+    const formattedDemands = companyDemands.map(demand => ({
+      demandId: demand.demandId, 
+      productType: demand.productType,
+      productName: demand.productName,
+      productModel: demand.productModel,
+      productBrand: demand.productBrand,
+      productQuantity: demand.productQuantity,
+      status: demand.status,
+      createdAt: demand.createdAt
+    }));
+
+    res.status(200).json({
+      success: true,
+      message: "User demands fetched successfully",
+      data: formattedDemands
+    });
+  } catch (error) {
+    console.error("Error fetching user demands:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch user demands",
+      error: error.message
+    });
+  }
+};
+
 exports.getAllDemand = async (req, res) => {
   try {
     const demands = await Demand.find({});
@@ -193,9 +224,19 @@ exports.allCompanyDemand = async (req, res) => {
   }
 };
 
-exports.getPendingDemand = async (req, res) => {
+exports.getUserPendingDemand = async (req, res) => {
   try {
     const demands = await Demand.find({ status: "PENDING" });
+    res.status(200).json({ demands, success: true });
+  } catch (error) {
+    console.error("Error fetching demands:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getCompanyPendingDemand = async (req, res) => {
+  try {
+    const demands = await companyDemand.find({ status: "PENDING" });
     res.status(200).json({ demands, success: true });
   } catch (error) {
     console.error("Error fetching demands:", error);
@@ -397,9 +438,6 @@ exports.filterProducts = async (req, res) => {
 };
 
 
-
-
-
 exports.assignSingleProduct = async (req, res) => {
   const { productId, userId, demandId } = req.body;
 
@@ -436,6 +474,56 @@ exports.assignSingleProduct = async (req, res) => {
 
     // Update the product document with the new fields
     const updateFields = { issuedTo: userId, status: 'ISSUED' };
+    product = await Product.findOneAndUpdate(
+      { productId },
+      { $set: updateFields },
+      { new: true }
+    );
+
+    res.json({ success: true, product, demand });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+exports.assignSingleCompanyProduct = async (req, res) => {
+  const { productId, companyId, demandId } = req.body;
+
+  console.log(req.body)
+
+  try {
+    // Fetch the Demand document
+    let demand = await companyDemand.findOne({ demandId });
+    if (!demand) {
+      return res.status(404).json({ success: false, message: 'Demand not found' });
+    }
+
+    // Check if productQuantity is greater than zero
+    if (demand.productQuantity > 0) {
+      // Decrement productQuantity by one
+      demand.productQuantity -= 1;
+
+      // If productQuantity reaches zero, update the status to COMPLETED
+      if (demand.productQuantity === 0) {
+        demand.status = 'COMPLETED';
+      }
+
+      // Save the updated Demand document
+      await demand.save();
+    } else {
+      return res.status(400).json({ success: false, message: 'No remaining product quantity in the demand' });
+    }
+
+    // Find the product
+    let product = await Product.findOne({ productId });
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    // Update the product document with the new fields
+    const updateFields = { issuedTo: companyId, status: 'ISSUED' };
     product = await Product.findOneAndUpdate(
       { productId },
       { $set: updateFields },

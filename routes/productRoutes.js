@@ -15,9 +15,11 @@ router.post('/availableDemands',productController.productTypesInDemand);  //Used
 router.post('/getAllProduct',productController.getAllProducts);               // Get List and data of all products
 router.post('/getProductStore',productController.getProductStore);            // Used in Authorization Panel to draw graph
 router.post('/getUserDemand',productController.getUserDemands);               // Used in User Panel user can see his own demands
+router.post('/getCompanyDemand',productController.getCompanyDemands);
 router.post('/getAllDemand',productController.getAllDemand);                  // Used in Admin & Manager Paenl to see all demands of user
 router.post('/getAllCompanyDemand',productController.allCompanyDemand); 
-router.post('/getPendingDemand',productController.getPendingDemand);          // Used in Admin Panel to see all pending demandds
+router.post('/getPendingDemand',productController.getUserPendingDemand);          // Used in Admin Panel to see all pending demands
+router.post('/getCompanyPendingDemand',productController.getCompanyPendingDemand);  
 router.post('/unissuedDemandList',productController.getUnissuedDemandList)    // Used in Moderator Panel to get unissued demand list of users
 router.post('/company-unissuedDemandList',productController.getUnissuedCompanyDemandList) // Used in Moderator Panel to get unissued company demand list
 router.post('/filterProducts',productController.filterProducts)               // Used in Moderator Panel to get filtered product for useer
@@ -47,6 +49,9 @@ router.post('/updateDemandStatus',productController.updateDemandStatus);   // Us
 router.post('/updateCompanyDemandStatus',productController.updateCompanyDemandStatus);
 router.post('/storeReport',productController.storeReport);                 // Used in Admin Panel for store report table
 router.post('/assignSingleProduct',productController.assignSingleProduct); // Used in Moderator Panel to assign 1 product
+
+router.post('/assignSingleCompanyProduct',productController.assignSingleCompanyProduct);
+
 router.post('/company-makeDemand',productController.makeDemandCompany); 
 // router.post('/demandReport',productController.demandReport);            // Used in Admin/Manager Panel for demand report table
 
