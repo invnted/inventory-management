@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/unissuedDemandList`;
 
-function IssueProduct() {
+function IssueForCompany() {
     const [demandData, setDemandData] = useState([]);
 
     useEffect(() => {
@@ -52,7 +52,7 @@ function IssueProduct() {
             <ModeratorNavbar />
             <div className='m-4 md:m-12 justify-between'>
                 <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
-                    User Demand Requested
+                    Company Demand Requested
                 </div>
                 <div className='bg-sky-300'>
                     <form className="max-w-md mx-auto md:pt-20 p-6">
@@ -96,7 +96,7 @@ function IssueProduct() {
                                                 <td className="py-2 px-4 border border-black text-center">{demand.productBrand}</td>
                                                 <td className="py-2 px-4 border border-black text-center">{demand.productQuantity}</td>
                                                 <td className="py-2 px-4 border border-black text-center">
-                                                    <Link to='/moderator-home/confirm-product'>
+                                                    <Link to='/moderator-home/confirm-company-product'>
                                                         <button
                                                             className="bg-sky-800 text-white px-2 py-1 rounded active:bg-sky-900"
                                                             onClick={() => handleIssue(demand.demandId, demand.userId, demand.productType, demand.productName, demand.productModel,demand.productBrand,demand.productQuantity)}
@@ -124,4 +124,6 @@ function IssueProduct() {
     );
 }
 
-export default IssueProduct;
+
+
+export default IssueForCompany

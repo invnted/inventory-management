@@ -16,7 +16,18 @@ function ModeratorHome() {
                             <img className='color-white' src={Issue} alt="Description" />
                         </div>
                         <div className='p-2 text-white text-3xl font-mono text-center'>
-                            Issue Product
+                            Issue For User
+                        </div>
+                    </div>
+                </Link>
+
+                <Link to='/moderator-home/issue-product-company'>
+                    <div className="bg-sky-800 p-4 h-52 flex flex-col justify-center items-center cursor-pointer rounded-2xl">
+                        <div className='w-20 block'>
+                            <img className='color-white' src={Issue} alt="Description" />
+                        </div>
+                        <div className='p-2 text-white text-3xl font-mono text-center'>
+                            Issue For Company
                         </div>
                     </div>
                 </Link>

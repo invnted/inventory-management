@@ -5,7 +5,7 @@ import Demand from '../Images/demand1.png'
 import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getAllDemand`;
+const REQ_URL = `${serverUrl}/products/getAllCompanyDemand`;
 const downloadCSVURL = `${serverUrl}/users/download-companyDemand-csv`; // CSV download URL
 
 function CompanyDemandRequest() {
@@ -95,7 +95,7 @@ function CompanyDemandRequest() {
                   <img src={Demand} alt='Description' />
                 </div>
                 <div className='text-xl font-semibold'>
-                  User Demand
+                  Company Demand
                 </div>
               </div>
             </Link>
@@ -132,8 +132,7 @@ function CompanyDemandRequest() {
                 <thead>
                   <tr>
                     <th className="py-2 px-4 border border-black text-center">Demand ID</th>
-                    <th className="py-2 px-4 border border-black text-center">User ID</th>
-                    <th className="py-2 px-4 border border-black text-center">Designation</th>
+                    <th className="py-2 px-4 border border-black text-center">Company ID</th>
                     <th className="py-2 px-4 border border-black text-center">Product Type</th>
                     <th className="py-2 px-4 border border-black text-center">Product Name</th>
                     <th className="py-2 px-4 border border-black text-center">Model</th>
@@ -147,8 +146,7 @@ function CompanyDemandRequest() {
                     demandData.map((demand) => (
                       <tr key={demand.demandId}>
                         <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
-                        <td className="py-2 px-4 border border-black text-center">{demand.userId}</td>
-                        <td className="py-2 px-4 border border-black text-center">{demand.designation}</td>
+                        <td className="py-2 px-4 border border-black text-center">{demand.companyId}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.productType}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.productModel}</td>

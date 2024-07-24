@@ -5,7 +5,7 @@ const serverUrl = process.env.REACT_APP_SERVER_URL;
 const FILTER_URL = `${serverUrl}/products/filterProducts`;
 const ASSIGN_URL = `${serverUrl}/products/assignSingleProduct`;
 
-function ConfirmProduct() {
+function ConfirmCompanyProduct() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const demandId = localStorage.getItem('demandId');
   const userId = localStorage.getItem('userId');
@@ -73,7 +73,7 @@ function ConfirmProduct() {
       <ModeratorNavbar />
       <div className='m-4 md:m-12 justify-between'>
         <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
-          User Demand Requested
+          Company Demand Requested
         </div>
         <div className='bg-sky-300'>
           <div className="p-2 md:p-10">
@@ -124,4 +124,4 @@ function ConfirmProduct() {
   );
 }
 
-export default ConfirmProduct;
+export default ConfirmCompanyProduct

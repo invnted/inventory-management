@@ -60,7 +60,7 @@ function ManagerDemandReport() {
                 <div className='bg-sky-300 m-4 md:m-20 '>
                     <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
                         <div className='flex gap-4 md:gap-10'>
-                            <Link to='/manager-dashboard/ManagerDemand'>
+                            <Link to='/manager-dashboard/CompanyDemand'>
                                 <div className='bg-gray-200 p-2 md:p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer'>
                                     <div className='w-10 md:w-14 block'>
                                         <img src={DemandRequested} alt='Description' />

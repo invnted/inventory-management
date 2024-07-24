@@ -52,6 +52,8 @@ import ModeratorLogin from './moderator/ModeratorLogin';
 import CompanyDemandRequest from './super-admin/CompanyDemandRequest';
 import CompanyDemand from './manager/CompanyDemand';
 import CompanyDemandReport from './manager/CompanyDemandReport';
+import IssueForCompany from './moderator/IssueForCompany';
+import ConfirmCompanyProduct from './moderator/ConfirmCompanyProduct';
 
 
 
@@ -110,7 +112,9 @@ function App() {
         <Route path="/moderator-home/add-moderator" element={<AddModerator/>}/>
         <Route path="/moderator-home/all-moderator" element={<AllModerator/>}/>
         <Route path="/moderator-home/issue-product" element={<IssueProduct/>}/>
+        <Route path="/moderator-home/issue-product-company" element={<IssueForCompany/>}/>
         <Route path="/moderator-home/confirm-product" element={<ConfirmProduct/>}/>
+        <Route path="/moderator-home/confirm-company-product" element={<ConfirmCompanyProduct/>}/>
         <Route path="/moderator-home/authorization-store" element={<ManagerAuthorizationStore/>}/>
 
         {/* Company Panel */}
