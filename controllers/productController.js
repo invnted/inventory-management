@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
 const Demand = require('../models/Demand');
 const companyDemand = require('../models/companyDemand');
+const Ticket = require('../models/Ticket');
 const { createObjectCsvStringifier } = require('csv-writer');
 
 //CSV Locators
@@ -9,7 +10,6 @@ const { sendProductCSV } = require('../csv_handlers/products/sendProductCSV');
 
 //CSV Caller
 exports.receiveProductCSV = receiveProductCSV;
-
 exports.sendProductCSV = sendProductCSV;
 
 
@@ -625,21 +625,33 @@ exports.outOfStockCalculator = async (req, res) => {
   }
 };
 
-
 exports.productReceived = async (req, res) => {
   try {
     const { userId } = req.body;
     const products = await Product.find({ issuedTo: userId }, 'productId productType productName productBrand productModel updatedAt');
+    
     if (!products || products.length === 0) {
       return res.status(404).json({ message: 'No products found for this user.' });
     }
 
-    return res.status(200).json({products,success:true});
-  } catch (error){
-    console.error('Error fetching products:', error);
-    return res.status(500).json({ message: 'Server error' });
+    const productsWithTicketStatus = await Promise.all(products.map(async (product) => {
+      const ticket = await Ticket.findOne({ productId: product.productId });
+      let ticketStatus = 'UNRAISED';
+      if (ticket) {
+        ticketStatus = ticket.status === 'RESOLVED' ? 'UNRAISED' : 'RAISED';
+      }
+      return {
+        ...product.toObject(),
+        ticketStatus
+      };
+    }));
+
+    return res.status(200).json({products: productsWithTicketStatus, success:true});
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 exports.allProductReport = async (req, res) => {
   try{
@@ -673,3 +685,85 @@ exports.makeDemandCompany = async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
+exports.raiseTicket = async (req, res) => {
+  const { ticketId , issueType , message , issuedBy , productId } = req.body;
+  try {
+    
+    // Convert specific fields to lowercase
+    const lowercaseFields = ['issueType', 'message',];
+    lowercaseFields.forEach(field => {
+      if (req.body[field]) {
+        req.body[field] = req.body[field].toLowerCase();
+      }
+    });
+
+    const ticket = new Ticket(req.body);
+    await ticket.save();
+    console.log("Ticket Raised Successfully");
+    res.status(200).json({ success: true });
+
+  } catch (err) {
+    console.error("Error while raising ticket:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.getAllTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.find({ status: { $ne: 'RESOLVED' } });
+    return res.status(200).json({ tickets, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+}
+
+
+exports.updateTicketStatus = async (req, res) => {
+  const { ticketId, status } = req.body;
+  console.log(req.body);
+
+  if (!ticketId) {
+    console.log("Ticket Id not found");
+    return res.status(400).json({ msg: 'Ticket ID is required' });
+  }
+
+  if (status !== 'UNDER REVIEW' && status !== 'RESOLVED') {
+    console.log("status not correct");
+    return res.status(400).json({ msg: 'Invalid status' });
+  }
+
+  try {
+    // Find the ticket by ticketId
+    let ticket = await Ticket.findOne({ ticketId });
+
+    if (!ticket) {
+      console.log("Ticket not found");
+      return res.status(404).json({ msg: 'Ticket not found' });
+    }
+
+    // Update the ticket document with the new status
+    ticket = await Ticket.findOneAndUpdate(
+      { ticketId },
+      { $set: { status } },
+      { new: true }
+    );
+
+    // If status is "RESOLVED", also update the ticketStatus in the Product model
+    if (status === 'RESOLVED') {
+      await Product.findOneAndUpdate(
+        { productId: ticket.productId },
+        { $set: { ticketStatus: 'UNRAISED' } }
+      );
+    }
+
+    res.json({ ticket, success: true });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+
+

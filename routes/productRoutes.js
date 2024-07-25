@@ -49,10 +49,12 @@ router.post('/updateDemandStatus',productController.updateDemandStatus);   // Us
 router.post('/updateCompanyDemandStatus',productController.updateCompanyDemandStatus);
 router.post('/storeReport',productController.storeReport);                 // Used in Admin Panel for store report table
 router.post('/assignSingleProduct',productController.assignSingleProduct); // Used in Moderator Panel to assign 1 product
-
 router.post('/assignSingleCompanyProduct',productController.assignSingleCompanyProduct);
-
 router.post('/company-makeDemand',productController.makeDemandCompany); 
+router.post('/raiseTicket',productController.raiseTicket);                 // Used in User & Company Panel to raise Ticket
+router.post('/getAllTickets',productController.getAllTickets);               // Used in Moderator Panel to get All Ticket
+router.post('/updateTicket',productController.updateTicketStatus); 
+
 // router.post('/demandReport',productController.demandReport);            // Used in Admin/Manager Panel for demand report table
 
 module.exports = router;

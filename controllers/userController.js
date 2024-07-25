@@ -57,7 +57,7 @@ exports.registerAdmin = async (req, res) => {
 
     const payload = { admin: { id: admin.id } };
 
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       res.json({ token });
     });
@@ -87,7 +87,7 @@ exports.loginAdmin = async (req, res) => {
 
     const payload = { admin: { id: admin.id } };
 
-    jwt.sign(payload,"7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       const { profileId, adminName, email, role, department } = admin;
       console.log({ token, admin: { profileId, adminName, email, role, department }});
@@ -170,7 +170,7 @@ exports.registerManager = async (req, res) => {
 
     const payload = { manager: { id: manager.id } };
 
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       res.json({success:true});
     });
@@ -200,7 +200,7 @@ exports.loginManager = async (req, res) => {
 
     const payload = { manager: { id: manager.id } };
 
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       const { managerId, managerName, password, designation, section, appointment, allProductReport, demandReceived, issueProduct } = manager;
       res.json({ token,success:true, managerData: { managerId, managerName, password, designation, section, appointment, allProductReport, demandReceived, issueProduct } });
@@ -324,7 +324,7 @@ exports.registerUser = async (req, res) => {
 
     const payload = { user: { id: user.id } };
 
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       res.json({ token ,success:true});
     });
@@ -357,7 +357,7 @@ exports.loginUser = async (req, res) => {
 
     jwt.sign(
       payload, 
-      "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", 
+      process.env.JWT_SECRET, 
       { expiresIn: 3600 }, 
       (err, token) => {
         if (err) throw err;
@@ -432,28 +432,6 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.userRaiseTicket = async (req, res) => {
-  const { ticketId , issueType , message , issuedBy , productId } = req.body;
-  try {
-    
-    // Convert specific fields to lowercase
-    const lowercaseFields = ['issueType', 'message',];
-    lowercaseFields.forEach(field => {
-      if (req.body[field]) {
-        req.body[field] = req.body[field].toLowerCase();
-      }
-    });
-
-    const ticket = new Ticket(req.body);
-    await ticket.save();
-    console.log("Ticket Raised Successfully");
-    res.status(200).json({ success: true });
-
-  } catch (err) {
-    console.error("Error while raising ticket:", err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-};
 
 
 //Moderator 
@@ -472,7 +450,7 @@ exports.registerModerator = async (req, res) => {
     moderator = new Moderator({ moderatorId, moderatorName, password, designation, section, appointment });
     await moderator.save();
     const payload = { moderator: { id: moderator.id } };
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       res.json({success:true});
     });
@@ -502,7 +480,7 @@ exports.loginModerator = async (req, res) => {
 
     jwt.sign(
       payload, 
-      "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", 
+      process.env.JWT_SECRET, 
       { expiresIn: 3600 }, 
       (err, token) => {
         if (err) throw err;
@@ -601,7 +579,7 @@ exports.registerCompany = async (req, res) => {
 
     const payload = { company: { id: company.id } };
 
-    jwt.sign(payload, "7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       res.json({ token , success:true});
     });
@@ -631,7 +609,7 @@ exports.loginCompany = async (req, res) => {
 
     const payload = { company: { id: company.id } };
 
-    jwt.sign(payload,"7583d88d1f4614edf7e3d4b52e496a0fb02fbc1885bb64b06d62257549ee0a1929fa5a52e14e979587536fee27e7f20980719862c1c1664b3461e3eaa9c9f9c1", { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
       const { companyId, companyName, email, contact_1 } = company;
       console.log({ token, company: { companyId, companyName, email, contact_1 }});
