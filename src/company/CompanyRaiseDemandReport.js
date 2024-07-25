@@ -12,6 +12,7 @@ console.log("ID Picked for local storage: ", companyId);
 
 function CompanyRaiseDemandReport() {
     const [demands, setDemands] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fetchData = async () => {
         try {
@@ -38,8 +39,26 @@ function CompanyRaiseDemandReport() {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData(); // Initial fetch when the component mounts
+
+        const intervalId = setInterval(fetchData, 60000); // Fetch data every 60 seconds
+
+        return () => clearInterval(intervalId); // Clean up the interval on component unmount
     }, []);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const filteredDemands = demands.filter(demand =>
+        demand.demandId.toString().includes(searchTerm) ||
+        demand.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        demand.productModel.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        demand.productBrand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        demand.productQuantity.toString().includes(searchTerm) ||
+        demand.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        demand.createdAt.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className='bg-white h-screen'>
@@ -79,13 +98,21 @@ function CompanyRaiseDemandReport() {
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                     </svg>
                                 </div>
-                                <input type="search" id="default-search" className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white" placeholder="Search Using Name / ID" required />
+                                <input
+                                    type="search"
+                                    id="default-search"
+                                    className="block w-full p-4 ps-10 text-sm rounded-lg bg-sky-800 placeholder-gray-300 outline-none text-white"
+                                    placeholder="Search Using Any Column"
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                    required
+                                />
                             </div>
                         </form>
                         <div className="p-4 md:p-10">
                             <button onClick={fetchData} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
                             <div className="overflow-x-auto mt-4">
-                                <table className="min-w-full bg-sky-200 border">
+                                <table className="min-w-full bg-sky-100 border">
                                     <thead>
                                         <tr>
                                             <th className="py-2 px-4 border border-black text-center">Demand ID</th>
@@ -98,8 +125,8 @@ function CompanyRaiseDemandReport() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {demands.length > 0 ? (
-                                            demands.map((demand) => (
+                                        {filteredDemands.length > 0 ? (
+                                            filteredDemands.map((demand) => (
                                                 <tr key={demand.demandId}>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>

@@ -9,6 +9,8 @@ function AllManager() {
     const [editingManager, setEditingManager] = useState(null);
     const [editedManager, setEditedManager] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const managersPerPage = 10;
     const serverUrl = process.env.REACT_APP_SERVER_URL;
     const managerListURL = `${serverUrl}/managers/manager-getAll`;
     const managerEditURL = `${serverUrl}/managers/manager-update`;
@@ -142,7 +144,7 @@ function AllManager() {
                     'Content-Type': 'application/json', // This is typically optional for downloads
                 },
             });
-    
+
             if (response.ok) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -162,7 +164,13 @@ function AllManager() {
             toast.error('An error occurred while downloading CSV');
         }
     };
-    
+
+    // Pagination logic
+    const indexOfLastManager = currentPage * managersPerPage;
+    const indexOfFirstManager = indexOfLastManager - managersPerPage;
+    const currentManagers = filteredManagers.slice(indexOfFirstManager, indexOfLastManager);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div>
@@ -205,7 +213,7 @@ function AllManager() {
                     <div className="p-2 md:p-10">
                         <button onClick={fetchManagers} className="bg-sky-800 text-white p-2 rounded-md mr-4">Refresh</button>
                         <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
-                        {filteredManagers.length > 0 && (
+                        {currentManagers.length > 0 && (
                             <div className="overflow-x-auto mt-4">
                                 <table className="min-w-full bg-white border border-gray-300">
                                     <thead>
@@ -219,13 +227,25 @@ function AllManager() {
                                             <th className="py-2 px-4 border border-gray-300 text-center">All Product Report</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Demand Received</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Issue Product</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Action</th>
+                                            <th className="py-2 px-4 border border-gray-300 text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredManagers.map((manager) => (
+                                        {currentManagers.map((manager) => (
                                             <tr key={manager.managerId}>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">{manager.managerId}</td>
+                                                <td className="py-2 px-4 border border-gray-300 text-center">
+                                                    {editingManager === manager.managerId ? (
+                                                        <input
+                                                            type="text"
+                                                            name="managerId"
+                                                            value={editedManager.managerId}
+                                                            onChange={handleInputChange}
+                                                            className="border rounded-md px-2 py-1 w-full"
+                                                        />
+                                                    ) : (
+                                                        manager.managerId
+                                                    )}
+                                                </td>
                                                 <td className="py-2 px-4 border border-gray-300 text-center">
                                                     {editingManager === manager.managerId ? (
                                                         <input
@@ -233,7 +253,7 @@ function AllManager() {
                                                             name="managerName"
                                                             value={editedManager.managerName}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         />
                                                     ) : (
                                                         manager.managerName
@@ -246,7 +266,7 @@ function AllManager() {
                                                             name="password"
                                                             value={editedManager.password}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         />
                                                     ) : (
                                                         manager.password
@@ -259,7 +279,7 @@ function AllManager() {
                                                             name="designation"
                                                             value={editedManager.designation}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         />
                                                     ) : (
                                                         manager.designation
@@ -272,7 +292,7 @@ function AllManager() {
                                                             name="section"
                                                             value={editedManager.section}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         />
                                                     ) : (
                                                         manager.section
@@ -285,7 +305,7 @@ function AllManager() {
                                                             name="appointment"
                                                             value={editedManager.appointment}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         />
                                                     ) : (
                                                         manager.appointment
@@ -297,10 +317,10 @@ function AllManager() {
                                                             name="allProductReport"
                                                             value={editedManager.allProductReport}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         >
-                                                            <option value={true}>✔</option>
-                                                            <option value={false}>❌</option>
+                                                            <option value="true">Yes</option>
+                                                            <option value="false">No</option>
                                                         </select>
                                                     ) : (
                                                         getPermissionIcon(manager.allProductReport)
@@ -312,10 +332,10 @@ function AllManager() {
                                                             name="demandReceived"
                                                             value={editedManager.demandReceived}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         >
-                                                            <option value={true}>✔</option>
-                                                            <option value={false}>❌</option>
+                                                            <option value="true">Yes</option>
+                                                            <option value="false">No</option>
                                                         </select>
                                                     ) : (
                                                         getPermissionIcon(manager.demandReceived)
@@ -327,47 +347,46 @@ function AllManager() {
                                                             name="issueProduct"
                                                             value={editedManager.issueProduct}
                                                             onChange={handleInputChange}
-                                                            className="bg-gray-200"
+                                                            className="border rounded-md px-2 py-1 w-full"
                                                         >
-                                                            <option value={true}>✔</option>
-                                                            <option value={false}>❌</option>
+                                                            <option value="true">Yes</option>
+                                                            <option value="false">No</option>
                                                         </select>
                                                     ) : (
                                                         getPermissionIcon(manager.issueProduct)
                                                     )}
                                                 </td>
-
                                                 <td className="py-2 px-4 border border-gray-300 text-center">
                                                     {editingManager === manager.managerId ? (
-                                                        <>
+                                                        <div className="flex justify-center">
                                                             <button
-                                                                className="text-green-600 hover:text-green-900 mr-2"
                                                                 onClick={() => handleSaveClick(manager.managerId)}
+                                                                className="bg-green-500 text-white p-2 rounded-md mr-2"
                                                             >
                                                                 Save
                                                             </button>
                                                             <button
-                                                                className="text-gray-600 hover:text-gray-900"
                                                                 onClick={() => setEditingManager(null)}
+                                                                className="bg-red-500 text-white p-2 rounded-md"
                                                             >
                                                                 Cancel
                                                             </button>
-                                                        </>
+                                                        </div>
                                                     ) : (
-                                                        <>
+                                                        <div className="flex justify-center">
                                                             <button
-                                                                className="text-blue-600 hover:text-blue-900 mr-2"
                                                                 onClick={() => handleEditClick(manager)}
+                                                                className="bg-blue-500 text-white p-2 rounded-md mr-2"
                                                             >
                                                                 Edit
                                                             </button>
                                                             <button
-                                                                className="text-red-600 hover:text-red-900"
                                                                 onClick={() => handleDeleteClick(manager.managerId)}
+                                                                className="bg-red-500 text-white p-2 rounded-md"
                                                             >
                                                                 Delete
                                                             </button>
-                                                        </>
+                                                        </div>
                                                     )}
                                                 </td>
                                             </tr>
@@ -376,6 +395,19 @@ function AllManager() {
                                 </table>
                             </div>
                         )}
+
+                        {/* Pagination */}
+                        <div className="flex justify-center my-4">
+                            {Array.from({ length: Math.ceil(filteredManagers.length / managersPerPage) }, (_, index) => (
+                                <button
+                                    key={index + 1}
+                                    onClick={() => paginate(index + 1)}
+                                    className={`mx-1 px-3 py-1 rounded-md ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
-import AddUsers from '../Images/add-user.png'
-import List from '../Images/list.png'
+import AddUsers from '../Images/add-user.png';
+import List from '../Images/list.png';
 
 function UsersList() {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [editedUser, setEditedUser] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(10);
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const userListURL = `${serverUrl}/users/user-getAll`;
   const userEditURL = `${serverUrl}/users/user-update`;
@@ -52,14 +53,11 @@ function UsersList() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    
-      setEditedUser({
-        ...editedUser,
-        [name]: value
-      });
+    setEditedUser({
+      ...editedUser,
+      [name]: value
+    });
   };
-
 
   const handleSaveClick = async (userId) => {
     try {
@@ -115,8 +113,6 @@ function UsersList() {
     }
   };
 
-
-
   // Function to handle search input change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -128,40 +124,48 @@ function UsersList() {
     user.userName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-   // Function to handle CSV download
-   const handleDownloadCSV = async () => {
-    try {
-        const response = await fetch(userCSV, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // This is typically optional for downloads
-            },
-        });
+  // Pagination logic
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-        if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'users.csv'; // Ensure filename is correct
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            toast.success('CSV file downloaded successfully');
-        } else {
-            console.error('Failed to download CSV:', response.statusText);
-            toast.error('Failed to download CSV');
-        }
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Function to handle CSV download
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await fetch(userCSV, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'users.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast.success('CSV file downloaded successfully');
+      } else {
+        console.error('Failed to download CSV:', response.statusText);
+        toast.error('Failed to download CSV');
+      }
     } catch (error) {
-        console.error('Error while downloading CSV:', error);
-        toast.error('An error occurred while downloading CSV');
+      console.error('Error while downloading CSV:', error);
+      toast.error('An error occurred while downloading CSV');
     }
-};
+  };
 
   return (
     <div>
       <Navbar />
-      <div className='m-4 md:m-12  justify-between'>
+      <div className='m-4 md:m-12 justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <Link to='/home/add-user'>
@@ -175,14 +179,14 @@ function UsersList() {
               </div>
             </Link>
             <Link to='/home/add-user/users-list'>
-            <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex  flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
-              <div className='w-10 block'>
-                <img src={List} alt='Description' />
+              <div className='bg-gray-200 p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500 '>
+                <div className='w-10 block'>
+                  <img src={List} alt='Description' />
+                </div>
+                <div>
+                  <p>User List</p>
+                </div>
               </div>
-              <div>
-                <p>User List</p>
-              </div>
-            </div>
             </Link>
           </div>
         </div>
@@ -202,7 +206,7 @@ function UsersList() {
             <button onClick={fetchUsers} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
             &nbsp;&nbsp;&nbsp;
             <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
-            {filteredUsers.length > 0 && (
+            {currentUsers.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">
                   <thead>
@@ -217,7 +221,7 @@ function UsersList() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user) => (
+                    {currentUsers.map((user) => (
                       <tr key={user.userId}>
                         <td className="py-2 px-4 border border-gray-300 text-center">{user.userId}</td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
@@ -233,7 +237,6 @@ function UsersList() {
                             user.userName
                           )}
                         </td>
-                        
                         <td className="py-2 px-4 border border-gray-300 text-center">
                           {editingUser === user.userId ? (
                             <input
@@ -286,7 +289,6 @@ function UsersList() {
                             user.password
                           )}
                         </td>
-                        
                         <td className="py-2 px-4 border border-gray-300 text-center">
                           {editingUser === user.userId ? (
                             <>
@@ -326,6 +328,18 @@ function UsersList() {
                 </table>
               </div>
             )}
+            {/* Pagination */}
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -333,4 +347,4 @@ function UsersList() {
   );
 }
 
-export default UsersList;
+export default UsersList;

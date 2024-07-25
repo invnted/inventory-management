@@ -10,13 +10,14 @@ function AllModerator() {
   const [editingModerator, setEditingModerator] = useState(null);
   const [editedModerator, setEditedModerator] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const moderatorsPerPage = 10;
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const moderatorListURL = `${serverUrl}/moderators/moderator-getAll`;
   const moderatorEditURL = `${serverUrl}/moderators/moderator-update`;
   const moderatorDeleteURL = `${serverUrl}/moderators/moderator-delete`;
-  const downloadCSVURL = `${serverUrl}/moderators/download-moderator-csv`; // CSV download URL
+  const downloadCSVURL = `${serverUrl}/moderators/download-moderator-csv`;
 
-  // Function to fetch all moderators
   const fetchModerators = async () => {
     try {
       const response = await fetch(moderatorListURL, {
@@ -25,7 +26,7 @@ function AllModerator() {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log("Received:", data);
@@ -111,18 +112,15 @@ function AllModerator() {
     }
   };
 
-  // Function to handle search input change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Filter moderators based on search term
   const filteredModerators = moderators.filter((moderator) =>
     moderator.moderatorId.toLowerCase().includes(searchTerm.toLowerCase()) ||
     moderator.moderatorName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to handle CSV download
   const handleDownloadCSV = async () => {
     try {
       const response = await fetch(downloadCSVURL, {
@@ -133,17 +131,12 @@ function AllModerator() {
       });
 
       if (response.ok) {
-        // Get the blob from the response
         const blob = await response.blob();
-        // Create a link element
         const link = document.createElement('a');
-        // Set the URL using the blob
         link.href = URL.createObjectURL(blob);
-        link.download = 'moderators.csv'; // Filename
-        // Append to the DOM and trigger click
+        link.download = 'moderators.csv';
         document.body.appendChild(link);
         link.click();
-        // Clean up
         document.body.removeChild(link);
       } else {
         toast.error('Failed to download CSV');
@@ -153,6 +146,17 @@ function AllModerator() {
       toast.error('An error occurred');
     }
   };
+
+  const indexOfLastModerator = currentPage * moderatorsPerPage;
+  const indexOfFirstModerator = indexOfLastModerator - moderatorsPerPage;
+  const currentModerators = filteredModerators.slice(indexOfFirstModerator, indexOfLastModerator);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredModerators.length / moderatorsPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div>
@@ -196,8 +200,8 @@ function AllModerator() {
           </form>
           <div className="p-2 md:p-10">
             <button onClick={fetchModerators} className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
-            <button onClick={handleDownloadCSV} className="bg-green-500 text-white p-2 rounded-md ml-4">Download CSV</button> {/* Download CSV Button */}
-            {filteredModerators.length > 0 && (
+            <button onClick={handleDownloadCSV} className="bg-green-500 text-white p-2 rounded-md ml-4">Download CSV</button>
+            {currentModerators.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">
                   <thead>
@@ -212,7 +216,7 @@ function AllModerator() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredModerators.map((moderator) => (
+                    {currentModerators.map((moderator) => (
                       <tr key={moderator.moderatorId}>
                         <td className="py-2 px-4 border border-gray-300 text-center">{moderator.moderatorId}</td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
@@ -317,6 +321,17 @@ function AllModerator() {
                     ))}
                   </tbody>
                 </table>
+                <div className="flex justify-center mt-4">
+                  {pageNumbers.map(number => (
+                    <button
+                      key={number}
+                      onClick={() => paginate(number)}
+                      className={`px-4 py-2 mx-1 ${number === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                    >
+                      {number}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

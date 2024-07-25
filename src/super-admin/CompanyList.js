@@ -16,7 +16,10 @@ function CompanyList() {
   const companyDeleteURL = `${serverUrl}/companies/company-delete`;
   const companiesCSV = `${serverUrl}/users/download-company-csv`;
 
-  // Function to fetch all companies
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
+
   const fetchCompanies = async () => {
     try {
       const response = await fetch(companyListURL, {
@@ -28,7 +31,7 @@ function CompanyList() {
   
       if (response.ok) {
         const data = await response.json();
-        if (data.success) {  // Check for success flag
+        if (data.success) {
           setCompanies(data.companies);
           toast.success('Successfully fetched data');
         } else {
@@ -42,11 +45,6 @@ function CompanyList() {
       toast.error('An error occurred');
     }
   };
-  
-
-  useEffect(() => {
-    fetchCompanies();
-  }, []);
 
   const handleEditClick = (company) => {
     setEditingCompany(company.companyId);
@@ -120,40 +118,37 @@ function CompanyList() {
     setSearchTerm(e.target.value);
   };
 
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await fetch(companiesCSV, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'companies.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast.success('CSV file downloaded successfully');
+      } else {
+        toast.error('Failed to download CSV');
+      }
+    } catch (error) {
+      toast.error('An error occurred while downloading CSV');
+    }
+  };
+
   const filteredCompanies = companies.filter((company) =>
     company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     company.companyId.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Function to handle CSV download
-  const handleDownloadCSV = async () => {
-    try {
-        const response = await fetch(companiesCSV, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // This is typically optional for downloads
-            },
-        });
-
-        if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'companies.csv'; // Ensure filename is correct
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            toast.success('CSV file downloaded successfully');
-        } else {
-            console.error('Failed to download CSV:', response.statusText);
-            toast.error('Failed to download CSV');
-        }
-    } catch (error) {
-        console.error('Error while downloading CSV:', error);
-        toast.error('An error occurred while downloading CSV');
-    }
-};
 
   return (
     <div>
