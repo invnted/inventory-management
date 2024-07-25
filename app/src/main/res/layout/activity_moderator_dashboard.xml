@@ -299,6 +299,40 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/tickets"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/gridbg"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline33"
+            app:layout_constraintEnd_toStartOf="@+id/guideline31"
+            app:layout_constraintStart_toStartOf="@+id/guideline28"
+            app:layout_constraintTop_toTopOf="@+id/guideline32">
+
+            <ImageView
+                android:id="@+id/tick"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ticket" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="Tickets"
+                android:textColor="#bebebe"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -14,11 +14,11 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/newinventory"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="wrap"
-        app:layout_constraintBottom_toTopOf="@+id/guideline1" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
@@ -32,14 +32,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.23" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <View
         android:id="@+id/view2"
@@ -53,19 +53,11 @@
         app:layout_constraintTop_toTopOf="@+id/guideline3"
         app:layout_constraintVertical_bias="1.0" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/inwave"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4" />
-
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/lgly2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="15dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
@@ -77,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
-            android:gravity="bottom|center"
+            android:gravity="bottom|center|start"
             android:paddingTop="15dp"
             android:text="Welcome Back"
             android:textColor="@color/skyBlue"
@@ -88,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
-            android:gravity="center"
+            android:gravity="center|start"
             android:text="Login to your account"
             android:textColor="#BEBEBE"
             android:textSize="21sp"
@@ -101,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.4" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -119,13 +111,16 @@
         app:layout_constraintGuide_percent="0.1" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/lgly"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="20dp"
         android:gravity="center|bottom"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/guideline13"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5">
 
         <Spinner
@@ -209,20 +204,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.74" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:paddingEnd="10dp"
-        android:text="Forgot Password?"
-        android:textColor="@color/skyBlue"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline13" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline12"
         android:layout_width="wrap_content"
@@ -243,6 +224,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.87" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
         android:layout_width="wrap_content"
@@ -250,19 +232,32 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.93" />
 
-    <TextView
-        android:id="@+id/login_button"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/loginbtn"
-        android:fontFamily="@font/poppins_medium"
-        android:gravity="center"
-        android:text="Login"
-        android:textColor="#dbf0fe"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintStart_toStartOf="@+id/guideline7"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lgly">
+
+        <ProgressBar
+            android:id="@+id/pb"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/login_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/loginbtn"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="Login"
+            android:textColor="#dbf0fe"
+            android:textSize="18sp"
+             />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -151,6 +151,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:id="@+id/pk"
         android:src="@drawable/adminicon"
         app:layout_constraintBottom_toTopOf="@+id/guideline123"
         app:layout_constraintEnd_toStartOf="@+id/guideline131"
@@ -228,6 +229,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline109">
 
         <ImageView
+            android:id="@+id/orgReceived"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:src="@drawable/demand" />

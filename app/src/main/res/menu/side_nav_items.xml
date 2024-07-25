@@ -29,6 +29,15 @@
         android:id="@+id/Org"
         android:title="Organization List"
         android:icon="@drawable/baseline_filter_list_24"/>
+    <item
+        android:id="@+id/pendingDemandOrg"
+        android:title="Oraganization pending demands"
+        android:icon="@drawable/baseline_app_registration_24"/>
+
+    <item
+        android:id="@+id/orgDemands"
+        android:title="Oraganization Demands"
+        android:icon="@drawable/baseline_real_estate_agent_24"/>
 
     <item
         android:id="@+id/allUserReport"

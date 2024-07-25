@@ -14,6 +14,7 @@ class moderatorDashboard : AppCompatActivity() {
     private lateinit var profile: ImageView
     private lateinit var issueProduct : ImageView
     private lateinit var issueO : ImageView
+    private lateinit var ticket : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_moderator_dashboard)
@@ -58,6 +59,12 @@ class moderatorDashboard : AppCompatActivity() {
         issueO.setOnClickListener {
             issueO.startAnimation(AnimationUtils.loadAnimation(this@moderatorDashboard,R.anim.click))
             startActivity(Intent(this@moderatorDashboard,issueOrg::class.java))
+        }
+
+        ticket = findViewById(R.id.tick)
+        ticket.setOnClickListener {
+            ticket.startAnimation(AnimationUtils.loadAnimation(this@moderatorDashboard,R.anim.click))
+            startActivity(Intent(this@moderatorDashboard,ticket_raised::class.java))
         }
     }
 }

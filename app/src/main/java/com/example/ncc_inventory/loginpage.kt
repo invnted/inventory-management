@@ -12,6 +12,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -26,7 +28,7 @@ import retrofit2.http.POST
 
 object rFit {
     var retrofit: Retrofit? = null
-    const val BASE_URL_PLACEHOLDER = "https://4be1-103-37-80-91.ngrok-free.app/"
+    const val BASE_URL_PLACEHOLDER = "https://97cb-103-37-80-91.ngrok-free.app/"
 }
 
 data class managerloginrequest(
@@ -39,6 +41,8 @@ class loginpage : AppCompatActivity() {
     private val items =
         mutableListOf("Select one", "Admin", "Manager", "Organization", "Moderator", "User")
     private lateinit var identity: String
+    private lateinit var pb : ProgressBar
+    private lateinit var loginButton : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginpage)
@@ -50,33 +54,19 @@ class loginpage : AppCompatActivity() {
             )
         }
 
-        val rootView = findViewById<View>(R.id.root_layout)
-
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val r = Rect()
-            rootView.getWindowVisibleDisplayFrame(r)
-            val screenHeight = rootView.height
-            val keypadHeight = screenHeight - r.bottom
-            if (keypadHeight > screenHeight * 0.15) {
-                // Keyboard is opened
-                rootView.post {
-                    rootView.translationY = -keypadHeight.toFloat() / 2
-                }
-            } else {
-                // Keyboard is closed
-                rootView.post {
-                    rootView.translationY = 0f
-                }
-            }
-        }
+        val lgly : LinearLayout = findViewById(R.id.lgly)
+        val lgly2 : LinearLayout = findViewById(R.id.lgly2)
+        pb = findViewById(R.id.pb)
 
 
-        val loginButton = findViewById<TextView>(R.id.login_button)
+
+        loginButton = findViewById<TextView>(R.id.login_button)
         //loading click animation
         val click = AnimationUtils.loadAnimation(this, R.anim.click)
 
         loginButton.setOnClickListener {
             loginButton.startAnimation(click)
+            loginButton.visibility = View.INVISIBLE
             val email = findViewById<EditText>(R.id.email).text.toString()
             val password = findViewById<EditText>(R.id.password).text.toString()
             val baseUrl = rFit.BASE_URL_PLACEHOLDER
@@ -115,6 +105,7 @@ class loginpage : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         rFit.retrofit = retrofit
+        pb.visibility =View.VISIBLE
         if (identity == "Admin") {
             val loginService = retrofit.create(LoginService::class.java)
             val loginRequest = LoginRequest(email, password)
@@ -125,6 +116,8 @@ class loginpage : AppCompatActivity() {
                         response: Response<LoginResponse>
                     ) {
                         if (response.isSuccessful) {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             val loginResponse = response.body()
                             if (loginResponse != null) {
                                 // Handle successful login
@@ -147,6 +140,8 @@ class loginpage : AppCompatActivity() {
                                     finish()
                                 }
                             } else {
+                                pb.visibility =View.INVISIBLE
+                                loginButton.visibility = View.VISIBLE
                                 Toast.makeText(
                                     this@loginpage,
                                     loginResponse?.message ?: "Login failed12",
@@ -154,6 +149,8 @@ class loginpage : AppCompatActivity() {
                                 ).show()
                             }
                         } else {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             // Handle login failure (e.g., display error message)
                             Toast.makeText(
                                 this@loginpage,
@@ -164,6 +161,8 @@ class loginpage : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         // Handle network errors
                         Toast.makeText(
                             this@loginpage,
@@ -182,6 +181,8 @@ class loginpage : AppCompatActivity() {
                         response: Response<managerLoginResponse>
                     ) {
                         if (response.isSuccessful) {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             val respo = response.body()
                             if (respo?.success == true) {
                                 val it = Intent(this@loginpage, managerDashboard::class.java)
@@ -198,6 +199,8 @@ class loginpage : AppCompatActivity() {
                                 finish()
                             }
                         } else {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             Toast.makeText(
                                 this@loginpage,
                                 "Invalid Credentials",
@@ -207,6 +210,8 @@ class loginpage : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<managerLoginResponse>, t: Throwable) {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         Toast.makeText(this@loginpage, "Response failed", Toast.LENGTH_SHORT).show()
 
                     }
@@ -222,6 +227,8 @@ class loginpage : AppCompatActivity() {
                         response: Response<loginUserResponse>
                     ) {
                         if (response.isSuccessful) {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             val respo = response.body()
                             if (respo?.success == true) {
                                 val user = respo.user
@@ -241,6 +248,8 @@ class loginpage : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else {
+                                pb.visibility =View.INVISIBLE
+                                loginButton.visibility = View.VISIBLE
                                 Toast.makeText(
                                     this@loginpage,
                                     "Invalid Credentials",
@@ -248,6 +257,8 @@ class loginpage : AppCompatActivity() {
                                 ).show()
                             }
                         } else {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             Toast.makeText(
                                 this@loginpage,
                                 "Invalid Credentials",
@@ -257,6 +268,8 @@ class loginpage : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<loginUserResponse>, t: Throwable) {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         Toast.makeText(this@loginpage, "Response Failed", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -269,6 +282,8 @@ class loginpage : AppCompatActivity() {
                     response: Response<moderatorResponse>
                 ) {
                     if (response.isSuccessful) {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         val respo = response.body()
                         if (respo?.success == true) {
                             val moderator = respo.moderator
@@ -285,6 +300,8 @@ class loginpage : AppCompatActivity() {
                             Toast.makeText(this@loginpage, "Login Successful", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             Toast.makeText(
                                 this@loginpage,
                                 "Invalid Credentials",
@@ -292,12 +309,16 @@ class loginpage : AppCompatActivity() {
                             ).show()
                         }
                     } else {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         Toast.makeText(this@loginpage, "Invalid Credentials", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
 
                 override fun onFailure(call: Call<moderatorResponse>, t: Throwable) {
+                    pb.visibility =View.INVISIBLE
+                    loginButton.visibility = View.VISIBLE
                     Toast.makeText(this@loginpage, "Response Failed", Toast.LENGTH_SHORT).show()
                 }
 
@@ -312,6 +333,8 @@ class loginpage : AppCompatActivity() {
                     response: Response<orgLoginResponse>
                 ) {
                     if (response.isSuccessful) {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         val respo = response.body()
                         if (respo?.success == true) {
                             Toast.makeText(this@loginpage, "Login Successful", Toast.LENGTH_SHORT)
@@ -324,6 +347,8 @@ class loginpage : AppCompatActivity() {
                             startActivity(it)
                             finish()
                         } else {
+                            pb.visibility =View.INVISIBLE
+                            loginButton.visibility = View.VISIBLE
                             Toast.makeText(
                                 this@loginpage,
                                 "Invalid Credentials",
@@ -331,6 +356,8 @@ class loginpage : AppCompatActivity() {
                             ).show()
                         }
                     } else {
+                        pb.visibility =View.INVISIBLE
+                        loginButton.visibility = View.VISIBLE
                         Toast.makeText(
                             this@loginpage,
                             "Invalid Credentials",
@@ -340,6 +367,8 @@ class loginpage : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<orgLoginResponse>, t: Throwable) {
+                    pb.visibility =View.INVISIBLE
+                    loginButton.visibility = View.VISIBLE
                     Toast.makeText(
                         this@loginpage,
                         "Some Error Occurred",
@@ -350,6 +379,8 @@ class loginpage : AppCompatActivity() {
 
             })
         } else {
+            pb.visibility =View.INVISIBLE
+            loginButton.visibility = View.VISIBLE
             Toast.makeText(
                 this@loginpage,
                 "Please fill all the mandatory fields",

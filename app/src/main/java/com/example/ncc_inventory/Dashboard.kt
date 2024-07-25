@@ -131,6 +131,12 @@ class Dashboard : AppCompatActivity() {
                 R.id.Org ->{
                     startActivity(Intent(this,organization_list_panel::class.java))
                 }
+                R.id.pendingDemandOrg -> {
+                    startActivity(Intent(this,orgPendingDemands::class.java))
+                }
+                R.id.orgDemands -> {
+                    startActivity(Intent(this,OrganizationDemandsNav::class.java))
+                }
 
                 // Add other cases for other menu items as needed
             }

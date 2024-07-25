@@ -24,8 +24,7 @@ class filterOrgAdapter(
     val newList: MutableList<filteredProducts> = adapterItems.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderClass {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.filter_item_org, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.filter_item_org, parent, false)
         return ViewHolderClass(itemView)
     }
 

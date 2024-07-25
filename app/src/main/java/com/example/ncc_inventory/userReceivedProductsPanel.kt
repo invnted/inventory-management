@@ -33,29 +33,35 @@ class userReceivedProductsPanel : AppCompatActivity() {
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
 
+        //ddd
         searchView = findViewById(R.id.serachView9)
         recyclerView = findViewById(R.id.receivedRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = receivedDemandAdapter(this, emptyList())
+        adapter = receivedDemandAdapter(this, emptyList(),"")
         retrofit = rFit.retrofit!!
         backButton = findViewById(R.id.receivedBack)
         rk = findViewById(R.id.rk)
         rk.visibility = View.INVISIBLE
 
+
         val id = intent.getStringExtra("id")
+
+
         val receivedUserReq = id?.let { receivedUserReq(it) }
         val service = retrofit.create(receivedUserService::class.java)
         if (receivedUserReq != null) {
+
             service.receivedProducts(receivedUserReq).enqueue(object : Callback<receivedUserRes>{
                 override fun onResponse(
                     call: Call<receivedUserRes>,
                     response: Response<receivedUserRes>
                 ) {
+
                     if(response.isSuccessful){
                         val respo = response.body()
                         if(respo?.success==true){
                             if(respo.products.isNotEmpty()){
-                                adapter = receivedDemandAdapter(this@userReceivedProductsPanel,respo.products)
+                                adapter = receivedDemandAdapter(this@userReceivedProductsPanel,respo.products,id)
                                 recyclerView.adapter = adapter
                             }else{
                                 rk.visibility = View.VISIBLE

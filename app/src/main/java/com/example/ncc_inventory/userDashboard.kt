@@ -19,7 +19,7 @@ class userDashboard : AppCompatActivity() {
     private lateinit var click : Animation
     private lateinit var rcvd : ImageView
     private lateinit var cp : TextView
-
+    private lateinit var pf : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_dashboard)
@@ -57,6 +57,17 @@ class userDashboard : AppCompatActivity() {
             startActivity(intent)
         }
 
+        pf = findViewById(R.id.pf)
+        pf.setOnClickListener {
+            pf.startAnimation(click)
+            val intent = Intent(this,user_profile::class.java)
+            intent.putExtra("userName",name)
+            intent.putExtra("userEmail",id)
+            intent.putExtra("designation",dsg)
+            intent.putExtra("section",sc)
+            intent.putExtra("appointment",apt)
+            startActivity(intent)
+        }
     }
 
 
