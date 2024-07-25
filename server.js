@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const auth = require('./middlewares/auth');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const cors = require('cors');
@@ -14,7 +15,7 @@ connectDB();
 // Middleware
 app.use(bodyParser.json());
 app.use('/users', userRoutes);
-app.use('/products', productRoutes);
+app.use('/products',auth,productRoutes);
 app.use('/admins',userRoutes);
 app.use('/managers',userRoutes);
 app.use('/moderators',userRoutes)
