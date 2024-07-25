@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import UserNavbar from './UserNavbar';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getProductReceived`;
@@ -10,6 +10,7 @@ function UserProductReceived() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,8 +26,8 @@ function UserProductReceived() {
         if (response.ok) {
           const result = await response.json();
           console.log('Fetched products:', result); // Debug log
-          if (Array.isArray(result) && result.length > 0) {
-            setProducts(result);
+          if (Array.isArray(result.products) && result.products.length > 0) {
+            setProducts(result.products);
           } else {
             console.log('No products found for this user.');
           }
@@ -43,6 +44,14 @@ function UserProductReceived() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleRaiseTicket = (productId) => {
+    localStorage.setItem('productId', productId);
+    localStorage.setItem('issuedBy', userId); // Save issuedBy in local storage
+    console.log("Saved Product ID:", productId);
+    console.log("Saved Issue ID:", userId);
+    navigate('/user-home/raise-ticket');
   };
 
   const filteredProducts = products.filter((product) =>
@@ -74,11 +83,6 @@ function UserProductReceived() {
                   onChange={handleSearchChange}
                   required
                 />
-                <div className="absolute inset-y-0 right-6 md:right-8 flex items-center pl-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                  </svg>
-                </div>
               </div>
             </form>
             <button
@@ -111,13 +115,17 @@ function UserProductReceived() {
                         <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
                         <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
                         <td className="py-2 px-4 border text-black border-black ">
-                          <Link to='/user-home/raise-ticket'>
-                            <div className=' bg-sky-800 text-white p-2 rounded-lg text-center'>Raise Ticket</div>
-                          </Link>
+                          {product.ticketStatus === 'UNRAISED' ? (
+                            <button
+                              onClick={() => handleRaiseTicket(product.productId)}
+                              className='bg-sky-800 text-white p-2 rounded-lg text-center'
+                            >
+                              Raise Ticket
+                            </button>
+                          ) : (
+                            <span className='text-red-500'>Ticket Raised</span>
+                          )}
                         </td>
-
-
-
                       </tr>
                     ))
                   ) : (

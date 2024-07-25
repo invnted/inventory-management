@@ -1,53 +1,76 @@
-import React, { useEffect, useState } from 'react'
-import ModeratorNavbar from './ModeratorNavbar'
-
-
+import React, { useEffect, useState } from 'react';
+import ModeratorNavbar from './ModeratorNavbar';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/company-unissuedDemandList`;
+const GET_TICKETS_URL = `${serverUrl}/products/getAllTickets`;
+const UPDATE_TICKET_URL = `${serverUrl}/products/updateTicket`;
 
 function UserTicketReceived() {
-    const [demandData, setDemandData] = useState([]);
+    const [ticketData, setTicketData] = useState([]);
 
     useEffect(() => {
-        const fetchDemandData = async () => {
+        const fetchTicketData = async () => {
             try {
-                const response = await fetch(REQ_URL, {
+                const response = await fetch(GET_TICKETS_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
                 const data = await response.json();
-                console.log('Fetched demand data:', data);
+                console.log('Fetched ticket data:', data);
                 if (data.success) {
-                    setDemandData(data.demands);
+                    setTicketData(data.tickets);
                 }
             } catch (error) {
-                console.error('Error fetching demand data:', error);
+                toast.error("Error fetching ticket data");
+                console.error('Error fetching ticket data:', error);
             }
         };
 
-        fetchDemandData();
+        fetchTicketData();
     }, []);
 
-    useEffect(() => {
-        console.log('Updated demandData:', demandData);
-    }, [demandData]);
-
-    const handleIssue = (demandId, companyId, productType, productName, productModel,productBrand,productQuantity) => {
-        // Handle issue logic here
-        localStorage.setItem('demandId', demandId);
-        localStorage.setItem('companyId', companyId);
-        localStorage.setItem('productBrand', productBrand);
-        localStorage.setItem('productType', productType);
-        localStorage.setItem('productName', productName);
-        localStorage.setItem('productModel', productModel);
-        localStorage.setItem('productQuantity', productQuantity);
-        
+    const handleUpdateStatus = async (ticketId, newStatus) => {
+        try {
+            const response = await fetch(UPDATE_TICKET_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ticketId, status: newStatus }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                if (newStatus === 'RESOLVED') {
+                    // Remove the ticket from the list
+                    setTicketData(ticketData.filter(ticket => ticket.ticketId !== ticketId));
+                    toast.success("Issue Resolved Successfully");
+                } else {
+                    // Update ticket status without removing it from the list
+                    setTicketData(ticketData.map(ticket =>
+                        ticket.ticketId === ticketId ? { ...ticket, status: newStatus } : ticket
+                    ));
+                    toast.success("Ticket Updated");
+                }
+            }
+        } catch (error) {
+            toast.error("Error updating ticket status");
+            console.error('Error updating ticket status:', error);
+        }
     };
-  return (
-    <div>
+
+    const handleReviewClick = (ticketId) => {
+        handleUpdateStatus(ticketId, 'UNDER REVIEW');
+    };
+
+    const handleResolveClick = (ticketId) => {
+        handleUpdateStatus(ticketId, 'RESOLVED');
+    };
+
+    return (
+        <div>
             <ModeratorNavbar />
             <div className='m-4 md:m-12 justify-between'>
                 <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
@@ -66,38 +89,55 @@ function UserTicketReceived() {
                         </div>
                     </form>
                     <div className="p-2 md:p-10">
-                        <button className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
+                        <button className="bg-sky-800 text-white p-2 rounded-md" onClick={() => window.location.reload()}>Refresh</button>
                         <div className="overflow-x-auto mt-4">
                             <table className="min-w-full bg-sky-100 border border-black">
                                 <thead>
                                     <tr>
-                                        <th className="py-2 px-4 border border-black text-center">Demand ID</th>
-                                        <th className="py-2 px-4 border border-black text-center">Company ID</th>
-                                        <th className="py-2 px-4 border border-black text-center">Product Type</th>
-                                        <th className="py-2 px-4 border border-black text-center">Product Name</th>
-                                        <th className="py-2 px-4 border border-black text-center">Model</th>
-                                        <th className="py-2 px-4 border border-black text-center">Brand</th>
-                                        <th className="py-2 px-4 border border-black text-center">Quantity</th>
+                                        <th className="py-2 px-4 border border-black text-center">Ticket ID</th>
+                                        <th className="py-2 px-4 border border-black text-center">Issue Type</th>
+                                        <th className="py-2 px-4 border border-black text-center">Message</th>
+                                        <th className="py-2 px-4 border border-black text-center">Raised By</th>
+                                        <th className="py-2 px-4 border border-black text-center">Product ID</th>
+                                        <th className="py-2 px-4 border border-black text-center">Status</th>
+                                        <th className="py-2 px-4 border border-black text-center">Created At</th>
+                                        <th className="py-2 px-4 border border-black text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {demandData.length > 0 ? (
-                                        demandData.map((demand) => (
-                                            <tr key={demand.demandId}>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.companyId}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productType}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productModel}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productBrand}</td>
-                                                <td className="py-2 px-4 border border-black text-center">{demand.productQuantity}</td>
-                                                
+                                    {ticketData.length > 0 ? (
+                                        ticketData.map((ticket) => (
+                                            <tr key={ticket._id}>
+                                                <td className="py-2 px-4 border border-black text-center">{ticket.ticketId}</td>
+                                                <td className="py-2 px-4 border border-black text-center">{ticket.issueType}</td>
+                                                <td className="py-2 px-4 border border-black text-center">{ticket.message}</td>
+                                                <td className="py-2 px-4 border border-black text-center">{ticket.issuedBy}</td>
+                                                <td className="py-2 px-4 border border-black text-center">{ticket.productId}</td>
+                                                <td className="py-2 px-4 border border-black text-center">{ticket.status}</td>
+                                                <td className="py-2 px-4 border border-black text-center">{new Date(ticket.createdAt).toLocaleString()}</td>
+                                                <td className="py-2 px-4 border border-black text-center">
+                                                    {ticket.status === 'UNDER REVIEW' ? (
+                                                        <button
+                                                            className="bg-green-500 text-white p-2 rounded-md"
+                                                            onClick={() => handleResolveClick(ticket.ticketId)}
+                                                        >
+                                                            RESOLVE
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="bg-yellow-500 text-white p-2 rounded-md"
+                                                            onClick={() => handleReviewClick(ticket.ticketId)}
+                                                        >
+                                                            REVIEW
+                                                        </button>
+                                                    )}
+                                                </td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="9" className="py-2 px-4 border border-black text-center">
-                                                No demand requests found.
+                                            <td colSpan="8" className="py-2 px-4 border border-black text-center">
+                                                No tickets found.
                                             </td>
                                         </tr>
                                     )}
@@ -108,7 +148,7 @@ function UserTicketReceived() {
                 </div>
             </div>
         </div>
-  )
+    );
 }
 
-export default UserTicketReceived
+export default UserTicketReceived;
