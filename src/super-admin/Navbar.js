@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
 
@@ -32,6 +32,19 @@ function Navbar() {
         setSidebarOpen(!sidebarOpen);
     };
 
+    const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target) && imgRef.current && !imgRef.current.contains(event.target)) {
+            setOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className="flex">
             <div className={`fixed inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out bg-sky-700 text-white w-64 z-50`}>
@@ -56,7 +69,7 @@ function Navbar() {
                             ☰
                         </button>
                         <span className="hidden sm:block self-center text-3xl font-bold whitespace-nowrap dark:text-white">Admin Dashboard</span>
-                        
+
                         <div className="hidden md:flex space-x-4">
                             <Link to='/home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 text-xl py-2 px-3">Dashboard</Link>
                             <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 text-xl py-2 px-3">Reports</Link>
@@ -80,11 +93,11 @@ function Navbar() {
                                                 </li>
                                             ))}
                                         </ul>
-                                        <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
-                                            <Link to='/'>
+                                        <Link to='/'>
+                                            <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
                                                 <button onClick={logOut}>Logout</button>
-                                            </Link>
-                                        </div>
+                                            </div>
+                                        </Link>
                                     </div>
                                 )}
                             </div>

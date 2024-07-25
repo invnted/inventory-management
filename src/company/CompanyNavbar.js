@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
 
@@ -30,6 +30,19 @@ function CompanyNavbar() {
         setSidebarOpen(!sidebarOpen);
     };
 
+    const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target) && imgRef.current && !imgRef.current.contains(event.target)) {
+            setOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className="relative flex">
             {/* Overlay */}
@@ -48,8 +61,7 @@ function CompanyNavbar() {
                     <Link to="/company-home" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Dashboard</Link>
                     <Link to="/company-home/raise-demand" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Raise Demand</Link>
                     <Link to="/company-home/product-received" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Product Received</Link>
-                    <Link to="" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 ">Product in Use</Link>
-                    
+
                 </nav>
             </div>
             <div className="flex-1">
@@ -62,12 +74,11 @@ function CompanyNavbar() {
                             ☰
                         </button>
                         <span className="hidden sm:block self-center text-2xl font-bold whitespace-nowrap dark:text-white">Company Dashboard</span>
-                        
+
                         <div className="hidden md:flex space-x-4">
                             <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Dashboard</Link>
                             <Link to='/company-home/raise-demand' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Raise Demand</Link>
                             <Link to='/company-home/product-received' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Product Received</Link>
-                            <Link to='' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 text-xl px-3">Product in Use</Link>
                         </div>
 
                         <div className="flex items-center md:order-2 space-x-3 md:space-x-0">
@@ -88,19 +99,15 @@ function CompanyNavbar() {
                                                 </li>
                                             ))}
                                         </ul>
-                                        <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
-                                            <Link to='/'>
+                                        <Link to='/'>
+                                            <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
                                                 <button onClick={logOut}>Logout</button>
-                                            </Link>
-                                        </div>
+                                            </div>
+                                        </Link>
                                     </div>
                                 )}
                             </div>
                         </div>
-                    </div>
-                    <div className="hidden sm:block md:hidden justify-around py-2">
-                        <Link to='/company-home' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Dashboard</Link>
-                        <Link to='/reports' className="text-gray-800 dark:text-gray-200 hover:text-blue-600 py-2 px-3">Reports</Link>
                     </div>
                 </nav>
             </div>

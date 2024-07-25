@@ -50,6 +50,19 @@ function ManagerNavbar() {
         fetchOutOfStockItems();
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target) && imgRef.current && !imgRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const logOut = () => {
         window.localStorage.clear();
         window.location.href = "/";
@@ -72,7 +85,6 @@ function ManagerNavbar() {
                     <Link to="/manager-dashboard" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Dashboard</Link>
                     <Link to="/manager-dashboard/manager-AddProduct" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Add Product</Link>
                     <Link to="/manager-dashboard/managerAdd-user" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Add User</Link>
-                    <Link to="/manager-dashboard/ManagerDemandReport" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Demand</Link>
                     <Link to="/manager-dashboard/StockRequiredInStore" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Stock Required
                         {showNotificationDot && (
                             <span className="absolute h-3 w-3 bg-yellow-300 rounded-full"></span>
@@ -111,11 +123,11 @@ function ManagerNavbar() {
                                                 </li>
                                             ))}
                                         </ul>
-                                        <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
-                                            <Link to='/'>
+                                        <Link to='/'>
+                                            <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
                                                 <button onClick={logOut}>Logout</button>
-                                            </Link>
-                                        </div>
+                                            </div>
+                                        </Link>
                                     </div>
                                 )}
                             </div>
@@ -132,9 +144,6 @@ function ManagerNavbar() {
                                     Add User
                                 </li>
                             </Link>
-                            <Link to='/manager-dashboard/ManagerDemand'>
-                                <li className='hover:text-blue-500 delay-100'>Demand</li>
-                            </Link>
                             <Link to='/manager-dashboard/StockRequiredInStore'>
                                 <li className='hover:text-blue-500 delay-100'>
                                     Stock Required
@@ -145,19 +154,6 @@ function ManagerNavbar() {
                             </Link>
                         </ul>
                     </div>
-                    {/* <div className="hidden sm:block  md:hidden justify-around py-2">
-                        <Link to='/manager-dashboard' className="text-white hover:text-blue-500 py-2 px-3">Dashboard</Link>
-                        <Link to='/manager-dashboard/manager-AddProduct' className="text-white hover:text-blue-500 py-2 px-3">Add Product</Link>
-                        <Link to='/manager-dashboard/managerAdd-user' className="text-white hover:text-blue-500 py-2 px-3">Add User</Link>
-                        <Link to='/manager-dashboard/ManagerDemand' className="text-white hover:text-blue-500 py-2 px-3">Demand</Link>
-                        <Link to='/manager-dashboard/ManagerDemand' className="text-white hover:text-blue-500 py-2 px-3">Stock Required</Link>
-                        <Link to='/manager-dashboard/StockRequiredInStore' className="text-white hover:text-blue-500 py-2 px-3">
-                            Stock Required
-                            {showNotificationDot && (
-                                <span className="absolute h-2 w-2 bg-red-600 rounded-full top-0 right-0 animate-ping slower"></span>
-                            )}
-                        </Link>
-                    </div> */}
                 </nav>
             </div>
         </div>

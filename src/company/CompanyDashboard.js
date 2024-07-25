@@ -26,12 +26,6 @@ function CompanyDashboard() {
                         </div>
                     </div>
                 </Link>
-                <div className='w-72 h-40 bg-sky-800 hover:bg-sky-500 transition-colors duration-300 flex justify-center items-center rounded-3xl cursor-pointer shadow-2xl'>
-                    <div className='flex flex-col justify-center items-center'>
-                        <img src={ProductInUse} className='w-16 h-16' alt='Product in Use' />
-                        <div className='text-lg md:text-2xl lg:text-3xl text-white'>Product in Use</div>
-                    </div>
-                </div>
             </div>
         </div>
     );

@@ -50,15 +50,21 @@ function ModeratorNavbar() {
                     >
                         <img src={AsideIcon} alt="Menu" className="w-6 h-6" /> {/* Use the uploaded image */}
                     </button>
-                    <ul className='hidden md:flex gap-10 text-xl font-semibold text-white'>
+                    <ul className='hidden md:flex gap-10  font-semibold text-white'>
                         <Link to='/moderator-home' className='hover:text-blue-900 delay-100'>
                             <li>Dashboard</li>
                         </Link>
                         <Link to='/moderator-home/issue-product' className='hover:text-blue-900 delay-100'>
-                            <li>Issue Product</li>
+                            <li>Issue for User</li>
                         </Link>
-                        <Link to='' className='hover:text-blue-900 delay-100'>
-                            <li>Pending</li>
+                        <Link to='/moderator-home/issue-product-company' className='hover:text-blue-900 delay-100'>
+                            <li>Issue for Company</li>
+                        </Link>
+                        <Link to='/moderator-home/user-ticket-received' className='hover:text-blue-900 delay-100'>
+                            <li>User Ticket Received</li>
+                        </Link>
+                        <Link to='/moderator-home/company-ticket-received' className='hover:text-blue-900 delay-100'>
+                            <li>Company Ticket Received</li>
                         </Link>
                     </ul>
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -80,11 +86,11 @@ function ModeratorNavbar() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
-                                        <Link to='/'>
+                                    <Link to='/'>
+                                        <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
                                             <button onClick={logOut}>Logout</button>
-                                        </Link>
-                                    </div>
+                                        </div>
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -124,12 +130,22 @@ function ModeratorNavbar() {
                             </li>
                             <li>
                                 <Link to='/moderator-home/issue-product' className='block px-4 py-2 hover:bg-blue-900 rounded'>
-                                    Issue Product
+                                    Issue for User
                                 </Link>
                             </li>
                             <li>
-                                <Link to='' className='block px-4 py-2 hover:bg-blue-900 rounded'>
-                                    Pending
+                                <Link to='/moderator-home/issue-product-company' className='block px-4 py-2 hover:bg-blue-900 rounded'>
+                                    Issue for Company
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to='/moderator-home/user-ticket-received' className='block px-4 py-2 hover:bg-blue-900 rounded'>
+                                    Issue for Company
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to='/moderator-home/company-ticket-received' className='block px-4 py-2 hover:bg-blue-900 rounded'>
+                                    Issue for Company
                                 </Link>
                             </li>
                         </ul>

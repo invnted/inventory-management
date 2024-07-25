@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
-import MoreOptionsImage from '../Images/aside.png'; 
+import MoreOptionsImage from '../Images/aside.png';
 
 function UserNavbar() {
     const [open, setOpen] = useState(false);
@@ -46,7 +46,7 @@ function UserNavbar() {
                         <img src={MoreOptionsImage} alt="More options" className="w-6 h-6" />
                     </button>
                     <div className="hidden md:block">
-                            <span className="self-center text-3xl font-bold whitespace-nowrap text-white">User Dashboard</span>
+                        <span className="self-center text-3xl font-bold whitespace-nowrap text-white">User Dashboard</span>
                     </div>
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         <div className="relative flex text-sm rounded-full md:me-0 focus:ring-4 focus:ring-blue-600">
@@ -66,11 +66,11 @@ function UserNavbar() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
-                                        <Link to='/'>
+                                    <Link to='/'>
+                                        <div className='flex justify-center items-center text-2xl font-semibold text-gray-200 bg-red-400 hover:bg-red-600 rounded-lg p-2 mt-4'>
                                             <button onClick={logOut}>Logout</button>
-                                        </Link>
-                                    </div>
+                                        </div>
+                                    </Link>
                                 </div>
                             )}
                         </div>
@@ -84,9 +84,6 @@ function UserNavbar() {
                         </Link>
                         <Link to='/user-home/product-received' className='hover:text-blue-300'>
                             <li className=''>Product Received</li>
-                        </Link>
-                        <Link to='' className='hover:text-blue-300'>
-                            <li className=''>Product in Use</li>
                         </Link>
                     </ul>
                 </div>
@@ -111,9 +108,6 @@ function UserNavbar() {
                             </Link>
                             <Link to='/user-home/product-received' className='hover:text-blue-300' onClick={() => setMenuOpen(false)}>
                                 <li className='pt-4'>Product Received</li>
-                            </Link>
-                            <Link to=''  className='hover:text-blue-300' onClick={() => setMenuOpen(false)}>
-                                <li className='pt-4'>Product in Use</li>
                             </Link>
                         </ul>
                     </aside>

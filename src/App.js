@@ -55,6 +55,8 @@ import IssueForCompany from './moderator/IssueForCompany';
 import ConfirmCompanyProduct from './moderator/ConfirmCompanyProduct';
 import PendingCompanyDemand from './super-admin/PendingCompanyDemand';
 import PendingUserDemand from './super-admin/PendingUserDemand';
+import UserTicketReceived from './moderator/UserTicketReceived';
+import CompanyTicketReceived from './moderator/CompanyTicketReceived';
 
 
 
@@ -119,6 +121,8 @@ function App() {
         <Route path="/moderator-home/confirm-product" element={<ConfirmProduct/>}/>
         <Route path="/moderator-home/confirm-company-product" element={<ConfirmCompanyProduct/>}/>
         <Route path="/moderator-home/authorization-store" element={<ManagerAuthorizationStore/>}/>
+        <Route path="/moderator-home/user-ticket-received" element={<UserTicketReceived/>}/>
+        <Route path="/moderator-home/company-ticket-received" element={<CompanyTicketReceived/>}/>
 
         {/* Company Panel */}
         <Route path="/company-home" element={<CompanyDashboard/>}/>

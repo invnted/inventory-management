@@ -22,16 +22,6 @@ function UserHome() {
                         </div>
                     </div>
                 </Link>
-                {/* <Link to='/user-home/raise-ticket'>
-                    <div className='w-72 h-40 bg-sky-800 hover:bg-sky-500 transition duration-300 flex justify-center items-center rounded-3xl cursor-pointer shadow-2xl'>
-                        <div className='flex flex-col justify-center items-center'>
-                            <div className='w-16'>
-                                <img src={RaiseTicket} alt="Raise Demand" />
-                            </div>
-                            <div className='text-3xl text-white'>Raise Ticket</div>
-                        </div>
-                    </div>
-                </Link> */}
                 <Link to='/user-home/product-received'>
                     <div className='w-72 h-40 bg-sky-800 hover:bg-sky-500 transition duration-300 flex justify-center items-center rounded-3xl cursor-pointer shadow-2xl'>
                         <div className='flex flex-col justify-center items-center'>
@@ -42,14 +32,7 @@ function UserHome() {
                         </div>
                     </div>
                 </Link>
-                <div className='w-72 h-40 bg-sky-800 hover:bg-sky-500 transition duration-300 flex justify-center items-center rounded-3xl cursor-pointer shadow-2xl'>
-                    <div className='flex flex-col justify-center items-center'>
-                        <div className='w-16'>
-                            <img src={ProductInUse} alt="Product in Use" />
-                        </div>
-                        <div className='text-3xl text-white'>Product in Use</div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     );
