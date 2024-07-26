@@ -5,10 +5,15 @@ import List from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { useNavigate } from 'react-router-dom';
+
 function AddUser() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/users/user-register`;
   const uploadCSVURL = `${serverUrl}/users/upload-user-csv`;
+
+
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({
     userId: '',
@@ -51,7 +56,16 @@ function AddUser() {
           section: '',
           appointment: '',
         });
-      } else {
+      }
+      else if (response.status === 401) {
+        toast.error('Invalid credentials');
+        navigate('/authorization-failed');
+        setTimeout(() => {
+          navigate('/home/add-manager'); 
+        }, 2000);
+
+       }
+       else {
         toast.error('Invalid details');
       }
     } catch (error) {

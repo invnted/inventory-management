@@ -4,6 +4,7 @@ import AddUsers from '../Images/add-user.png';
 import List from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function AddModerator() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -11,6 +12,7 @@ function AddModerator() {
   const uploadCSVURL = `${serverUrl}/moderators/upload-moderator-csv`;
   
 
+  const navigate = useNavigate();
 
   const [moderator, setModerator] = useState({
     moderatorId: '',
@@ -53,7 +55,16 @@ function AddModerator() {
           section: '',
           appointment: '',
         });
-      } else {
+      }
+      else if (response.status === 401) {
+        toast.error('Invalid credentials');
+        navigate('/authorization-failed');
+        setTimeout(() => {
+          navigate('/home/add-manager'); 
+        }, 2000);
+
+       }
+      else {
         toast.error('Invalid details');
       }
     } catch (error) {

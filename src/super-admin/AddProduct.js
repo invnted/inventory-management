@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const ADDPRODUCTURL = `${serverUrl}/products/add`;
 const UPLOADCSVURL = `${serverUrl}/products/upload-product-csv`;
+
 
 function generateRandomString(length = 10) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -16,6 +18,10 @@ function generateRandomString(length = 10) {
 }
 
 function AddProduct() {
+
+  const navigate = useNavigate();
+
+
   const [product, setProduct] = useState({
     productId: generateRandomString(),
     productType: "",
@@ -102,7 +108,16 @@ function AddProduct() {
           productPrice: "",
           additionalDetail: "",
         });
-      } else {
+      } 
+      else if (response.status === 401) {
+        toast.error('Invalid credentials');
+        navigate('/authorization-failed');
+        setTimeout(() => {
+          navigate('/home/add-manager'); 
+        }, 2000);
+
+       }
+      else {
         toast.error("Invalid details");
       }
     } catch (error) {

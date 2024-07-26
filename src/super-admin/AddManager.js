@@ -4,12 +4,17 @@ import Manager from '../Images/add.png';
 import ListManager from '../Images/list.png';
 import { Switch } from 'antd';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 function AddManager() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/managers/manager-register`;
   const UPLOADCSVURL = `${serverUrl}/users/upload-manager-csv`;
+
+  const navigate = useNavigate();
+
 
   const [manager, setManager] = useState({
     managerId: '',
@@ -96,7 +101,17 @@ function AddManager() {
           demandReceived: false,
           issueProduct: false,
         });
-      } else {
+
+      }
+      else if (response.status === 401) {
+        toast.error('Invalid credentials');
+        navigate('/authorization-failed');
+        setTimeout(() => {
+          navigate('/home/add-manager'); 
+        }, 2000);
+
+       }
+      else {
         toast.error('Invalid details');
       }
     } catch (error) {

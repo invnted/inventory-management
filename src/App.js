@@ -57,6 +57,7 @@ import PendingCompanyDemand from './super-admin/PendingCompanyDemand';
 import PendingUserDemand from './super-admin/PendingUserDemand';
 import UserTicketReceived from './moderator/UserTicketReceived';
 import CompanyTicketReceived from './moderator/CompanyTicketReceived';
+import AuthorizationFailed from './components/AuthorizationFailed';
 
 
 
@@ -71,6 +72,8 @@ function App() {
         <Route path="/moderator-login" element={<ModeratorLogin/>} />
         <Route path="/company-login" element={<CompanyLogin/>} />
         <Route path="/" element={<UserLogin/>} />
+        {/* Authorization failed... */}
+        <Route path="/authorization-failed" element={<AuthorizationFailed/>} />
         {/* Admin panel */}
         <Route path="/home" element={<Home />} />
         <Route path="/reports" element={<Reports />} />

@@ -4,11 +4,15 @@ import AddCompanyIcon from '../Images/AddCompany1.png';
 import ListIcon from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
 
 function AddCompany() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const registrationURL = `${serverUrl}/companies/company-register`;
   const uploadCSVURL = `${serverUrl}/companies/upload-company-csv`;
+
+  const navigate = useNavigate();
 
   const [company, setCompany] = useState({
     companyId: '',
@@ -53,7 +57,16 @@ function AddCompany() {
           contact_2: '',
           password: ''
         });
-      } else {
+      } 
+      else if (response.status === 401) {
+        toast.error('Invalid credentials');
+        navigate('/authorization-failed');
+        setTimeout(() => {
+          navigate('/home/add-manager'); 
+        }, 2000);
+
+       }
+      else {
         toast.error('Invalid details');
       }
     } catch (error) {
