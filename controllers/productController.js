@@ -4,6 +4,7 @@ const companyDemand = require('../models/companyDemand');
 const Ticket = require('../models/Ticket');
 const { createObjectCsvStringifier } = require('csv-writer');
 
+
 //CSV Locators
 const { receiveProductCSV } = require('../csv_handlers/products/addProductCSV');
 const { sendProductCSV } = require('../csv_handlers/products/sendProductCSV');
@@ -625,32 +626,46 @@ exports.outOfStockCalculator = async (req, res) => {
   }
 };
 
+
+
 exports.productReceived = async (req, res) => {
   try {
     const { userId } = req.body;
+
+    // Step 1: Fetch all products assigned to the user
     const products = await Product.find({ issuedTo: userId }, 'productId productType productName productBrand productModel updatedAt');
-    
+
     if (!products || products.length === 0) {
       return res.status(404).json({ message: 'No products found for this user.' });
     }
 
+    // Step 2: Fetch ticket statuses for the user's products
     const productsWithTicketStatus = await Promise.all(products.map(async (product) => {
-      const ticket = await Ticket.findOne({ productId: product.productId });
-      let ticketStatus = 'UNRAISED';
+      // Find the ticket associated with the product and issuedBy
+      const ticket = await Ticket.findOne({ productId: product.productId, issuedBy: userId });
+
+      // Determine the ticket status
+
+      // console.log("Value of ticket: ",ticket);
+
+      let ticketStatus = 'NOT RAISED'; // Default status if no ticket is found
       if (ticket) {
-        ticketStatus = ticket.status === 'RESOLVED' ? 'UNRAISED' : 'RAISED';
+        ticketStatus = ticket.status; // Use the status from the ticket
       }
+
+      // Return product with ticket status
       return {
         ...product.toObject(),
         ticketStatus
       };
     }));
-
-    return res.status(200).json({products: productsWithTicketStatus, success:true});
+    console.log(productsWithTicketStatus);
+    return res.status(200).json({ products: productsWithTicketStatus, success: true });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 
 exports.allProductReport = async (req, res) => {
@@ -686,18 +701,27 @@ exports.makeDemandCompany = async (req, res) => {
   }
 };
 
+
 exports.raiseTicket = async (req, res) => {
-  const { ticketId , issueType , message , issuedBy , productId } = req.body;
+  const { ticketId, issueType, message, issuedBy, productId } = req.body;
+
   try {
-    
     // Convert specific fields to lowercase
-    const lowercaseFields = ['issueType', 'message',];
+    const lowercaseFields = ['issueType', 'message'];
     lowercaseFields.forEach(field => {
       if (req.body[field]) {
         req.body[field] = req.body[field].toLowerCase();
       }
     });
 
+    // Check if a ticket already exists for the given productId
+    const existingTicket = await Ticket.findOne({ productId: productId });
+
+    if (existingTicket) {
+      return res.status(400).json({ success: false, message: 'Product ticket already exits.' });
+    }
+
+    // Create and save the new ticket
     const ticket = new Ticket(req.body);
     await ticket.save();
     console.log("Ticket Raised Successfully");
@@ -742,28 +766,31 @@ exports.updateTicketStatus = async (req, res) => {
       return res.status(404).json({ msg: 'Ticket not found' });
     }
 
-    // Update the ticket document with the new status
-    ticket = await Ticket.findOneAndUpdate(
-      { ticketId },
-      { $set: { status } },
-      { new: true }
-    );
-
-    // If status is "RESOLVED", also update the ticketStatus in the Product model
     if (status === 'RESOLVED') {
+      // Delete the ticket if status is "RESOLVED"
+      await Ticket.findOneAndDelete({ ticketId });
+
+      // Update the ticketStatus in the Product model
       await Product.findOneAndUpdate(
         { productId: ticket.productId },
         { $set: { ticketStatus: 'UNRAISED' } }
       );
-    }
 
-    res.json({ ticket, success: true });
+      return res.json({ success: true, msg: 'Ticket resolved and removed successfully' });
+    } else {
+      // Update the ticket document with the new status
+      ticket = await Ticket.findOneAndUpdate(
+        { ticketId },
+        { $set: { status } },
+        { new: true }
+      );
+
+      res.json({ ticket, success: true });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 };
-
-
 
 
