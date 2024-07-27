@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ManagerNavbar from './ManagerNavbar';
 import { toast } from 'react-toastify';
+import fetchWithToken from '../services/api';
 
 function ManagerProductReport() {
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -23,7 +24,7 @@ function ManagerProductReport() {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch(REPORT_URL, {
+            const response = await fetchWithToken(REPORT_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,6 +37,7 @@ function ManagerProductReport() {
 
             const data = await response.json();
             if (data.success) {
+                toast.success("Fetched Successfully");
                 setProducts(data.products);
             } else {
                 throw new Error('Failed to fetch products');

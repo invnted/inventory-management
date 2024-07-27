@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import UserNavbar from './UserNavbar';
 import { useNavigate } from 'react-router-dom';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getProductReceived`;
+const TICKETS_URL = `${serverUrl}/products/getAllTickets`;
 
 function UserProductReceived() {
   const [products, setProducts] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   const userId = localStorage.getItem('userId');
@@ -15,7 +19,7 @@ function UserProductReceived() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(REQ_URL, {
+        const response = await fetchWithToken(REQ_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -25,7 +29,6 @@ function UserProductReceived() {
 
         if (response.ok) {
           const result = await response.json();
-          console.log('Fetched products:', result); // Debug log
           if (Array.isArray(result.products) && result.products.length > 0) {
             setProducts(result.products);
           } else {
@@ -39,7 +42,33 @@ function UserProductReceived() {
       }
     };
 
+    const fetchTickets = async () => {
+      try {
+        const response = await fetchWithToken(TICKETS_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ issuedBy: userId }), // Adjust as needed
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (Array.isArray(result.tickets) && result.tickets.length > 0) {
+            setTickets(result.tickets);
+          } else {
+            console.log('No tickets found for this user.');
+          }
+        } else {
+          console.error('Failed to fetch tickets');
+        }
+      } catch (error) {
+        console.error('Error fetching tickets:', error);
+      }
+    };
+
     fetchData();
+    fetchTickets();
   }, [userId]);
 
   const handleSearchChange = (e) => {
@@ -49,8 +78,6 @@ function UserProductReceived() {
   const handleRaiseTicket = (productId) => {
     localStorage.setItem('productId', productId);
     localStorage.setItem('issuedBy', userId); // Save issuedBy in local storage
-    console.log("Saved Product ID:", productId);
-    console.log("Saved Issue ID:", userId);
     navigate('/user-home/raise-ticket');
   };
 
@@ -69,7 +96,7 @@ function UserProductReceived() {
         <div className='bg-sky-300'>
           <div className='flex justify-center items-center bg-sky-800 p-8 text-4xl font-semibold text-white text-center'>
             Product Received
-          </div>
+          </div> 
 
           <div className='bg-sky-300 text-white p-2 md:p-10'>
             <form className="mb-6">
@@ -101,33 +128,40 @@ function UserProductReceived() {
                     <th className="py-3 px-4 border border-black text-left">Product Brand</th>
                     <th className="py-3 px-4 border border-black text-left">Product Model</th>
                     <th className="py-3 px-4 border border-black text-left">Updated At</th>
-                    <th className="py-3 px-4 border border-black text-left">Raise Ticket</th>
+                    <th className="py-3 px-4 border border-black text-left">Ticket Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => (
-                      <tr key={product.productId} className='hover:bg-sky-50'>
-                        <td className="py-2 px-4 border text-black border-black">{product.productId}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productType}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productName}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productBrand}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
-                        <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
-                        <td className="py-2 px-4 border text-black border-black ">
-                          {product.ticketStatus === 'UNRAISED' ? (
-                            <button
-                              onClick={() => handleRaiseTicket(product.productId)}
-                              className='bg-sky-800 text-white p-2 rounded-lg text-center'
-                            >
-                              Raise Ticket
-                            </button>
-                          ) : (
-                            <span className='text-red-500'>Ticket Raised</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))
+                    filteredProducts.map((product) => {
+                      const ticket = tickets.find(ticket => ticket.productId === product.productId);
+                      const ticketStatus = ticket ? ticket.status : 'UNRAISED';
+
+                      return (
+                        <tr key={product.productId} className='hover:bg-sky-50'>
+                          <td className="py-2 px-4 border text-black border-black">{product.productId}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productType}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productName}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productBrand}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
+                          <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
+                          <td className="py-2 px-4 border text-black border-black">
+                            {ticketStatus === 'PENDING' ? (
+                              <span className='text-red-500 font-bold'>PENDING</span>
+                            ) : ticketStatus === 'UNDER REVIEW' ? (
+                              <span className='text-red-500 font-bold'>Under Review</span>
+                            ) : (
+                              <button
+                                onClick={() => handleRaiseTicket(product.productId)}
+                                className='bg-sky-800 text-white p-2 rounded-lg text-center'
+                              >
+                                Raise Ticket
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td colSpan="7" className="py-2 px-4 text-center text-black">No products found</td>

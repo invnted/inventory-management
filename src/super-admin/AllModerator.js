@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import AddUsers from '../Images/add-user.png';
 import List from '../Images/list.png';
+import fetchWithToken from '../services/api';
 
 function AllModerator() {
   const [moderators, setModerators] = useState([]);
@@ -20,21 +21,23 @@ function AllModerator() {
 
   const fetchModerators = async () => {
     try {
-      const response = await fetch(moderatorListURL, {
+      const response = await fetchWithToken(moderatorListURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Received:", data);
+      
         setModerators(data);
         toast.success('Successfully fetched data');
-      } else {
+
+      }
+
+      else {
         toast.error('Failed to fetch data');
       }
+
+      
     } catch (error) {
       console.error('Error while fetching:', error);
       toast.error('An error occurred');
@@ -60,11 +63,8 @@ function AllModerator() {
 
   const handleSaveClick = async (moderatorId) => {
     try {
-      const response = await fetch(moderatorEditURL, {
+      const response = await fetchWithToken(moderatorEditURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(editedModerator),
       });
 
@@ -75,7 +75,10 @@ function AllModerator() {
         setModerators(updatedModerators);
         setEditingModerator(null);
         toast.success('Moderator updated successfully');
-      } else {
+      }
+      
+      
+      else {
         toast.error('Failed to update Moderator');
       }
     } catch (error) {
@@ -88,11 +91,8 @@ function AllModerator() {
     const confirmDelete = window.confirm('Are you sure you want to delete this moderator?');
     if (confirmDelete) {
       try {
-        const response = await fetch(moderatorDeleteURL, {
+        const response = await fetchWithToken(moderatorDeleteURL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({ moderatorId }),
         });
 
@@ -102,7 +102,10 @@ function AllModerator() {
           );
           setModerators(updatedModerators);
           toast.success('Moderator deleted successfully');
-        } else {
+        }
+
+        
+        else {
           toast.error('Failed to delete Moderator');
         }
       } catch (error) {
@@ -138,7 +141,13 @@ function AllModerator() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-      } else {
+      }
+
+      else if (response.status === 401) {
+        toast.error('Access Denied');
+    }
+      
+      else {
         toast.error('Failed to download CSV');
       }
     } catch (error) {

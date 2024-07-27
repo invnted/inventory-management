@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProfilePhoto from '../Images/profile photo.jpg';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const GET_OUT_OF_STOCK_URL = `${serverUrl}/products/getOutOfStock`;
@@ -27,13 +28,12 @@ function ManagerNavbar() {
     useEffect(() => {
         const fetchOutOfStockItems = async () => {
             try {
-                const response = await fetch(GET_OUT_OF_STOCK_URL, {
+                const response = await fetchWithToken(GET_OUT_OF_STOCK_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        // Add any headers you need, e.g., authorization token
+                        'Content-Type': 'application/json',   
                     },
-                    // You can pass any necessary data in the body, e.g., JSON.stringify({ key: value })
+                    
                 });
 
                 if (!response.ok) {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Navbar from '../super-admin/Navbar';
 import ManagerNavbar from './ManagerNavbar';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const ADDPRODUCTURL = `${serverUrl}/products/add`;
@@ -79,7 +80,7 @@ function ManagerAddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(ADDPRODUCTURL, {
+      const response = await fetchWithToken(ADDPRODUCTURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

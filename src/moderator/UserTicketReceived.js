@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModeratorNavbar from './ModeratorNavbar';
 import { toast } from 'react-toastify';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const GET_TICKETS_URL = `${serverUrl}/products/getAllTickets`;
@@ -12,7 +13,7 @@ function UserTicketReceived() {
     useEffect(() => {
         const fetchTicketData = async () => {
             try {
-                const response = await fetch(GET_TICKETS_URL, {
+                const response = await fetchWithToken(GET_TICKETS_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -34,7 +35,7 @@ function UserTicketReceived() {
 
     const handleUpdateStatus = async (ticketId, newStatus) => {
         try {
-            const response = await fetch(UPDATE_TICKET_URL, {
+            const response = await fetchWithToken(UPDATE_TICKET_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

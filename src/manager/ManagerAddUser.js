@@ -5,6 +5,7 @@ import List from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ManagerNavbar from './ManagerNavbar';
+import fetchWithToken from '../services/api';
 
 function ManagerAddUser() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -30,7 +31,7 @@ function ManagerAddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(registrationURL, {
+      const response = await fetchWithToken(registrationURL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

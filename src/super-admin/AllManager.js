@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Manager from '../Images/add.png';
 import { toast } from 'react-toastify';
 import Navbar from './Navbar';
+import fetchWithToken from '../services/api';
 
 function AllManager() {
     const [managers, setManagers] = useState([]);
@@ -20,21 +21,21 @@ function AllManager() {
     // Function to fetch all managers
     const fetchManagers = async () => {
         try {
-            const response = await fetch(managerListURL, {
+            const response = await fetchWithToken(managerListURL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
             });
 
-            if (response.ok) {
+            if (response.ok){
                 const data = await response.json();
                 console.log("Received:", data);
                 setManagers(data);
                 toast.success('Successfully fetched data');
-            } else {
-                toast.error('Failed to fetch data');
             }
+
+            else{
+                toast.error("Failed to fetch");
+            }
+  
         } catch (error) {
             console.error('Error while fetching:', error);
             toast.error('An error occurred');
@@ -68,11 +69,8 @@ function AllManager() {
 
     const handleSaveClick = async (managerId) => {
         try {
-            const response = await fetch(managerEditURL, {
+            const response = await fetchWithToken(managerEditURL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(editedManager),
             });
 
@@ -83,7 +81,9 @@ function AllManager() {
                 setManagers(updatedManagers);
                 setEditingManager(null);
                 toast.success('Manager updated successfully');
-            } else {
+            } 
+
+            else{
                 toast.error('Failed to update manager');
             }
         } catch (error) {
@@ -96,11 +96,8 @@ function AllManager() {
         const confirmDelete = window.confirm('Are you sure you want to delete this manager?');
         if (confirmDelete) {
             try {
-                const response = await fetch(managerDeleteURL, {
+                const response = await fetchWithToken(managerDeleteURL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                     body: JSON.stringify({ managerId }),
                 });
 
@@ -110,7 +107,11 @@ function AllManager() {
                     );
                     setManagers(updatedManagers);
                     toast.success('Manager deleted successfully');
-                } else {
+                } 
+
+                
+
+                else {
                     toast.error('Failed to delete manager');
                 }
             } catch (error) {
@@ -211,7 +212,7 @@ function AllManager() {
                         </div>
                     </form>
                     <div className="p-2 md:p-10">
-                        <button onClick={fetchManagers} className="bg-sky-800 text-white p-2 rounded-md mr-4">Refresh</button>
+                        {/* <button onClick={fetchManagers} className="bg-sky-800 text-white p-2 rounded-md mr-4">Refresh</button> */}
                         <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
                         {currentManagers.length > 0 && (
                             <div className="overflow-x-auto mt-4">

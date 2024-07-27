@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import Chart from 'react-apexcharts';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const productTypeListUrl = `${serverUrl}/products/productType-list`;
@@ -34,15 +36,23 @@ function AuthorizationStore() {
   useEffect(() => {
     const fetchProductTypes = async () => {
       try {
-        const response = await fetch(productTypeListUrl, {
+        const response = await fetchWithToken(productTypeListUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
         });
+
+        if (response.ok){
         const data = await response.json();
-        console.log('Fetched product types:', data);
         setProductTypes(data);
+        }
+
+        else
+        {
+          toast.error("Fail to fetch data");
+        }
+
       } catch (error) {
         console.error('Error fetching product types:', error);
       }
@@ -58,15 +68,21 @@ function AuthorizationStore() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(productStoreDetailUrl, {
+      const response = await fetchWithToken(productStoreDetailUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ productType: selectedProductType }),
       });
+
+      if (response.ok)
+      {
+
       const data = await response.json();
       console.log('Fetched product store details:', data);
+
+      toast.success("Successfully Fetched");
 
       const seriesData = [
         parseInt(data.BER),
@@ -80,6 +96,12 @@ function AuthorizationStore() {
         series: seriesData,
         options: chartData.options,
       });
+      }
+
+      else
+      {
+        toast.error("Fail to fetch")
+      }
     } catch (error) {
       console.error('Error fetching product store details:', error);
     }

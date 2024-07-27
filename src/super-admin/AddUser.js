@@ -4,6 +4,7 @@ import AddUsers from '../Images/add-user.png';
 import List from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import fetchWithToken from '../services/api';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -38,11 +39,8 @@ function AddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(registrationURL, {
+      const response = await fetchWithToken(registrationURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(user),
       });
 
@@ -57,14 +55,7 @@ function AddUser() {
           appointment: '',
         });
       }
-      else if (response.status === 401) {
-        toast.error('Invalid credentials');
-        navigate('/authorization-failed');
-        setTimeout(() => {
-          navigate('/home/add-manager'); 
-        }, 2000);
-
-       }
+      
        else {
         toast.error('Invalid details');
       }

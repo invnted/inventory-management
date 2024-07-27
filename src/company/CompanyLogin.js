@@ -39,11 +39,13 @@ function CompanyLogin() {
         console.log("Received:", data);
 
         const { companyId, companyName, email, contact_1 } = data.company;
+       
 
         localStorage.setItem('companyId', companyId);
         localStorage.setItem('companyName', companyName);
         localStorage.setItem('email', email);
         localStorage.setItem('contact_1', contact_1);
+        localStorage.setItem('token', data.token);
 
         toast.success("Login successful");
         setCompany({ email: "", password: "" });

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
-
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getOutOfStock`;
 
@@ -11,22 +12,24 @@ function StockRequiredInStore() {
     useEffect(() => {
         const fetchOutOfStockDemands = async () => {
             try {
-                const response = await fetch(REQ_URL, {
+                const response = await fetchWithToken(REQ_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({}), // If you need to send any data, include it here
+                    body: JSON.stringify({}),
                 });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
                 if (data.outOfStockDemands) {
+                    toast.success("Fetched Successfully");
                     setDemands(data.outOfStockDemands);
                 } else {
                     setDemands([]);
                 }
+
             } catch (error) {
                 setError(error.message);
             }

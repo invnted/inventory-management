@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -10,7 +12,7 @@ function PendingUserDemand() {
   useEffect(() => {
     const fetchDemandData = async () => {
       try {
-        const response = await fetch(REQ_URL, {
+        const response = await fetchWithToken(REQ_URL, {
           method: 'POST', 
           headers: {
             'Content-Type': 'application/json',
@@ -19,6 +21,7 @@ function PendingUserDemand() {
         const data = await response.json();
         console.log('Fetched demand data:', data); // Debugging: log fetched data
         if (data.success) {
+          toast.success("Fetched Successfully");
           setDemandData(data.demands);
         }
       } catch (error) {

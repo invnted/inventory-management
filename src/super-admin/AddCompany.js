@@ -5,6 +5,8 @@ import ListIcon from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import fetchWithToken from '../services/api';
+
 
 
 function AddCompany() {
@@ -38,14 +40,11 @@ function AddCompany() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(registrationURL, {
+      const response = await fetchWithToken(registrationURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(company),
       });
-
+  
       if (response.ok) {
         toast.success('Successfully registered');
         setCompany({
@@ -57,23 +56,17 @@ function AddCompany() {
           contact_2: '',
           password: ''
         });
-      } 
-      else if (response.status === 401) {
-        toast.error('Invalid credentials');
-        navigate('/authorization-failed');
-        setTimeout(() => {
-          navigate('/home/add-manager'); 
-        }, 2000);
-
-       }
-      else {
-        toast.error('Invalid details');
+      } else {
+        toast.error(`Invalid details`);
       }
     } catch (error) {
       console.error('Error while registration:', error);
       toast.error('An error occurred');
     }
   };
+  
+  
+  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -82,18 +75,18 @@ function AddCompany() {
       setCsvFileName(file.name);
     }
   };
-
+  
   const handleCSVUpload = async (e) => {
     e.preventDefault();
-
+  
     if (!csvFile) {
       toast.error("Please select a CSV file to upload");
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('csvFile', csvFile);
-
+  
     try {
       const response = await fetch(uploadCSVURL, {
         method: "POST",
@@ -113,6 +106,8 @@ function AddCompany() {
       toast.error("An error occurred while uploading CSV");
     }
   };
+  
+  
 
   return (
     <div>

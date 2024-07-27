@@ -53,6 +53,7 @@ function UserLogin() {
         localStorage.setItem('designation', designation);
         localStorage.setItem('section', section);
         localStorage.setItem('appointment', appointment);
+        localStorage.setItem('token', data.token);
 
 
 

@@ -6,6 +6,7 @@ import Navbar from '../super-admin/Navbar';
 import AddUsers from '../Images/add-user.png'
 import List from '../Images/list.png'
 import ManagerNavbar from './ManagerNavbar';
+import fetchWithToken from '../services/api';
 
 function ManagerUserList() {
   const [users, setUsers] = useState([]);
@@ -20,7 +21,7 @@ function ManagerUserList() {
   // Function to fetch all users
   const fetchUsers = async () => {
     try {
-      const response = await fetch(userListURL, {
+      const response = await fetchWithToken(userListURL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ function ManagerUserList() {
 
   const handleSaveClick = async (userId) => {
     try {
-      const response = await fetch(userEditURL, {
+      const response = await fetchWithToken(userEditURL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +92,7 @@ function ManagerUserList() {
     const confirmDelete = window.confirm('Are you sure you want to delete this user?');
     if (confirmDelete) {
       try {
-        const response = await fetch(userDeleteURL, {
+        const response = await fetchWithToken(userDeleteURL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

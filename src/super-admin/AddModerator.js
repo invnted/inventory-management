@@ -5,6 +5,7 @@ import List from '../Images/list.png';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import fetchWithToken from '../services/api';
 
 function AddModerator() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -37,11 +38,8 @@ function AddModerator() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(registrationURL, {
+      const response = await fetchWithToken(registrationURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(moderator),
       });
 
@@ -56,16 +54,9 @@ function AddModerator() {
           appointment: '',
         });
       }
-      else if (response.status === 401) {
-        toast.error('Invalid credentials');
-        navigate('/authorization-failed');
-        setTimeout(() => {
-          navigate('/home/add-manager'); 
-        }, 2000);
 
-       }
-      else {
-        toast.error('Invalid details');
+      else{
+        toast.error("Invalid Detail");
       }
     } catch (error) {
       console.error('Error while registration:', error);

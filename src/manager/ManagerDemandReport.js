@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ManagerNavbar from './ManagerNavbar';
 import DemandRequested from '../Images/demand1.png'
 import { Link } from 'react-router-dom';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllDemand`;
@@ -15,7 +17,7 @@ function ManagerDemandReport() {
     useEffect(() => {
         const fetchDemandData = async () => {
             try {
-                const response = await fetch(REQ_URL, {
+                const response = await fetchWithToken(REQ_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -24,6 +26,7 @@ function ManagerDemandReport() {
                 const data = await response.json();
                 console.log('Fetched demand data:', data);
                 if (data.success) {
+                    toast.success("Fetched Successfully");
                     setDemandData(data.demands);
                 }
             } catch (error) {

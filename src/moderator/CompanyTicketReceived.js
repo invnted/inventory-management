@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ModeratorNavbar from './ModeratorNavbar'
+import fetchWithToken from '../services/api';
 
 
 
@@ -12,7 +13,7 @@ function CompanyTicketReceived() {
     useEffect(() => {
         const fetchDemandData = async () => {
             try {
-                const response = await fetch(REQ_URL, {
+                const response = await fetchWithToken(REQ_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

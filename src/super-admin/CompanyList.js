@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import AddCompany from '../Images/AddCompany1.png';
 import List from '../Images/list.png';
+import fetchWithToken from '../services/api';
 
 function CompanyList() {
   const [companies, setCompanies] = useState([]);
@@ -22,21 +23,17 @@ function CompanyList() {
 
   const fetchCompanies = async () => {
     try {
-      const response = await fetch(companyListURL, {
+      const response = await fetchWithToken(companyListURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
+
+      const data = await response.json();
+        console.log("Received:", data);
   
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          setCompanies(data.companies);
-          toast.success('Successfully fetched data');
-        } else {
-          toast.error('Failed to fetch data');
-        }
+  
+      if (data.success) {
+        setCompanies(data.companies);
+        toast.success('Successfully fetched data');
       } else {
         toast.error('Failed to fetch data');
       }
@@ -45,6 +42,7 @@ function CompanyList() {
       toast.error('An error occurred');
     }
   };
+  
 
   const handleEditClick = (company) => {
     setEditingCompany(company.companyId);
@@ -61,23 +59,23 @@ function CompanyList() {
 
   const handleSaveClick = async (companyId) => {
     try {
-      const response = await fetch(companyEditURL, {
+      // Fetch the response from the API
+      const response = await fetchWithToken(companyEditURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(editedCompany),
       });
-
+  
+    
       if (response.ok) {
-        const updatedCompany = await response.json();
         const updatedCompanies = companies.map((company) =>
-          company.companyId === companyId ? updatedCompany.company : company
+          company.companyId === companyId ? editedCompany : company
         );
         setCompanies(updatedCompanies);
         setEditingCompany(null);
         toast.success('Company updated successfully');
-      } else {
+      } 
+      
+      else {
         toast.error('Failed to update company');
       }
     } catch (error) {
@@ -85,16 +83,14 @@ function CompanyList() {
       toast.error('An error occurred');
     }
   };
+  
 
   const handleDeleteClick = async (companyId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this company?');
     if (confirmDelete) {
       try {
-        const response = await fetch(companyDeleteURL, {
+        const response = await fetchWithToken(companyDeleteURL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({ companyId }),
         });
 
@@ -117,33 +113,32 @@ function CompanyList() {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-
+  
   const handleDownloadCSV = async () => {
     try {
+      // Fetch the CSV file using fetchWithToken
       const response = await fetch(companiesCSV, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'companies.csv';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        toast.success('CSV file downloaded successfully');
-      } else {
-        toast.error('Failed to download CSV');
-      }
+  
+      // Create a Blob from the response data
+      const blob = await response.blob(); // Use response.blob() instead of response.json()
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'companies.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast.success('CSV file downloaded successfully');
     } catch (error) {
+      console.error('Error while downloading CSV:', error);
       toast.error('An error occurred while downloading CSV');
     }
   };
+  
+  
+
 
   const filteredCompanies = companies.filter((company) =>
     company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||

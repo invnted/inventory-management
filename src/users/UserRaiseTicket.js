@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserNavbar from './UserNavbar';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import fetchWithToken from '../services/api';
 
 function UserRaiseTicket() {
   const [productId, setProductId] = useState('');
@@ -51,7 +52,7 @@ function UserRaiseTicket() {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/products/raiseTicket`, {
+      const response = await fetchWithToken(`${process.env.REACT_APP_SERVER_URL}/products/raiseTicket`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

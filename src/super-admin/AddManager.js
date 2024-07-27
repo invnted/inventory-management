@@ -6,6 +6,7 @@ import { Switch } from 'antd';
 import { toast } from 'react-toastify';
 import { Link, Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import fetchWithToken from '../services/api';
 
 
 function AddManager() {
@@ -80,11 +81,8 @@ function AddManager() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(registrationURL, {
+      const response = await fetchWithToken(registrationURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(manager),
       });
 
@@ -103,17 +101,11 @@ function AddManager() {
         });
 
       }
-      else if (response.status === 401) {
-        toast.error('Invalid credentials');
-        navigate('/authorization-failed');
-        setTimeout(() => {
-          navigate('/home/add-manager'); 
-        }, 2000);
-
-       }
       else {
         toast.error('Invalid details');
-      }
+       }
+
+     
     } catch (error) {
       console.error('Error while registration:', error);
       toast.error('An error occurred');

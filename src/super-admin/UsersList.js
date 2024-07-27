@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import AddUsers from '../Images/add-user.png';
 import List from '../Images/list.png';
+import fetchWithToken from '../services/api';
 
 function UsersList() {
   const [users, setUsers] = useState([]);
@@ -21,14 +22,13 @@ function UsersList() {
   // Function to fetch all users
   const fetchUsers = async () => {
     try {
-      const response = await fetch(userListURL, {
+      const response = await fetchWithToken(userListURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
 
-      if (response.ok) {
+      console.log(response.status)
+
+      if (response.status==200) {
         const data = await response.json();
         console.log("Received:", data);
         setUsers(data);
@@ -61,11 +61,8 @@ function UsersList() {
 
   const handleSaveClick = async (userId) => {
     try {
-      const response = await fetch(userEditURL, {
+      const response = await fetchWithToken(userEditURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(editedUser),
       });
 
@@ -89,7 +86,7 @@ function UsersList() {
     const confirmDelete = window.confirm('Are you sure you want to delete this user?');
     if (confirmDelete) {
       try {
-        const response = await fetch(userDeleteURL, {
+        const response = await fetchWithToken(userDeleteURL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -135,7 +132,7 @@ function UsersList() {
   // Function to handle CSV download
   const handleDownloadCSV = async () => {
     try {
-      const response = await fetch(userCSV, {
+      const response = await fetchWithToken(userCSV, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModeratorNavbar from './ModeratorNavbar';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const FILTER_URL = `${serverUrl}/products/filterProducts`;
@@ -21,7 +23,7 @@ function ConfirmProduct() {
 
   const fetchFilteredProducts = async () => {
     try {
-      const response = await fetch(FILTER_URL, {
+      const response = await fetchWithToken(FILTER_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +50,7 @@ function ConfirmProduct() {
 
   const handleAssign = async (demandId, productId) => {
     try {
-      const response = await fetch(ASSIGN_URL, {
+      const response = await fetchWithToken(ASSIGN_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,9 +60,11 @@ function ConfirmProduct() {
       
       const data = await response.json();
       if (data.success) {
+        toast.success("Successfully product assigned");
         console.log('Assigned demand with ID:', demandId, 'for product:', productId);
         fetchFilteredProducts(); // Refresh the data after assigning
       } else {
+        toast.error("Failed to assign product");
         console.error('Failed to assign product:', data.message);
       }
     } catch (error) {

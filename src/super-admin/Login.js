@@ -45,6 +45,9 @@ function AdminLogin() {
         localStorage.setItem('department', department);
         localStorage.setItem('profileId', profileId);
         localStorage.setItem('role', role);
+        localStorage.setItem('token',data.token);
+
+        console.log("Token:",data.token)
 
         toast.success("Login successful");
         setUser({ email: "", password: "" });

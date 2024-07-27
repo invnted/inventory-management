@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import CompanyNavbar from './CompanyNavbar';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const REQ_URL = `${serverUrl}/products/getProductReceived`;
-
-const userId = localStorage.getItem('companyId');
-console.log('User ID:', userId);
+const PRODUCTS_URL = `${serverUrl}/products/getProductReceived`;
+const TICKETS_URL = `${serverUrl}/products/getAllTickets`;
 
 function CompanyProductReceived() {
   const [products, setProducts] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const userId = localStorage.getItem('companyId');
+
+    if (!userId) {
+      toast.error('User is not authenticated.');
+      navigate('/login'); // Redirect to login or appropriate page
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        const response = await fetch(REQ_URL, {
+        const response = await fetchWithToken(PRODUCTS_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -23,25 +33,80 @@ function CompanyProductReceived() {
           body: JSON.stringify({ userId }),
         });
 
-        const result = await response.json();
-        console.log('Fetched products:', result); // Debug log
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-        if (response.ok && result.success) {
-          setProducts(result.products);
+        const result = await response.json();
+
+        if (result.success) {
+          if (Array.isArray(result.products) && result.products.length > 0) {
+            setProducts(result.products);
+          } else {
+            toast.info('No products found for this company.');
+            setProducts([]);
+          }
         } else {
-          console.error('Failed to fetch products:', result.message);
-          setProducts([]);
+          throw new Error(result.message || 'Failed to fetch products');
         }
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching products:', error.message);
+        toast.error(`Error fetching products: ${error.message}`);
+      }
+    };
+
+    const fetchTickets = async () => {
+      try {
+        const response = await fetchWithToken(TICKETS_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ issuedBy: userId }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          toast.success("Successfully Fetched");
+          if (Array.isArray(result.tickets) && result.tickets.length > 0) {
+            setTickets(result.tickets);
+          } else {
+            toast.info('No tickets found for this company.');
+            setTickets([]);
+          }
+        } else {
+          throw new Error(result.message || 'Failed to fetch tickets');
+        }
+      } catch (error) {
+        console.error('Error fetching tickets:', error.message);
+        toast.error(`Error fetching tickets: ${error.message}`);
       }
     };
 
     fetchData();
-  }, [userId]);
+    fetchTickets();
+  }, [navigate]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleRaiseTicket = (productId) => {
+    const ticketExists = tickets.some(ticket => ticket.productId === productId && ticket.status !== 'PENDING');
+    
+    if (ticketExists) {
+      toast.info("Ticket Already Raised");
+      return;
+    }
+
+    localStorage.setItem('productId', productId);
+    localStorage.setItem('issuedBy', localStorage.getItem('companyId')); 
+    navigate('/company-home/raise-ticket'); 
   };
 
   const filteredProducts = products.filter((product) =>
@@ -101,21 +166,37 @@ function CompanyProductReceived() {
                 </thead>
                 <tbody>
                   {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => (
-                      <tr key={product.productId} className='hover:bg-sky-50'>
-                        <td className="py-2 px-4 border text-black border-black">{product.productId}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productType}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productName}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productBrand}</td>
-                        <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
-                        <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
-                        <td className="py-2 px-4 border text-black border-black">
-                          <Link to='/company-home/raise-ticket'>
-                            <div className=' bg-sky-800 text-white p-2 rounded-lg text-center'>Raise Ticket</div>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))
+                    filteredProducts.map((product) => {
+                      const ticket = tickets.find(ticket => ticket.productId === product.productId);
+                      const ticketStatus = ticket ? ticket.status : 'NOT RAISED';
+
+                      return (
+                        <tr key={product.productId} className='hover:bg-sky-50'>
+                          <td className="py-2 px-4 border text-black border-black">{product.productId}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productType}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productName}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productBrand}</td>
+                          <td className="py-2 px-4 border text-black border-black">{product.productModel}</td>
+                          <td className="py-2 px-4 border text-black border-black">{new Date(product.updatedAt).toLocaleString()}</td>
+                          <td className="py-2 px-4 border text-black border-black">
+                            {ticketStatus === 'UNDER REVIEW' ? (
+                              <span className='text-red-500 font-bold'>Ticket Raised</span>
+                            ) : (ticketStatus === 'PENDING') ? (
+                              <span className='text-red-500 font-bold'>Pending</span>
+                            ) : (ticketStatus === 'NOT RAISED' || ticketStatus === 'RESOLVED') ? (
+                              <button
+                                onClick={() => handleRaiseTicket(product.productId)}
+                                className='bg-sky-800 text-white p-2 rounded-lg text-center'
+                              >
+                                Raise Ticket
+                              </button>
+                            ) : (
+                              <span className='text-red-500 font-bold'>Already Raised</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td colSpan="7" className="py-2 px-4 text-center text-black">No products found</td>

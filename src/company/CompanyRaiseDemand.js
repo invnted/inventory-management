@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import CompanyNavbar from './CompanyNavbar';
 import Demand from '../Images/demand1.png'
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = ` ${serverUrl}/products/company-makeDemand`
@@ -48,7 +49,7 @@ function CompanyRaiseDemand() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(REQ_URL, {
+      const response = await fetchWithToken(REQ_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +73,9 @@ function CompanyRaiseDemand() {
           additionalDetail: "",
           productQuantity: "",
         });
-      } else {
+      } 
+      
+      else {
         toast.error("Invalid details");
       }
     } catch (error) {

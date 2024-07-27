@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../super-admin/Navbar';
 import ModeratorNavbar from './ModeratorNavbar';
 import { Link } from 'react-router-dom';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/unissuedDemandList`;
@@ -12,7 +14,7 @@ function IssueProduct() {
     useEffect(() => {
         const fetchDemandData = async () => {
             try {
-                const response = await fetch(REQ_URL, {
+                const response = await fetchWithToken(REQ_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -21,6 +23,7 @@ function IssueProduct() {
                 const data = await response.json();
                 console.log('Fetched demand data:', data);
                 if (data.success) {
+                    toast.success("Fetched Successfully");
                     setDemandData(data.demands);
                 }
             } catch (error) {

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CompanyNavbar from './CompanyNavbar';
 import Demand from '../Images/demand1.png';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getCompanyDemand`;
@@ -16,7 +18,7 @@ function CompanyRaiseDemandReport() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(REQ_URL, {
+            const response = await fetchWithToken(REQ_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,6 +31,7 @@ function CompanyRaiseDemandReport() {
             console.log(result);
 
             if (result.success) {
+                toast.success("Successfully Fetched");
                 setDemands(Array.isArray(result.data) ? result.data : []);
             } else {
                 console.error(result.message);
@@ -39,11 +42,10 @@ function CompanyRaiseDemandReport() {
     };
 
     useEffect(() => {
-        fetchData(); // Initial fetch when the component mounts
+        fetchData(); 
 
-        const intervalId = setInterval(fetchData, 60000); // Fetch data every 60 seconds
-
-        return () => clearInterval(intervalId); // Clean up the interval on component unmount
+        const intervalId = setInterval(fetchData, 60000);
+        return () => clearInterval(intervalId); 
     }, []);
 
     const handleSearchChange = (e) => {

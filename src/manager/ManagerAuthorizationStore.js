@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import ManagerNavbar from './ManagerNavbar';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const productTypeListUrl = `${serverUrl}/products/productType-list`;
@@ -34,7 +35,7 @@ function ManagerAuthorizationStore() {
     useEffect(() => {
       const fetchProductTypes = async () => {
         try {
-          const response = await fetch(productTypeListUrl, {
+          const response = await fetchWithToken(productTypeListUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -58,7 +59,7 @@ function ManagerAuthorizationStore() {
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const response = await fetch(productStoreDetailUrl, {
+        const response = await fetchWithToken(productStoreDetailUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const ADDPRODUCTURL = `${serverUrl}/products/add`;
@@ -80,51 +81,38 @@ function AddProduct() {
     setCsvFile(file);
     setCsvFileName(file ? file.name : "");
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(ADDPRODUCTURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetchWithToken(ADDPRODUCTURL, {
+        method: 'POST',
         body: JSON.stringify(product),
       });
-
+  
       if (response.ok) {
-        const data = await response.json();
-        console.log("Received:", data);
-
-        toast.success("Product successfully added");
-
-
+        toast.success('Product successfully added');
         setProduct({
           productId: generateRandomString(),
-          productType: "",
-          productName: "",
-          productModel: "",
-          productBrand: "",
-          productPrice: "",
-          additionalDetail: "",
+          productType: '',
+          productName: '',
+          productModel: '',
+          productBrand: '',
+          productPrice: '',
+          additionalDetail: '',
         });
-      } 
-      else if (response.status === 401) {
-        toast.error('Invalid credentials');
-        navigate('/authorization-failed');
-        setTimeout(() => {
-          navigate('/home/add-manager'); 
-        }, 2000);
-
-       }
-      else {
-        toast.error("Invalid details");
+      } else {
+        toast.error(`Invalid details`);
       }
     } catch (error) {
-      console.error("Error adding product:", error);
-      toast.error("An error occurred");
+      console.error('Error adding product:', error);
+      toast.error('An error occurred');
     }
   };
+  
+  
+  
 
   return (
     <div>

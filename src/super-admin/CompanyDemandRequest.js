@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import Demand from '../Images/demand1.png'
 import { toast } from 'react-toastify';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllCompanyDemand`;
@@ -14,17 +15,23 @@ function CompanyDemandRequest() {
   useEffect(() => {
     const fetchDemandData = async () => {
       try {
-        const response = await fetch(REQ_URL, {
+        const response = await fetchWithToken(REQ_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
         });
-        const data = await response.json();
-        console.log('Fetched demand data:', data);
-        if (data.success) {
+
+        if (response.ok) {
+          const data = await response.json();
           setDemandData(data.demands);
+          toast.success("Fetched Successfully");
         }
+
+        else {
+          toast.error("Failed to fetch");
+        }
+
       } catch (error) {
         console.error('Error fetching demand data:', error);
       }
@@ -52,35 +59,35 @@ function CompanyDemandRequest() {
     }
   };
 
-  
-    // Function to handle CSV download
-    const handleDownloadCSV = async () => {
-      try {
-          const response = await fetch(downloadCSVURL, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json', // This is typically optional for downloads
-              },
-          });
-  
-          if (response.ok) {
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'company_Demands.csv'; // Ensure filename is correct
-              document.body.appendChild(a);
-              a.click();
-              a.remove();
-              toast.success('CSV file downloaded successfully');
-          } else {
-              console.error('Failed to download CSV:', response.statusText);
-              toast.error('Failed to download CSV');
-          }
-      } catch (error) {
-          console.error('Error while downloading CSV:', error);
-          toast.error('An error occurred while downloading CSV');
+
+  // Function to handle CSV download
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await fetch(downloadCSVURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // This is typically optional for downloads
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'company_Demands.csv'; // Ensure filename is correct
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast.success('CSV file downloaded successfully');
+      } else {
+        console.error('Failed to download CSV:', response.statusText);
+        toast.error('Failed to download CSV');
       }
+    } catch (error) {
+      console.error('Error while downloading CSV:', error);
+      toast.error('An error occurred while downloading CSV');
+    }
   };
 
   return (

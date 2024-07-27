@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import Demand from '../Images/demand1.png'
 import Navbar from '../super-admin/Navbar';
 import ManagerNavbar from './ManagerNavbar';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
+
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllCompanyDemand`;
@@ -14,7 +17,7 @@ function CompanyDemandReport() {
   useEffect(() => {
     const fetchDemandData = async () => {
       try {
-        const response = await fetch(REQ_URL, {
+        const response = await fetchWithToken(REQ_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -23,6 +26,7 @@ function CompanyDemandReport() {
         const data = await response.json();
         console.log('Fetched demand data:', data);
         if (data.success) {
+          toast.success("Fetched Successfully");
           setDemandData(data.demands);
         }
       } catch (error) {

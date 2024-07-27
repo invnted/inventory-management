@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ManagerNavbar from './ManagerNavbar';
+import fetchWithToken from '../services/api';
+import { toast } from 'react-toastify';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getOutOfStock`;
@@ -11,7 +13,7 @@ function StockRequiredInStore() {
     useEffect(() => {
         const fetchOutOfStockDemands = async () => {
             try {
-                const response = await fetch(REQ_URL, {
+                const response = await fetchWithToken(REQ_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -23,6 +25,7 @@ function StockRequiredInStore() {
                 }
                 const data = await response.json();
                 if (data.outOfStockDemands) {
+                    toast.success("Successfully Fetched");
                     setDemands(data.outOfStockDemands);
                 } else {
                     setDemands([]);
