@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserNavbar from './UserNavbar';
 import { Link } from 'react-router-dom';
 import Demand from '../Images/demand1.png';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getUserDemand`;
@@ -15,7 +16,7 @@ function RaiseDemandReport() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(REQ_URL, {
+            const response = await fetchWithToken(REQ_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
