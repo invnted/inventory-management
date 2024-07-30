@@ -33,6 +33,7 @@ router.post('/download-userDemand-csv',userController.sendUserDemandCSV);
 router.post('/upload-user-csv',upload.single('csvFile'), userController.receiveUserCSV); 
 
 
+
 // Moderators Routes
 router.post('/register',auth,userController.registerModerator);
 router.post('/login',userController.loginModerator);
@@ -53,6 +54,9 @@ router.post('/download-companyDemand-csv',userController.sendCompanyDemandCSV);
 router.post('/download-company-csv',userController.sendCompanyCSV);
 router.post('/upload-company-csv',upload.single('csvFile'), userController.receiveCompanyCSV); 
 
+
 router.post('/sendOTP', optController.sendOtp);
+router.post('/verifyOTP',optController.verifyOtp);
+router.post('/updatePassword',optController.updatePassword)
 
 module.exports = router;

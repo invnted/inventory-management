@@ -1,7 +1,7 @@
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 
 // Replace with your Brevo API key
-const apiKey = process.env.BREVO_API;
+const apiKey = '';
 
 // Configure the API key
 SibApiV3Sdk.ApiClient.instance.authentications['api-key'].apiKey = apiKey;

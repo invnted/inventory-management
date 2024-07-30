@@ -6,9 +6,6 @@ const Manager = require('../models/Manager');
 const User = require('../models/User');
 const Moderator = require('../models/Moderator');
 const Company = require('../models/Company');
-const Product = require('../models/Product');
-const Ticket = require('../models/Ticket');
-
 
 
 //CSV Handlers
@@ -148,6 +145,7 @@ exports.deleteAdmin = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
 
 // Manager methods
 exports.registerManager = async (req, res) => {
