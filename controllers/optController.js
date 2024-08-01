@@ -55,8 +55,10 @@ exports.sendOtp = async (req, res) => {
 
 
 exports.verifyOtp = async (req, res) => {
-    console.log("Verify OTP function called!");
     const { email, otp } = req.body;
+
+    console.log(req.body);
+
 
     if (!email || !otp) {
         return res.status(400).json({ success: false, message: 'Email and OTP are required' });
@@ -64,6 +66,8 @@ exports.verifyOtp = async (req, res) => {
 
     try {
         const otpRecord = await OTP.findOne({ email });
+
+        console.log("OTP FOR",email,"is",otpRecord.otp);
 
         if (!otpRecord) {
             return res.status(404).json({ success: false, message: 'OTP record not found' });
@@ -110,14 +114,9 @@ exports.updatePassword = async (req, res) => {
     }
 
     try {
-        // Hash the password only for specific roles
-        let convertedPassword;
-        if (role.toLowerCase() === 'admin' || role.toLowerCase() === 'company') {
-            convertedPassword = await bcrypt.hash(password, 10);
-        } else {
-            convertedPassword = password;
-        }
-
+        
+        convertedPassword = await bcrypt.hash(password, 10);
+        
         // Update the password in the specified collection
         await Model.updateOne({ email }, { password: convertedPassword });
         res.status(200).json({ success: true, message: 'Password updated successfully' });

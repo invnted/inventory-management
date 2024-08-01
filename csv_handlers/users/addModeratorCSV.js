@@ -1,23 +1,20 @@
 const fs = require('fs');
 const csvParser = require('csv-parser');
+const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const Moderator = require('../../models/Moderator'); 
 
-function moderator_csv_valitdator(headings) {
+function moderator_csv_validator(headings) {
   const validHeadings = [
     'moderatorId',
     'moderatorName',
+    'email',
     'password',
     'designation',
     'section',
     'appointment'
   ];
 
-  for (let heading of headings) {
-    if (!validHeadings.includes(heading)) {
-      return false;
-    }
-  }
-  return true;
+  return validHeadings.every(heading => headings.includes(heading));
 }
 
 exports.receiveModeratorCSV = async (req, res) => {
@@ -35,25 +32,67 @@ exports.receiveModeratorCSV = async (req, res) => {
       .pipe(csvParser())
       .on('data', (data) => results.push(data))
       .on('end', async () => {
-        // Validate CSV headings...
-        const headings = Object.keys(results[0]);
-        if (!moderator_csv_valitdator(headings)) {
-          console.log("Fail to upload due to invalid heading");
-          return res.status(400).json({ msg: 'Invalid CSV headings' });
+        if (results.length === 0) {
+          return res.status(400).json({ msg: 'CSV file is empty' });
         }
 
-        // Processing each row... 
+        // Validate CSV headings
+        const headings = Object.keys(results[0]);
+        if (!moderator_csv_validator(headings)) {
+          console.log("Fail to upload due to invalid heading");
+          return res.status(400).json({ msg: 'Invalid CSV headings. Required headings are missing.' });
+        }
+
+        let addedCount = 0;
+        let existingCount = 0;
+
+        // Processing each row
         for (let row of results) {
-            try {
-              const moderator = new Moderator(row);
-              await moderator.save();
-            } catch (err) {
-              console.error('Error saving moderator from CSV:', err);
+          // Ensure each row has all required fields
+          for (let heading of ['moderatorId', 'moderatorName', 'email', 'password', 'designation', 'section', 'appointment']) {
+            if (row[heading] === undefined || row[heading] === null || row[heading].trim() === '') {
+              console.log(`Skipping row with missing or empty ${heading}:`, row);
+              return res.status(400).json({ msg: `CSV row missing or empty field: ${heading}` });
             }
           }
-          
 
-        res.status(200).json({ msg: 'CSV file uploaded and moderators added successfully' });
+          // Hash the password before saving
+          try {
+            const salt = await bcrypt.genSalt(10);
+            row.password = await bcrypt.hash(row.password, salt);
+          } catch (err) {
+            console.error('Error hashing password for row:', row);
+            continue; // Skip to the next row if hashing fails
+          }
+
+          try {
+            // Check if moderator already exists by moderatorId or email
+            const existingModerator = await Moderator.findOne({
+              $or: [
+                { moderatorId: row.moderatorId },
+                { email: row.email }
+              ]
+            });
+
+            if (!existingModerator) {
+              // Save new moderator if not exists
+              const moderator = new Moderator(row);
+              await moderator.save();
+              addedCount++;
+            } else {
+              // Existing moderator found
+              existingCount++;
+            }
+          } catch (err) {
+            console.error('Error saving moderator from CSV:', err);
+          }
+        }
+
+        res.status(200).json({ 
+          msg: 'CSV file processed', 
+          added: addedCount, 
+          existing: existingCount 
+        });
       });
 
   } catch (err) {

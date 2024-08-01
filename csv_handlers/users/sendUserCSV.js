@@ -9,7 +9,7 @@ exports.sendUserCSV = async (req, res) => {
       header: [
         { id: 'userId', title: 'userId' },
         { id: 'userName', title: 'userName' },
-        { id: 'password', title: 'password' },
+        { id: 'email', title: 'email' },
         { id: 'designation', title: 'designation' },
         { id: 'section', title: 'section' },
         { id: 'appointment', title: 'appointment' }

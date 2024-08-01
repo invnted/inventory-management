@@ -14,6 +14,7 @@ router.post('/availableDemands',auth,productController.productTypesInDemand);  /
 
 //Data Retrived For Table
 router.post('/getAllProduct',auth,productController.getAllProducts);               // Get List and data of all products
+router.post('/NEW_getAllProduct',auth,productController.NEW_getAllProducts);  
 router.post('/getProductStore',auth,productController.getProductStore);            // Used in Authorization Panel to draw graph
 router.post('/getUserDemand',auth,productController.getUserDemands);               // Used in User Panel user can see his own demands
 router.post('/getCompanyDemand',auth,productController.getCompanyDemands);
@@ -34,7 +35,7 @@ router.post('/getProductReport',auth,productController.allProductReport)
 
 
 //For Sending CSV Files
-router.post('/getStoreReportCSV',auth,productController.getstoreReportCSV);     // Used in Store Report panel to download CSV
+router.post('/getStoreReportCSV',productController.sendStoreReportCSV);     // Used in Store Report panel to download CSV
 router.post('/get-products-csv',productController.sendProductCSV)            // Used in all product report panel to get CSV
 
 
@@ -50,11 +51,14 @@ router.post('/updateDemandStatus',auth,productController.updateDemandStatus);   
 router.post('/updateCompanyDemandStatus',auth,productController.updateCompanyDemandStatus);
 router.post('/storeReport',auth,productController.storeReport);                 // Used in Admin Panel for store report table
 router.post('/assignSingleProduct',auth,productController.assignSingleProduct); // Used in Moderator Panel to assign 1 product
+router.post('/assignMultipleProducts',auth,productController.assignMultipleProducts);
 router.post('/assignSingleCompanyProduct',auth,productController.assignSingleCompanyProduct);
 router.post('/company-makeDemand',auth,productController.makeDemandCompany); 
 router.post('/raiseTicket',auth,productController.raiseTicket);                 // Used in User & Company Panel to raise Ticket
 router.post('/getAllTickets',auth,productController.getAllTickets);               // Used in Moderator Panel to get All Ticket
 router.post('/updateTicket',auth,productController.updateTicketStatus); 
+
+router.post('/issuedReport',auth,productController.issueReport); 
 
 // router.post('/demandReport',productController.demandReport);            // Used in Admin/Manager Panel for demand report table
 

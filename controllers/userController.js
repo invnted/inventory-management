@@ -148,9 +148,9 @@ exports.deleteAdmin = async (req, res) => {
 
 
 // Manager methods
+
 exports.registerManager = async (req, res) => {
-  console.log(req.body);
-  const {managerId, managerName, password, designation, section, appointment, allProductReport, demandReceived, issueProduct} = req.body;
+  const {managerId, managerName, email, password, designation, section, appointment, allProductReport, demandReceived, issueProduct} = req.body;
 
   try {
     let manager = await Manager.findOne({ managerId });
@@ -159,19 +159,12 @@ exports.registerManager = async (req, res) => {
       return res.status(400).json({ msg: 'Manager already exists' });
     }
 
-    manager = new Manager({managerId, managerName, password, designation, section, appointment, allProductReport, demandReceived, issueProduct});
-
-    // const salt = await bcrypt.genSalt(10);
-    // manager.password = await bcrypt.hash(password, salt);
-
+    manager = new Manager({managerId, managerName, email, password, designation, section, appointment, allProductReport, demandReceived, issueProduct});
+    const salt = await bcrypt.genSalt(10);
+    manager.password = await bcrypt.hash(password, salt);
     await manager.save();
 
-    const payload = { manager: { id: manager.id } };
-
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      res.json({success:true});
-    });
+    res.json({success:true});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -179,35 +172,34 @@ exports.registerManager = async (req, res) => {
 };
 
 exports.loginManager = async (req, res) => {
-  const { managerId, password } = req.body;
-
-  console.log("login req as manager", req.body)
+  const { email, password } = req.body;
 
   try {
-    let manager = await Manager.findOne({ managerId });
-
+    let manager = await Manager.findOne({ email });
     if (!manager) {
-      return res.status(401).json({ msg: 'Invalid Credentials' });
+      return res.status(401).json({ msg: 'Invalid email' });
     }
-
-
-    if (manager.password !== password) {
-      console.log(manager.password,"not matched with",password);
-      return res.status(401).json({ msg: 'Invalid Credentials' });
+    const isMatch = await bcrypt.compare(password, manager.password);
+    if (!isMatch) {
+      return res.status(401).json({ msg: 'Invalid credentials' });
     }
-
     const payload = { manager: { id: manager.id } };
-
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      const { managerId, managerName, password, designation, section, appointment, allProductReport, demandReceived, issueProduct } = manager;
-      res.json({ token,success:true, managerData: { managerId, managerName, password, designation, section, appointment, allProductReport, demandReceived, issueProduct } });
+      if (err) {
+        console.error(err.message);
+        return res.status(500).send('Token generation error');
+      }
+
+      const { managerId, managerName, email, designation, section, appointment, allProductReport, demandReceived, issueProduct } = manager;
+
+      res.json({ token, success: true, managerData: { managerId, managerName, email, designation, section, appointment, allProductReport, demandReceived, issueProduct } });
     });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 };
+
 
 exports.getAllManagers = async (req, res) => {
   try {
@@ -302,21 +294,20 @@ exports.deleteManager = async (req, res) => {
 
 // User methods
 exports.registerUser = async (req, res) => {
-  const { userId, userName, password, designation, section, appointment } = req.body;
-
- 
+  const { userId, userName, email, password, designation, section, appointment } = req.body;
+  console.log(req.body);
 
   try {
-    let user = await User.findOne({ userId });
+    let user = await User.findOne({ email });
 
     if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
+      return res.status(400).json({ msg: 'Email already exists' });
     }
 
-    user = new User({ userId, userName, password, designation, section, appointment });
+    user = new User({ userId, userName, email, password, designation, section, appointment });
 
-    // const salt = await bcrypt.genSalt(10);
-    // user.password = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
 
     await user.save();
 
@@ -333,34 +324,31 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { userId, password } = req.body;
-
+  const { email, password } = req.body;
   console.log("login req as user", req.body)
 
-  // const userId=email;
-
-
   try {
-    console.log("finding USER ID: ",userId)
-    let user = await User.findOne({ userId });
-    console.log("USER FOUND")
+
+    let user = await User.findOne({ email });
 
 
-    if (!user || user.password !== password) {
-      console.log(user.password,"not matched with",password);
-      return res.status(401).json({ msg: 'Invalid Credentials' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      console.log("Invalid Password")
+      return res.status(401).json({ msg: 'Invalid credentials' });
     }
 
-    const payload = { user: { id: user.id } };
+    console.log("Valid password")
 
+    const payload = { user: { id: user.id } };
     jwt.sign(
       payload, 
       process.env.JWT_SECRET, 
       { expiresIn: 3600 }, 
       (err, token) => {
         if (err) throw err;
-        const { userId, userName, designation, section, appointment } = user;
-        res.json({ token, user: { userId, userName, designation, section, appointment },success:true });
+        const { userId, userName, email, designation, section, appointment } = user;
+        res.json({ token, user: { userId, userName, email, designation, section, appointment },success:true });
       }
     );
   } catch (err) {
@@ -434,24 +422,24 @@ exports.deleteUser = async (req, res) => {
 
 //Moderator 
 exports.registerModerator = async (req, res) => {
-  const { moderatorId, moderatorName, password, designation, section, appointment } = req.body;
+  const { moderatorId, moderatorName, email, password, designation, section, appointment } = req.body;
 
-  console.log("Req to register new modertor")
+  console.log(req.body);
 
   try {
-    let moderator = await Moderator.findOne({ moderatorId });
+    let moderator = await Moderator.findOne({ email });
 
     if (moderator) {
-      return res.status(400).json({ msg: 'Moderator already exists' });
+      return res.status(400).json({ msg: 'Email already exists' });
     }
 
-    moderator = new Moderator({ moderatorId, moderatorName, password, designation, section, appointment });
+    moderator = new Moderator({ moderatorId, moderatorName, email, password, designation, section, appointment });
+
+    const salt = await bcrypt.genSalt(10);
+    moderator.password = await bcrypt.hash(password, salt);
+
     await moderator.save();
-    const payload = { moderator: { id: moderator.id } };
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      res.json({success:true});
-    });
+    return res.status(200).json({ success:true});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -459,19 +447,20 @@ exports.registerModerator = async (req, res) => {
 };
 
 exports.loginModerator = async (req, res) => {
-  const { moderatorId, password } = req.body;
 
-  console.log("login req as Moderator", req.body)
+  const { email, password } = req.body;
+
+  console.log(req.body);
 
   try {
-    console.log("finding Moderator: ",moderatorId)
-    let moderator = await Moderator.findOne({ moderatorId });
+    console.log("finding Moderator: ",email)
+    let moderator = await Moderator.findOne({ email });
     console.log("Moderator FOUND")
 
 
-    if (!moderator || moderator.password !== password) {
-      console.log(moderator.password,"not matched with",password);
-      return res.status(401).json({ msg: 'Invalid Credentials' });
+    const isMatch = await bcrypt.compare(password, moderator.password);
+    if (!isMatch) {
+      return res.status(401).json({ msg: 'Invalid credentials' });
     }
 
     const payload = { moderator: { id: moderator.id } };
@@ -482,8 +471,8 @@ exports.loginModerator = async (req, res) => {
       { expiresIn: 3600 }, 
       (err, token) => {
         if (err) throw err;
-        const { moderatorId, moderatorName, designation, section, appointment } = moderator;
-        res.json({ token, moderator: { moderatorId, moderatorName, designation, section, appointment },success:true });
+        const { moderatorId, moderatorName, email, designation, section, appointment } = moderator;
+        res.json({ token, moderator: { moderatorId, moderatorName, email, designation, section, appointment },success:true });
       }
     );
   } catch (err) {

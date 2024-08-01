@@ -8,12 +8,12 @@ const { createObjectCsvStringifier } = require('csv-writer');
 //CSV Locators
 const { receiveProductCSV } = require('../csv_handlers/products/addProductCSV');
 const { sendProductCSV } = require('../csv_handlers/products/sendProductCSV');
+const { sendStoreReportCSV } = require('../csv_handlers/products/storeReportCSV');
 
 //CSV Caller
 exports.receiveProductCSV = receiveProductCSV;
 exports.sendProductCSV = sendProductCSV;
-
-
+exports.sendStoreReportCSV = sendStoreReportCSV;
 
 
 exports.addProduct = async (req, res) => {
@@ -66,6 +66,62 @@ exports.getAllProducts = async (req, res) => {
       })
     );
     res.status(200).json(productsDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.NEW_getAllProducts = async (req, res) => {
+  try {
+    // Fetch all distinct product types
+    const productTypes = await Product.distinct('productType');
+
+    // Create an object to store the structured data
+    const productsDetails = {};
+
+    // Iterate over each product type to fetch and organize product details
+    for (const type of productTypes) {
+      const products = await Product.find({ productType: type }).exec();
+
+      // Initialize the product type in the result object if it doesn't exist
+      if (!productsDetails[type]) {
+        productsDetails[type] = {};
+      }
+
+      // Group products by product brand
+      products.forEach(product => {
+        const { productBrand, productModel, productName } = product;
+
+        // Initialize the product brand in the result object if it doesn't exist
+        if (!productsDetails[type][productBrand]) {
+          productsDetails[type][productBrand] = {};
+        }
+
+        // Initialize the product name in the result object if it doesn't exist
+        if (!productsDetails[type][productBrand][productName]) {
+          productsDetails[type][productBrand][productName] = [];
+        }
+
+        // Add the product model to the product name array if it doesn't exist
+        if (!productsDetails[type][productBrand][productName].includes(productModel)) {
+          productsDetails[type][productBrand][productName].push(productModel);
+        }
+      });
+    }
+
+    // Format the data to the desired structure
+    const formattedData = Object.keys(productsDetails).map(type => ({
+      productType: type,
+      brands: Object.keys(productsDetails[type]).map(brand => ({
+        productBrand: brand,
+        products: Object.keys(productsDetails[type][brand]).map(productName => ({
+          productName: productName,
+          models: productsDetails[type][brand][productName]
+        }))
+      }))
+    }));
+
+    res.status(200).json(formattedData);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -280,61 +336,13 @@ exports.storeReport = async (req, res) => {
 
   try {
     const reports = await Product.find(query);
+
+    
+
     res.json(reports);
   } catch (err) {
     console.error("Error fetching reports:", err);
     res.status(500).json({ error: "Error fetching reports" });
-  }
-};
-
-
-exports.getstoreReportCSV = async (req, res) => {
-  const { productType, productModel, productBrand, fromDate, toDate } = req.body;
-  let query = {};
-
-  if (productType) query.productType = productType;
-  if (productModel) query.productModel = productModel;
-  if (productBrand) query.productBrand = productBrand;
-
-  if (fromDate && toDate) {
-    try {
-      const startDate = new Date(fromDate);
-      const endDate = new Date(toDate);
-      endDate.setHours(23, 59, 59, 999);
-
-      if (isNaN(startDate.valueOf()) || isNaN(endDate.valueOf())) {
-        throw new Error("Invalid date format");
-      }
-
-      query.createdAt = { $gte: startDate, $lte: endDate };
-    } catch (err) {
-      console.error("Error parsing dates:", err);
-      return res.status(400).json({ error: "Invalid date format" });
-    }
-  }
-
-  
-
-
-  try {
-    const products = await Product.find(query).lean();
-
-    const csvStringifier = createObjectCsvStringifier({
-      header: [
-        { id: 'productType', title: 'Product Type' },
-        { id: 'productModel', title: 'Product Model' },
-        { id: 'productBrand', title: 'Product Brand' },
-        { id: 'status', title: 'Product Status' },
-        { id: 'createdAt', title: 'Date & Time' },
-      ]
-    });
-
-    const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(products);
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename=store_report.csv');
-    res.status(200).send(csvData);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
 };
 
@@ -487,6 +495,7 @@ exports.assignSingleProduct = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
 
 
 exports.assignSingleCompanyProduct = async (req, res) => {
@@ -792,5 +801,22 @@ exports.updateTicketStatus = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.issueReport = async (req, res) => {
+  
+  try {
+    const issueList = await Product.find({
+      status: 'ISSUED',
+      issueTo: { $ne: 'NONE' }
+    });
+
+    console.log(issueList);
+    return res.status(200).json({ issueList, success:true });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 
 

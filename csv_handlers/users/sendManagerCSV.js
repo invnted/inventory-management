@@ -1,15 +1,15 @@
-const { createObjectCsvStringifier } = require('csv-writer'); // Ensure this import is correct
+const { createObjectCsvStringifier } = require('csv-writer'); 
 const Manager = require('../../models/Manager'); 
 
 exports.sendManagerCSV = async (req, res) => {
   try {
-    const managers = await Manager.find({}).lean(); // Fetch all managers from the database
+    const managers = await Manager.find({}).lean(); 
 
     const csvStringifier = createObjectCsvStringifier({
       header: [
         { id: 'managerId', title: 'managerId' },
         { id: 'managerName', title: 'managerName' },
-        { id: 'password', title: 'password' },
+        { id: 'email', title: 'email' },
         { id: 'designation', title: 'designation' },
         { id: 'section', title: 'section' },
         { id: 'appointment', title: 'appointment' },

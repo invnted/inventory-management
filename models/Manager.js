@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ManagerSchema = new mongoose.Schema({
   managerId: String,
   managerName: String,
+  email: String,
   password: String,
   designation: String,
   section: String,

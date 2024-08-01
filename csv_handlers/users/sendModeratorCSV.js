@@ -9,7 +9,7 @@ exports.sendModeratorCSV = async (req, res) => {
       header: [
         { id: 'moderatorId', title: 'moderatorId' },
         { id: 'moderatorName', title: 'moderatorName' },
-        { id: 'password', title: 'password' },
+        { id: 'email', title: 'email' },
         { id: 'designation', title: 'designation' },
         { id: 'section', title: 'section' },
         { id: 'appointment', title: 'appointment' }
