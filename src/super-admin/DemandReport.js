@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const productListUrl = `${serverUrl}/products/getAllProduct`;
@@ -19,7 +20,7 @@ function DemandReport() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch(productListUrl, {
+                const response = await fetchWithToken(productListUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ function DemandReport() {
         };
 
         try {
-            const response = await fetch(storeReportUrl, {
+            const response = await fetchWithToken(storeReportUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

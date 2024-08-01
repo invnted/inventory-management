@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
+import PasswordHide from '../Images/passHide.png';
+import PasswordShow from '../Images/passShow.png';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const LOGIN_URL = `${serverUrl}/moderators/login`;
 
 function ModeratorLogin() {
   const [moderator, setModerator] = useState({
-    moderatorId: '',
+    email: '',
     password: '',
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
+    const { name, value } = e.target;
     setModerator({
       ...moderator,
       [name]: value,
@@ -38,36 +40,30 @@ function ModeratorLogin() {
         const data = await response.json();
         console.log('Received:', data);
 
-        const {
-          token,
-          moderator: {
-            moderatorId,
-            moderatorName,
-            designation,
-            section,
-            appointment,
-          },
-        } = data;
+        const { token, moderator: { moderatorId, moderatorName, email, designation, section, appointment } } = data;
 
         localStorage.setItem('moderatorId', moderatorId);
         localStorage.setItem('moderatorName', moderatorName);
+        localStorage.setItem('email', email);
         localStorage.setItem('designation', designation);
         localStorage.setItem('section', section);
         localStorage.setItem('appointment', appointment);
         localStorage.setItem('token', token);
 
-
         toast.success('Login successful');
-        setModerator({ moderatorId: '', password: '' });
+        setModerator({ email: '', password: '' });
 
-        navigate('/moderator-home');
+        navigate('/moderator-home', { state: { moderatorId, moderatorName, email, designation, section, appointment } });
       } else {
         toast.error('Invalid credentials');
       }
     } catch (error) {
-      console.log(error)
       toast.error('An error occurred');
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const Dropdown = () => {
@@ -86,12 +82,11 @@ function ModeratorLogin() {
     };
 
     return (
-      <div className="relative inline-block text-center w-full mt-5 ">
-        
+      <div className="relative inline-block text-center w-full mt-5">
         <div>
           <button
             type="button"
-            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md  shadow-sm px-4 py-2  font-semibold text-white"
+            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md shadow-sm px-4 py-2 font-semibold text-white"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
@@ -112,7 +107,7 @@ function ModeratorLogin() {
             aria-labelledby="menu-button"
             tabIndex="-1"
           >
-            <div className="py-1 text-center " role="none">
+            <div className="py-1 text-center" role="none">
               <button
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
@@ -165,28 +160,27 @@ function ModeratorLogin() {
     );
   };
 
-
   return (
-    <div className="relative h-screen bg-sky-800">
-      <div className="absolute inset-0  flex items-center justify-center">
+    <div className='relative h-screen bg-sky-800'>
+      <div className='absolute inset-0 flex items-center justify-center'>
         <div className="w-4/5 md:w-1/4 border rounded-lg shadow p-5">
-        <Dropdown/>
+          <Dropdown />
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
               Moderator Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="moderatorId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Moderator ID
                 </label>
                 <input
-                  type="text"
-                  name="moderatorId"
-                  id="moderatorId"
+                  type="email"
+                  name="email"
+                  id="email"
                   onChange={handleInput}
                   className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white"
-                  placeholder="Moderator ID"
+                  placeholder="Your Email"
                   required
                 />
               </div>
@@ -194,25 +188,43 @@ function ModeratorLogin() {
                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Password
                 </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={handleInput}
-                  placeholder="••••••••"
-                  className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    onChange={handleInput}
+                    placeholder="Your Password"
+                    className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-white"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordShow} />
+                    ) : (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordHide} />
+                    )}
+                  </button>
+                </div>
               </div>
-              <div className="mt-20 flex justify-center items-center">
-                <button
-                  type="submit"
-                  className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl"
-                >
+              <div className='mt-20 flex justify-center items-center'>
+                <button type="submit" className="w-1/2 flex justify-center items-center hover:border-sky-500 hover:bg-sky-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">
                   Login
                 </button>
               </div>
             </form>
+            <div className="text-gray-400">
+              If you forgot your password &nbsp;
+              <Link to='/moderator-forgot-password'>
+              <span className="text-white hover:text-sky-500 hover:underline cursor-pointer font-semibold">
+                click here
+              </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

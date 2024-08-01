@@ -9,6 +9,8 @@ const REQ_URL = `${serverUrl}/products/getOutOfStock`;
 function StockRequiredInStore() {
     const [demands, setDemands] = useState([]);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchOutOfStockDemands = async () => {
@@ -37,6 +39,14 @@ function StockRequiredInStore() {
 
         fetchOutOfStockDemands();
     }, []);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentDemands = demands.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = Math.ceil(demands.length / itemsPerPage);
 
     return (
         <div>
@@ -75,8 +85,8 @@ function StockRequiredInStore() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {demands.length > 0 ? (
-                                            demands.map((demand, index) => (
+                                        {currentDemands.length > 0 ? (
+                                            currentDemands.map((demand, index) => (
                                                 <tr key={index} className="hover:bg-sky-100">
                                                     <td className="py-2 px-4 border border-gray-300 text-center">{demand.productType}</td>
                                                     <td className="py-2 px-4 border border-gray-300 text-center">{demand.productBrand}</td>
@@ -93,6 +103,17 @@ function StockRequiredInStore() {
                                     </tbody>
                                 </table>
                             )}
+                            <div className="flex justify-center mt-4">
+                                {Array.from({ length: totalPages }, (_, index) => (
+                                    <button
+                                        key={index + 1}
+                                        onClick={() => handlePageChange(index + 1)}
+                                        className={`px-4 py-2 mx-1 border ${currentPage === index + 1 ? 'bg-sky-500 text-white' : 'bg-white text-sky-500'} rounded`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

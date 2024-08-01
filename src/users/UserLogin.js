@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+import PasswordHide from '../Images/passHide.png'
+import PasswordShow from '../Images/passShow.png'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const LOGIN_URL = ` ${serverUrl}/users/user-login`
+const LOGIN_URL = `${serverUrl}/users/user-login`;
 
 function UserLogin() {
-
   const [user, setUser] = useState({
-    userId: "",
+    email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-
+    const { name, value } = e.target;
     setUser({
       ...user,
       [name]: value,
@@ -38,33 +38,21 @@ function UserLogin() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Received:", data)
+        console.log("Received:", data);
 
-        // userId, userName, designation, section, appointment
-
-        const userId = data.user.userId
-        const userName = data.user.userName;
-        const designation = data.user.designation;
-        const section = data.user.section;
-        const appointment = data.user.appointment;
+        const { userId, userName, email, designation, section, appointment } = data.user;
 
         localStorage.setItem('userId', userId);
         localStorage.setItem('userName', userName);
+        localStorage.setItem('email', email);
         localStorage.setItem('designation', designation);
         localStorage.setItem('section', section);
         localStorage.setItem('appointment', appointment);
         localStorage.setItem('token', data.token);
 
-
-
-        console.log("userId:", userId);
-        console.log("userName:", userName);
-        console.log("Designation:", designation);
-        console.log("section:", section);
-        console.log("appointment:", appointment);
-
+       
         toast.success("Login successful");
-        setUser({ userId: "", password: "" });
+        setUser({ email: "", password: "" });
 
         navigate('/User-Home');
       } else {
@@ -73,6 +61,10 @@ function UserLogin() {
     } catch (error) {
       toast.error("An error occurred");
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const Dropdown = () => {
@@ -91,12 +83,11 @@ function UserLogin() {
     };
 
     return (
-      <div className="relative inline-block text-center w-full mt-5 ">
-        
+      <div className="relative inline-block text-center w-full mt-5">
         <div>
           <button
             type="button"
-            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md  shadow-sm px-4 py-2  font-semibold text-white"
+            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md shadow-sm px-4 py-2 font-semibold text-white"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
@@ -117,7 +108,7 @@ function UserLogin() {
             aria-labelledby="menu-button"
             tabIndex="-1"
           >
-            <div className="py-1 text-center " role="none">
+            <div className="py-1 text-center" role="none">
               <button
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
@@ -163,7 +154,6 @@ function UserLogin() {
               >
                 User
               </button>
-              
             </div>
           </div>
         )}
@@ -171,36 +161,76 @@ function UserLogin() {
     );
   };
 
-
   return (
-    <div className='relative h-screen bg-sky-800'>
-      <div className='absolute inset-0   flex items-center justify-center'>
-
-        <div className="w-4/5 md:w-1/4 border  rounded-lg shadow p-5">
-        <Dropdown/>
+    <div className="relative h-screen bg-sky-800">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-4/5 md:w-1/4 border rounded-lg shadow p-5">
+          <Dropdown />
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
               User Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="userId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User ID</label>
-                <input type="text" name="userId" id="userId" onChange={handleInput} className="w-full bg-transparent border-b border-gray-300  px-4 py-2 focus:outline-none text-white" placeholder=" User ID" required />
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  User Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  onChange={handleInput}
+                  className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white"
+                  placeholder="Your Email"
+                  required
+                />
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" name="password" id="password" onChange={handleInput} placeholder="••••••••" className="w-full bg-transparent border-b border-gray-300  px-4 py-2 focus:outline-none text-white  mb-6" required />
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    onChange={handleInput}
+                    placeholder="Password"
+                    className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-white"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordShow} />
+                    ) : (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordHide} />
+                    )}
+                  </button>
+                </div>
               </div>
-              <div className='mt-20 flex justify-center items-center'>
-                <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">Login</button>
+              <div className="mt-20 flex justify-center items-center">
+                <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-sky-500 hover:border-sky-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">
+                  Login
+                </button>
               </div>
             </form>
+            <div className="text-gray-400">
+              If you forgot your password &nbsp;
+              <Link to='/user-forgot-password'>
+                <span className="text-white hover:text-sky-500 hover:underline cursor-pointer font-semibold">
+                  click here
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default UserLogin
+export default UserLogin;

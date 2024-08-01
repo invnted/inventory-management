@@ -1,36 +1,30 @@
-import React from 'react'
-import Navbar from './Navbar'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import Navbar from './Navbar';
+import { Link } from 'react-router-dom';
 
 function Reports() {
   return (
-    <div>
+    <div className='bg-sky-100 min-h-screen flex flex-col'>
       <Navbar />
-      <div className='m-4 md:m-12 border  justify-between bg-sky-200'>
-        <div className='text-center bg-sky-800 text-white text-5xl h-24 flex items-center justify-center '>
-          <div>Reports</div>
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-10 m-20 '>
-          <Link to='/reports/store-reports'>
-            <div className='bg-sky-800 p-4 h-32 flex flex-col text-white text-3xl justify-center items-center cursor-pointer'>Store Report</div>
+      <div className='p-8 md:p-12 flex flex-col items-center'>
+        <header className='text-center text-black font-bold text-4xl py-12 px-8'>
+          Reports
+        </header>
+        <div className='flex flex-col md:flex-row gap-6 md:gap-8'>
+          <Link to='/reports/store-reports' className='w-full md:w-1/2'>
+            <div className='bg-sky-700 p-6 flex items-center justify-center text-white text-2xl font-semibold rounded-lg shadow-md hover:bg-sky-600 transition-colors duration-300 whitespace-nowrap'>
+              Store Report
+            </div>
           </Link>
-          <div className='bg-sky-800 p-4 h-32 flex flex-col text-white text-3xl justify-center items-center cursor-pointer'>Issue Report</div>
-          <Link to='/home/demand-report'>
-            <div className='bg-sky-800 p-4 h-32 flex flex-col text-white text-3xl justify-center items-center cursor-pointer'>Demand Report</div>
+          <Link to='/reports/issue-reports' className='w-full md:w-1/2'>
+            <div className='bg-sky-700 p-6 flex items-center justify-center text-white text-2xl font-semibold rounded-lg shadow-md hover:bg-sky-600 transition-colors duration-300 whitespace-nowrap'>
+              Issue Report
+            </div>
           </Link>
-
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-10 mb-20 mx-20 '>
-          <div className='bg-sky-800 p-4 h-32 flex flex-col text-white text-3xl justify-center items-center cursor-pointer'>All User Report</div>
-          <Link to='/reports/manager-report'>
-            <div className='bg-sky-800 p-4 h-32 flex flex-col text-white text-3xl justify-center items-center cursor-pointer'>All Manager Report</div>
-          </Link>
-
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default Reports
+export default Reports;

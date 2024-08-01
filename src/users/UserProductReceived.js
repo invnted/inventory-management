@@ -12,6 +12,8 @@ function UserProductReceived() {
   const [products, setProducts] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
@@ -89,6 +91,13 @@ function UserProductReceived() {
     product.productModel.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const currentProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className='bg-white min-h-screen'>
       <UserNavbar />
@@ -132,8 +141,8 @@ function UserProductReceived() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => {
+                  {currentProducts.length > 0 ? (
+                    currentProducts.map((product) => {
                       const ticket = tickets.find(ticket => ticket.productId === product.productId);
                       const ticketStatus = ticket ? ticket.status : 'UNRAISED';
 
@@ -169,6 +178,18 @@ function UserProductReceived() {
                   )}
                 </tbody>
               </table>
+            </div>
+
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-sky-700 text-white' : 'bg-sky-300 text-black'}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
             </div>
           </div>
         </div>

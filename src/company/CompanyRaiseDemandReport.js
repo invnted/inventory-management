@@ -15,6 +15,8 @@ console.log("ID Picked for local storage: ", companyId);
 function CompanyRaiseDemandReport() {
     const [demands, setDemands] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [demandsPerPage] = useState(10);
 
     const fetchData = async () => {
         try {
@@ -42,10 +44,10 @@ function CompanyRaiseDemandReport() {
     };
 
     useEffect(() => {
-        fetchData(); 
+        fetchData();
 
         const intervalId = setInterval(fetchData, 60000);
-        return () => clearInterval(intervalId); 
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleSearchChange = (e) => {
@@ -61,6 +63,13 @@ function CompanyRaiseDemandReport() {
         demand.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
         demand.createdAt.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Pagination logic
+    const indexOfLastDemand = currentPage * demandsPerPage;
+    const indexOfFirstDemand = indexOfLastDemand - demandsPerPage;
+    const currentDemands = filteredDemands.slice(indexOfFirstDemand, indexOfLastDemand);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div className='bg-white h-screen'>
@@ -127,8 +136,8 @@ function CompanyRaiseDemandReport() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredDemands.length > 0 ? (
-                                            filteredDemands.map((demand) => (
+                                        {currentDemands.length > 0 ? (
+                                            currentDemands.map((demand) => (
                                                 <tr key={demand.demandId}>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
@@ -136,7 +145,7 @@ function CompanyRaiseDemandReport() {
                                                     <td className="py-2 px-4 border border-black text-center">{demand.productBrand}</td>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.productQuantity}</td>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.status}</td>
-                                                    <td className="py-2 px-4 border border-black text-center">{demand.createdAt}</td>
+                                                    <td className="py-2 px-4 border border-black text-center">{new Date(demand.createdAt).toLocaleString()}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -146,6 +155,17 @@ function CompanyRaiseDemandReport() {
                                         )}
                                     </tbody>
                                 </table>
+                                <div className="flex justify-center mt-4">
+                                    {Array.from({ length: Math.ceil(filteredDemands.length / demandsPerPage) }, (_, i) => (
+                                        <button
+                                            key={i + 1}
+                                            onClick={() => paginate(i + 1)}
+                                            className={`mx-1 px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-sky-800 text-white' : 'bg-gray-200'}`}
+                                        >
+                                            {i + 1}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

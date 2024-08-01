@@ -9,6 +9,8 @@ const REQ_URL = `${serverUrl}/products/company-unissuedDemandList`;
 
 function IssueForCompany() {
     const [demandData, setDemandData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchDemandData = async () => {
@@ -32,11 +34,7 @@ function IssueForCompany() {
         fetchDemandData();
     }, []);
 
-    useEffect(() => {
-        console.log('Updated demandData:', demandData);
-    }, [demandData]);
-
-    const handleIssue = (demandId, companyId, productType, productName, productModel,productBrand,productQuantity) => {
+    const handleIssue = (demandId, companyId, productType, productName, productModel, productBrand, productQuantity) => {
         // Handle issue logic here
         localStorage.setItem('demandId', demandId);
         localStorage.setItem('companyId', companyId);
@@ -45,7 +43,27 @@ function IssueForCompany() {
         localStorage.setItem('productName', productName);
         localStorage.setItem('productModel', productModel);
         localStorage.setItem('productQuantity', productQuantity);
-        
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = demandData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(demandData.length / itemsPerPage);
+
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => setCurrentPage(i)}
+                    className={`px-4 py-2 mx-1 ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'} border border-blue-500 rounded`}
+                >
+                    {i}
+                </button>
+            );
+        }
+        return pageNumbers;
     };
 
     return (
@@ -84,8 +102,8 @@ function IssueForCompany() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {demandData.length > 0 ? (
-                                        demandData.map((demand) => (
+                                    {currentItems.length > 0 ? (
+                                        currentItems.map((demand) => (
                                             <tr key={demand.demandId}>
                                                 <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                                                 <td className="py-2 px-4 border border-black text-center">{demand.companyId}</td>
@@ -98,7 +116,7 @@ function IssueForCompany() {
                                                     <Link to='/moderator-home/confirm-company-product'>
                                                         <button
                                                             className="bg-sky-800 text-white px-2 py-1 rounded active:bg-sky-900"
-                                                            onClick={() => handleIssue(demand.demandId, demand.companyId, demand.productType, demand.productName, demand.productModel,demand.productBrand,demand.productQuantity)}
+                                                            onClick={() => handleIssue(demand.demandId, demand.companyId, demand.productType, demand.productName, demand.productModel, demand.productBrand, demand.productQuantity)}
                                                         >
                                                             Issue
                                                         </button>
@@ -108,13 +126,16 @@ function IssueForCompany() {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="9" className="py-2 px-4 border border-black text-center">
+                                            <td colSpan="8" className="py-2 px-4 border border-black text-center">
                                                 No demand requests found.
                                             </td>
                                         </tr>
                                     )}
                                 </tbody>
                             </table>
+                        </div>
+                        <div className="flex justify-center mt-4">
+                            {renderPageNumbers()}
                         </div>
                     </div>
                 </div>
@@ -123,6 +144,4 @@ function IssueForCompany() {
     );
 }
 
-
-
-export default IssueForCompany
+export default IssueForCompany;

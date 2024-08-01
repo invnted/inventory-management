@@ -13,12 +13,10 @@ function AddUser() {
   const registrationURL = `${serverUrl}/users/user-register`;
   const uploadCSVURL = `${serverUrl}/users/upload-user-csv`;
 
-
-  const navigate = useNavigate();
-
   const [user, setUser] = useState({
     userId: '',
     userName: '',
+    email: '',
     password: '',
     designation: '',
     section: '',
@@ -49,6 +47,7 @@ function AddUser() {
         setUser({
           userId: '',
           userName: '',
+          email:'',
           password: '',
           designation: '',
           section: '',
@@ -150,6 +149,15 @@ function AddUser() {
                     onChange={handleInput}
                     value={user.userName}
                     placeholder='User Name'
+                    className='m-3 p-2 outline-none border rounded-xl'
+                    required
+                  />
+                  <input
+                    type='email'
+                    name='email'
+                    onChange={handleInput}
+                    value={user.email}
+                    placeholder='User Email'
                     className='m-3 p-2 outline-none border rounded-xl'
                     required
                   />

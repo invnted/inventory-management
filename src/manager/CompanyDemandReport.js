@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-
 import { Link } from 'react-router-dom';
-import Demand from '../Images/demand1.png'
-import Navbar from '../super-admin/Navbar';
+import Demand from '../Images/demand1.png';
 import ManagerNavbar from './ManagerNavbar';
 import fetchWithToken from '../services/api';
 import { toast } from 'react-toastify';
-
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllCompanyDemand`;
 
 function CompanyDemandReport() {
   const [demandData, setDemandData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchDemandData = async () => {
@@ -56,9 +55,17 @@ function CompanyDemandReport() {
     }
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentDemands = demandData.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(demandData.length / itemsPerPage);
+
   return (
     <div>
-      <ManagerNavbar/>
+      <ManagerNavbar />
       <div className='m-4 md:m-12  justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
@@ -113,8 +120,8 @@ function CompanyDemandReport() {
                   </tr>
                 </thead>
                 <tbody>
-                  {demandData.length > 0 ? (
-                    demandData.map((demand) => (
+                  {currentDemands.length > 0 ? (
+                    currentDemands.map((demand) => (
                       <tr key={demand.demandId}>
                         <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.companyId}</td>
@@ -135,6 +142,17 @@ function CompanyDemandReport() {
                   )}
                 </tbody>
               </table>
+              <div className="flex justify-center mt-4">
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={() => handlePageChange(index + 1)}
+                    className={`px-4 py-2 mx-1 border ${currentPage === index + 1 ? 'bg-sky-500 text-white' : 'bg-white text-sky-500'} rounded`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -143,4 +161,4 @@ function CompanyDemandReport() {
   );
 }
 
-export default CompanyDemandReport
+export default CompanyDemandReport;

@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
-import Demand from '../Images/demand1.png'
+import Demand from '../Images/demand1.png';
 import { toast } from 'react-toastify';
 import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const REQ_URL = `${serverUrl}/products/getAllDemand`;
-const downloadCSVURL = `${serverUrl}/users/download-userDemand-csv`; // CSV download URL
+const downloadCSVURL = `${serverUrl}/users/download-userDemand-csv`;
 
 function DemandRequest() {
   const [demandData, setDemandData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchDemandData = async () => {
@@ -22,18 +24,13 @@ function DemandRequest() {
           },
         });
 
-        if (response.ok)
-        {
+        if (response.ok) {
           toast.success("Successfully Fetched");
-        const data = await response.json();
+          const data = await response.json();
           setDemandData(data.demands);
-      }
-
-      else
-      {
-        toast.error("Failed to Fetch");
-      }
-
+        } else {
+          toast.error("Failed to Fetch");
+        }
       } catch (error) {
         console.error('Error fetching demand data:', error);
       }
@@ -61,34 +58,46 @@ function DemandRequest() {
     }
   };
 
-    // Function to handle CSV download
-    const handleDownloadCSV = async () => {
-      try {
-          const response = await fetch(downloadCSVURL, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json', // This is typically optional for downloads
-              },
-          });
-  
-          if (response.ok) {
-              const blob = await response.blob();
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'user_Demands.csv'; // Ensure filename is correct
-              document.body.appendChild(a);
-              a.click();
-              a.remove();
-              toast.success('CSV file downloaded successfully');
-          } else {
-              console.error('Failed to download CSV:', response.statusText);
-              toast.error('Failed to download CSV');
-          }
-      } catch (error) {
-          console.error('Error while downloading CSV:', error);
-          toast.error('An error occurred while downloading CSV');
+  const handleDownloadCSV = async () => {
+    try {
+      const response = await fetch(downloadCSVURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'user_Demands.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast.success('CSV file downloaded successfully');
+      } else {
+        console.error('Failed to download CSV:', response.statusText);
+        toast.error('Failed to download CSV');
       }
+    } catch (error) {
+      console.error('Error while downloading CSV:', error);
+      toast.error('An error occurred while downloading CSV');
+    }
+  };
+
+  const indexOfLastDemand = currentPage * itemsPerPage;
+  const indexOfFirstDemand = indexOfLastDemand - itemsPerPage;
+  const currentDemands = demandData.slice(indexOfFirstDemand, indexOfLastDemand);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(demandData.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -151,8 +160,8 @@ function DemandRequest() {
                   </tr>
                 </thead>
                 <tbody>
-                  {demandData.length > 0 ? (
-                    demandData.map((demand) => (
+                  {currentDemands.length > 0 ? (
+                    currentDemands.map((demand) => (
                       <tr key={demand.demandId}>
                         <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.userId}</td>
@@ -174,6 +183,17 @@ function DemandRequest() {
                   )}
                 </tbody>
               </table>
+            </div>
+            <div className="flex justify-center mt-4">
+              {pageNumbers.map(number => (
+                <button
+                  key={number}
+                  onClick={() => handleClick(number)}
+                  className={`mx-1 px-3 py-1 rounded-md ${currentPage === number ? 'bg-sky-800 text-white' : 'bg-gray-300 text-black'}`}
+                >
+                  {number}
+                </button>
+              ))}
             </div>
           </div>
         </div>

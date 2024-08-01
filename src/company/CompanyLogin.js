@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import PasswordHide from '../Images/passHide.png';
+import PasswordShow from '../Images/passShow.png';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const LOGIN_URL = `${serverUrl}/companies/company-login`;
@@ -11,12 +13,11 @@ function CompanyLogin() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-
+    const { name, value } = e.target;
     setCompany({
       ...company,
       [name]: value,
@@ -39,7 +40,6 @@ function CompanyLogin() {
         console.log("Received:", data);
 
         const { companyId, companyName, email, contact_1 } = data.company;
-       
 
         localStorage.setItem('companyId', companyId);
         localStorage.setItem('companyName', companyName);
@@ -59,8 +59,9 @@ function CompanyLogin() {
     }
   };
 
-  
-  
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const Dropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -78,20 +79,29 @@ function CompanyLogin() {
     };
 
     return (
-      <div className="relative inline-block text-center w-full mt-5 ">
-        
+      <div className="relative inline-block text-center w-full mt-5">
         <div>
           <button
             type="button"
-            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md  shadow-sm px-4 py-2  font-semibold text-white"
+            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md shadow-sm px-4 py-2 font-semibold text-white"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
             onClick={toggleDropdown}
           >
             {selectedOption}
-            <svg className="-mr-2 ml-4 h-5 w-5 text-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 20 20" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            <svg
+              className="-mr-2 ml-4 h-5 w-5 text-center"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 -5 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
         </div>
@@ -104,7 +114,7 @@ function CompanyLogin() {
             aria-labelledby="menu-button"
             tabIndex="-1"
           >
-            <div className="py-1 text-center " role="none">
+            <div className="py-1 text-center" role="none">
               <button
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
@@ -173,12 +183,41 @@ function CompanyLogin() {
               </div>
               <div>
                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" onChange={handleInput} name="password" id="password" placeholder="••••••••" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6" required />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    onChange={handleInput}
+                    placeholder="••••••••"
+                    className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-white"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordShow} />
+                    ) : (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordHide} />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className='mt-20 flex justify-center items-center'>
-                <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">Login</button>
+                <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-sky-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">Login</button>
               </div>
             </form>
+            <div className="text-gray-400">
+              If you forgot your password &nbsp;
+              <Link to='/company-forgot-password'>
+              <span className="text-white hover:text-sky-500 hover:underline  cursor-pointer font-semibold">
+                click here
+              </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

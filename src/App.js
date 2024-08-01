@@ -58,6 +58,11 @@ import PendingUserDemand from './super-admin/PendingUserDemand';
 import UserTicketReceived from './moderator/UserTicketReceived';
 import CompanyTicketReceived from './moderator/CompanyTicketReceived';
 import AuthorizationFailed from './components/AuthorizationFailed';
+import UserForgotPassword from './users/UserForgotPassword';
+import AdminForgotPassword from './super-admin/AdminForgotPassword';
+import ManagerForgotPassword from './manager/ManagerForgotPassword';
+import CompanyForgotPassword from './company/CompanyForgotPassword';
+import ModeratorForgotPassword from './moderator/ModeratorForgotPassword';
 
 
 
@@ -75,6 +80,7 @@ function App() {
         {/* Authorization failed... */}
         <Route path="/authorization-failed" element={<AuthorizationFailed/>} />
         {/* Admin panel */}
+        <Route path="/admin-forgot-password" element={<AdminForgotPassword />} />
         <Route path="/home" element={<Home />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/reports/manager-report" element={<ManagerReport />} />
@@ -96,6 +102,7 @@ function App() {
         <Route path="/home/stock-required" element={<StockRequired />} />
 
         {/* Manger Section */}
+        <Route path="/manager-forgot-password" element={<ManagerForgotPassword/>} />
         <Route path="/manager-dashboard" element={<ManagerDashboard/>} />
         <Route path="/manager-dashboard/managerAdd-user" element={<ManagerAddUser/>} />
         <Route path="/manager-dashboard/manager-UserList" element={<ManagerUserList/>} />
@@ -109,6 +116,7 @@ function App() {
 
 
         {/* User Panel */}
+        <Route path="/user-forgot-password" element={<UserForgotPassword/>} />
         <Route path="/user-home" element={<UserHome/>} />
         <Route path="/user-home/raise-demand" element={<RaiseDemand/>} />
         <Route path="/user-home/raise-ticket" element={<UserRaiseTicket/>} />
@@ -116,6 +124,7 @@ function App() {
         <Route path="/user-home/product-received" element={<UserProductReceived/>} />
 
         {/* Moderator Panel */}
+        <Route path="/moderator-forgot-password" element={<ModeratorForgotPassword/>} />
         <Route path="/moderator-home" element={<ModeratorHome/>} />
         <Route path="/moderator-home/add-moderator" element={<AddModerator/>}/>
         <Route path="/moderator-home/all-moderator" element={<AllModerator/>}/>
@@ -128,6 +137,7 @@ function App() {
         <Route path="/moderator-home/company-ticket-received" element={<CompanyTicketReceived/>}/>
 
         {/* Company Panel */}
+        <Route path="/company-forgot-password" element={<CompanyForgotPassword/>}/>
         <Route path="/company-home" element={<CompanyDashboard/>}/>
         <Route path="/company-home/raise-demand" element={<CompanyRaiseDemand/>}/>
         <Route path="/company-home/raise-ticket" element={<CompanyRaiseTicket/>}/>

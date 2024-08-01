@@ -9,6 +9,8 @@ const UPDATE_TICKET_URL = `${serverUrl}/products/updateTicket`;
 
 function UserTicketReceived() {
     const [ticketData, setTicketData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchTicketData = async () => {
@@ -70,6 +72,27 @@ function UserTicketReceived() {
         handleUpdateStatus(ticketId, 'RESOLVED');
     };
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = ticketData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(ticketData.length / itemsPerPage);
+
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => setCurrentPage(i)}
+                    className={`px-4 py-2 mx-1 ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'} border border-blue-500 rounded`}
+                >
+                    {i}
+                </button>
+            );
+        }
+        return pageNumbers;
+    };
+
     return (
         <div>
             <ModeratorNavbar />
@@ -106,8 +129,8 @@ function UserTicketReceived() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {ticketData.length > 0 ? (
-                                        ticketData.map((ticket) => (
+                                    {currentItems.length > 0 ? (
+                                        currentItems.map((ticket) => (
                                             <tr key={ticket._id}>
                                                 <td className="py-2 px-4 border border-black text-center">{ticket.ticketId}</td>
                                                 <td className="py-2 px-4 border border-black text-center">{ticket.issueType}</td>
@@ -144,6 +167,9 @@ function UserTicketReceived() {
                                     )}
                                 </tbody>
                             </table>
+                        </div>
+                        <div className="flex justify-center mt-4">
+                            {renderPageNumbers()}
                         </div>
                     </div>
                 </div>

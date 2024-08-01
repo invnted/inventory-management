@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
+import fetchWithToken from '../services/api';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
-const productListUrl = `${serverUrl}/products/getAllProduct`;
+const productListUrl = `${serverUrl}/products/NEW_getAllProduct`;
 const storeReportUrl = `${serverUrl}/products/storeReport`;
 const storeReportCSV = `${serverUrl}/products/getStoreReportCSV`;
 
 function StoreReport() {
-  const [productTypes, setProductTypes] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [selectedProductType, setSelectedProductType] = useState('');
-  const [productModels, setProductModels] = useState([]);
+  const [selectedProductBrand, setSelectedProductBrand] = useState('');
+  const [selectedProductName, setSelectedProductName] = useState('');
   const [productBrands, setProductBrands] = useState([]);
+  const [productNames, setProductNames] = useState([]);
+  const [productModels, setProductModels] = useState([]);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [reportData, setReportData] = useState([]);
+  const [reportFetched, setReportFetched] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(productListUrl, {
+        const response = await fetchWithToken(productListUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
         });
         const data = await response.json();
-        setProductTypes(data);
+        setProductData(data);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -37,20 +42,64 @@ function StoreReport() {
   const handleProductTypeChange = (e) => {
     const selectedType = e.target.value;
     setSelectedProductType(selectedType);
-  
+    setSelectedProductBrand('');
+    setSelectedProductName('');
+    setProductNames([]);
+    setProductModels([]);
+
     if (selectedType) {
-      const selectedProduct = productTypes.find(product => product.productType === selectedType);
-      setProductModels([...new Set(selectedProduct.details.map(detail => detail.productModel))]);
-      setProductBrands([...new Set(selectedProduct.details.map(detail => detail.productBrand))]);
-
-      console.log("Selected type:",selectedType)
-
+      const productTypeData = productData.find(pt => pt.productType === selectedType);
+      if (productTypeData) {
+        const brands = productTypeData.brands || [];
+        setProductBrands(brands.map(brand => brand.productBrand));
+      } else {
+        setProductBrands([]);
+      }
     } else {
-      setProductModels([]);
       setProductBrands([]);
     }
   };
-  
+
+  const handleProductBrandChange = (e) => {
+    const selectedBrand = e.target.value;
+    setSelectedProductBrand(selectedBrand);
+    setSelectedProductName('');
+    setProductModels([]);
+
+    if (selectedBrand && selectedProductType) {
+      const productTypeData = productData.find(pt => pt.productType === selectedProductType);
+      if (productTypeData) {
+        const brandData = productTypeData.brands.find(brand => brand.productBrand === selectedBrand);
+        setProductNames(brandData ? brandData.products.map(p => p.productName) : []);
+      } else {
+        setProductNames([]);
+      }
+    } else {
+      setProductNames([]);
+    }
+  };
+
+  const handleProductNameChange = (e) => {
+    const selectedName = e.target.value;
+    setSelectedProductName(selectedName);
+
+    if (selectedName && selectedProductBrand && selectedProductType) {
+      const productTypeData = productData.find(pt => pt.productType === selectedProductType);
+      if (productTypeData) {
+        const brandData = productTypeData.brands.find(brand => brand.productBrand === selectedProductBrand);
+        if (brandData) {
+          const productData = brandData.products.find(p => p.productName === selectedName);
+          setProductModels(productData ? productData.models : []);
+        } else {
+          setProductModels([]);
+        }
+      } else {
+        setProductModels([]);
+      }
+    } else {
+      setProductModels([]);
+    }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -66,21 +115,17 @@ function StoreReport() {
   };
 
   const handleViewClick = async () => {
-    const productModelElement = document.querySelector('select[name="productModel"]');
-    const productBrandElement = document.querySelector('select[name="productBrand"]');
-
     const query = {
       productType: selectedProductType,
-      productModel: productModelElement ? productModelElement.value : '',
-      productBrand: productBrandElement ? productBrandElement.value : '',
+      productBrand: selectedProductBrand,
+      productName: selectedProductName,
+      productModel: productModels[0] || '', // Assuming only one model is selected or required
       fromDate,
       toDate
     };
 
-    console.log("Query :",query)
-
     try {
-      const response = await fetch(storeReportUrl, {
+      const response = await fetchWithToken(storeReportUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,26 +134,23 @@ function StoreReport() {
       });
       const data = await response.json();
       setReportData(data);
+      setReportFetched(true);
     } catch (error) {
       console.error('Error fetching report:', error);
+      setReportFetched(false);
     }
   };
- 
 
   const handleDownloadClick = async () => {
-    const productModelElement = document.querySelector('select[name="productModel"]');
-    const productBrandElement = document.querySelector('select[name="productBrand"]');
-  
     const query = {
       productType: selectedProductType,
-      productModel: productModelElement ? productModelElement.value : '',
-      productBrand: productBrandElement ? productBrandElement.value : '',
+      productBrand: selectedProductBrand,
+      productName: selectedProductName,
+      productModel: productModels[0] || '',
       fromDate,
       toDate
     };
-  
-    console.log('Download Query:', query); // Ensure selectedProductType is correctly set
-  
+
     try {
       const response = await fetch(storeReportCSV, {
         method: 'POST',
@@ -117,27 +159,27 @@ function StoreReport() {
         },
         body: JSON.stringify(query),
       });
-  
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch CSV data');
+      }
+
       const blob = await response.blob();
       const csvData = await blob.text();
-  
-      console.log('Raw CSV Data:', csvData);
-  
+
       const rows = csvData.split('\n').map(row => {
         const columns = row.split(',');
         if (columns.length >= 5) {
-          const [productType, productModel, productBrand, productStatus, createdAt] = columns;
-          const formattedDate = createdAt ? formatDate(createdAt.trim()) : ''; // Check if createdAt is defined before calling trim
-          return [productType, productModel, productBrand, productStatus, createdAt].join(',');
+          const [productType, productName, productModel, productBrand, productStatus, createdAt] = columns;
+          const formattedDate = createdAt ? formatDate(createdAt.trim()) : ''; 
+          return [productType, productName, productModel, productBrand, productStatus, formattedDate].join(',');
         }
-        return ''; // Handle incomplete rows if necessary
+        return '';
       });
-  
+
       const formattedCsvData = rows.join('\n');
       const formattedBlob = new Blob([formattedCsvData], { type: 'text/csv' });
-  
-      console.log("After Processing: ", formattedCsvData);
-  
+
       const url = window.URL.createObjectURL(formattedBlob);
       const a = document.createElement('a');
       a.style.display = 'none';
@@ -150,153 +192,147 @@ function StoreReport() {
       console.error('Error downloading CSV:', error);
     }
   };
-  
-  
-  
 
   return (
-    <div className='h-cover '>
+    <div className='h-screen bg-sky-600'>
       <Navbar />
-      <div className=''>
-        <div className=' inset-0 md:m-20 m-4'>
-          <div className='bg-sky-300'>
-            <div className='flex justify-center items-center bg-sky-800 p-8 tex-bold text-white  text-4xl'>Store Report</div>
-            <form className='flex flex-wrap justify-center items-center text-center text-white m-10 '>
-              <div className='w-full md:w-1/4'>
-                <div>
-                  <div className='relative inline-block w-64 text-black'>
-                    <select
-                      className='block appearance-none w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                      value={selectedProductType}
-                      onChange={handleProductTypeChange}
-                    >
-                      <option value=''>Select Product Type</option>
-                      {productTypes.map((productType, index) => (
-                        <option
-                          value={productType.productType}
-                          key={index}
-                          className='bg-sky-700 delay-100 h-20 flex text-white justify-center items-center rounded-xl font-bold cursor-pointer'
-                        >
-                          {productType.productType}
-                        </option>
-                      ))}
-                    </select>
-                    <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white'>
-                      <svg className='fill-current h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
-                        <path d='M7 10l5 5 5-5H7z' />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='w-full md:w-1/4 p-2'>
-                <div className='relative inline-block w-64 text-black'>
-                  <select
-                    name="productModel"
-                    className='block appearance-none w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  >
-                    <option value=''>Select Product Model</option>
-                    {productModels.map((model, index) => (
-                      <option value={model} key={index}>
-                        {model}
-                      </option>
-                    ))}
-                  </select>
-                  <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white'>
-                    <svg className='fill-current h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
-                      <path d='M7 10l5 5 5-5H7z' />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className='w-full md:w-1/4 p-2'>
-                <div className='relative inline-block w-64 text-black'>
-                  <select
-                    name="productBrand"
-                    className='block appearance-none w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  >
-                    <option value=''>Select Product Brand</option>
-                    {productBrands.map((brand, index) => (
-                      <option value={brand} key={index}>
-                        {brand}
-                      </option>
-                    ))}
-                  </select>
-                  <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white'>
-                    <svg className='fill-current h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
-                      <path d='M7 10l5 5 5-5H7z' />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className='w-full md:w-1/4 p-2 flex gap-4'>
-                <div className='flex justify-center items-center text-black text-lg font-semibold'>From Date :</div>
-                <input
-                  type='date'
-                  className='appearance-none block  bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                />
-              </div>
-              <div className='w-full md:w-1/4 p-2 flex gap-4'>
-              <div className='flex justify-center items-center text-black text-lg font-semibold'>To Date :</div>
-                <input
-                  type='date'
-                  className='appearance-none block  bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                />
-              </div>
-              <div className='w-full md:w-1/4 p-2'>
-                <button
-                  type='button'
-                  className='w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  onClick={handleViewClick}
+      <div className='p-4'>
+        <div className='bg-sky-500 rounded-lg shadow-lg p-6'>
+          <div className='text-center text-3xl font-bold text-white mb-6'>Store Report</div>
+          <form className='flex flex-wrap gap-4 justify-center'>
+            <div className='w-full md:w-1/4'>
+              <div className='relative'>
+                <select
+                  className='block w-full bg-white-700 text-lg text-gray-900 p-3 rounded-lg border border-white-600 focus:outline-none focus:ring-2 focus:ring-white-500'
+                  value={selectedProductType}
+                  onChange={handleProductTypeChange}
                 >
-                  View Report
-                </button>
+                  <option value=''>Select Product Type</option>
+                  {productData.map((typeData, index) => (
+                    <option value={typeData.productType} key={index}>
+                      {typeData.productType}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className='w-full md:w-1/4 p-2'>
-                <button
-                  type='button'
-                  className='w-full bg-sky-700 text-xl text-white p-3 rounded leading-tight focus:outline-none focus:shadow-outline'
-                  onClick={handleDownloadClick}
+            </div>
+            <div className='w-full md:w-1/4'>
+              <div className='relative'>
+                <select
+                  name="productBrand"
+                  className='block w-full bg-white-700 text-lg text-gray-900 p-3 rounded-lg border border-white-600 focus:outline-none focus:ring-2 focus:ring-white-500'
+                  value={selectedProductBrand}
+                  onChange={handleProductBrandChange}
+                  disabled={!selectedProductType}
                 >
-                  Download CSV
-                </button>
+                  <option value=''>Select Product Brand</option>
+                  {productBrands.map((brand, index) => (
+                    <option value={brand} key={index}>
+                      {brand}
+                    </option>
+                  ))}
+                </select>
               </div>
-            </form>
-            <div className='overflow-auto bg-sky-300 text-black md:p-10 p-4'>
-              <table className='min-w-full divide-y divide-gray-200'>
-                <thead className='bg-gray-50'>
+            </div>
+            <div className='w-full md:w-1/4'>
+              <div className='relative'>
+                <select
+                  name="productName"
+                  className='block w-full bg-white-700 text-lg text-gray-900 p-3 rounded-lg border border-white-600 focus:outline-none focus:ring-2 focus:ring-white-500'
+                  value={selectedProductName}
+                  onChange={handleProductNameChange}
+                  disabled={!selectedProductBrand}
+                >
+                  <option value=''>Select Product Name</option>
+                  {productNames.map((name, index) => (
+                    <option value={name} key={index}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='w-full md:w-1/4'>
+              <div className='relative'>
+                <select
+                  name="productModel"
+                  className='block w-full bg-white-700 text-lg text-gray-900 p-3 rounded-lg border border-white-600 focus:outline-none focus:ring-2 focus:ring-white-500'
+                  value={productModels[0] || ''}
+                  onChange={(e) => setProductModels([e.target.value])} // Handle single model selection
+                  disabled={!selectedProductName}
+                >
+                  <option value=''>Select Product Model</option>
+                  {productModels.map((model, index) => (
+                    <option value={model} key={index}>
+                      {model}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='w-full md:w-1/4'>
+              <input
+                type='date'
+                className='block w-full bg-white-700 text-lg text-gray-900 p-3 rounded-lg border border-white-600 focus:outline-none focus:ring-2 focus:ring-white-500'
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+            </div>
+            <div className='w-full md:w-1/4'>
+              <input
+                type='date'
+                className='block w-full bg-white-700 text-lg text-gray-900 p-3 rounded-lg border border-white-600 focus:outline-none focus:ring-2 focus:ring-white-500'
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+            </div>
+            <div className='w-full flex justify-center mt-4'>
+              <button
+                type='button'
+                className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'
+                onClick={handleViewClick}
+              >
+                View Report
+              </button>
+            </div>
+            <div className='w-full flex justify-center mt-4'>
+              <button
+                type='button'
+                className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'
+                onClick={handleDownloadClick}
+              >
+                Download CSV
+              </button>
+            </div>
+          </form>
+          {reportFetched && (
+            <div className='mt-6'>
+              <table className='min-w-full bg-white border border-gray-200'>
+                <thead>
                   <tr>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
-                      Product Type
-                    </th>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
-                      Product Model
-                    </th>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
-                      Product Brand
-                    </th>
-                    <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider'>
-                      Date & Time
-                    </th>
+                    <th className='py-2 px-4 border-b'>Product Type</th>
+                    <th className='py-2 px-4 border-b'>Product Name</th>
+                    <th className='py-2 px-4 border-b'>Product Model</th>
+                    <th className='py-2 px-4 border-b'>Product Brand</th>
+                    <th className='py-2 px-4 border-b'>Status</th>
+                    <th className='py-2 px-4 border-b'>Created At</th>
                   </tr>
                 </thead>
-                <tbody className='bg-white divide-y divide-gray-200'>
-                  {reportData.map((report, index) => (
+                <tbody>
+                  {reportData.map((item, index) => (
                     <tr key={index}>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{report.productType}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{report.productModel}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{report.productBrand}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-black'>{formatDate(report.createdAt)}</td>
+                      <td className='py-2 px-4 border-b'>{item.productType}</td>
+                      <td className='py-2 px-4 border-b'>{item.productName}</td>
+                      <td className='py-2 px-4 border-b'>{item.productModel}</td>
+                      <td className='py-2 px-4 border-b'>{item.productBrand}</td>
+                      <td className='py-2 px-4 border-b'>{item.status}</td>
+                      <td className='py-2 px-4 border-b'>{formatDate(item.createdAt)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -13,6 +13,8 @@ console.log("ID Picked for local storage: ", userId);
 
 function RaiseDemandReport() {
     const [demands, setDemands] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const fetchData = async () => {
         try {
@@ -39,6 +41,13 @@ function RaiseDemandReport() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const totalPages = Math.ceil(demands.length / itemsPerPage);
+    const currentDemands = demands.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
         <div>
@@ -98,8 +107,8 @@ function RaiseDemandReport() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {demands.length > 0 ? (
-                                            demands.map((demand) => (
+                                        {currentDemands.length > 0 ? (
+                                            currentDemands.map((demand) => (
                                                 <tr key={demand.demandId}>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                                                     <td className="py-2 px-4 border border-black text-center">{demand.productName}</td>
@@ -117,6 +126,18 @@ function RaiseDemandReport() {
                                         )}
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div className="flex justify-center mt-4">
+                                {Array.from({ length: totalPages }, (_, index) => (
+                                    <button
+                                        key={index + 1}
+                                        onClick={() => handlePageChange(index + 1)}
+                                        className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-sky-700 text-white' : 'bg-sky-300 text-black'}`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </div>

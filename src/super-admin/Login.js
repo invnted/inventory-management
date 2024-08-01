@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import PasswordHide from '../Images/passHide.png'
+import PasswordShow from '../Images/passShow.png'
+import { LogIn } from 'lucide-react';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const LOGIN_URL = `${serverUrl}/admins/admin-login`;
 
 function AdminLogin() {
-  const [admin, setUser] = useState({
+  const [admin, setAdmin] = useState({
     email: "",
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-
-    setUser({
+    const { name, value } = e.target;
+    setAdmin({
       ...admin,
       [name]: value,
     });
@@ -45,12 +48,12 @@ function AdminLogin() {
         localStorage.setItem('department', department);
         localStorage.setItem('profileId', profileId);
         localStorage.setItem('role', role);
-        localStorage.setItem('token',data.token);
+        localStorage.setItem('token', data.token);
 
-        console.log("Token:",data.token)
+        console.log("Token:", data.token);
 
         toast.success("Login successful");
-        setUser({ email: "", password: "" });
+        setAdmin({ email: "", password: "" });
 
         navigate('/home', { state: { adminName, email, department, profileId, role } });
       } else {
@@ -68,6 +71,10 @@ function AdminLogin() {
     }
   }, []);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const Dropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState("Admin");
@@ -84,12 +91,11 @@ function AdminLogin() {
     };
 
     return (
-      <div className="relative inline-block text-center w-full mt-5 ">
-        
+      <div className="relative inline-block text-center w-full mt-5">
         <div>
           <button
             type="button"
-            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md  shadow-sm px-4 py-2  font-semibold text-white"
+            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md shadow-sm px-4 py-2 font-semibold text-white"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
@@ -110,7 +116,7 @@ function AdminLogin() {
             aria-labelledby="menu-button"
             tabIndex="-1"
           >
-            <div className="py-1 text-center " role="none">
+            <div className="py-1 text-center" role="none">
               <button
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
@@ -174,17 +180,60 @@ function AdminLogin() {
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                <input type="email" name="email" id="email" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white" placeholder="name@company.com" onChange={handleInput} required />
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white"
+                  placeholder="Your Email"
+                  onChange={handleInput}
+                  required
+                />
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" onChange={handleInput} name="password" id="password" placeholder="••••••••" className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6" required />
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    onChange={handleInput}
+                    placeholder="Password"
+                    className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-white"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordShow} />
+                    ) : (
+                      <img className='w-5 md:w-6 mb-4' src={PasswordHide} />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className='mt-20 flex justify-center items-center'>
-                <button type="submit" className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">Login</button>
+                <button type="submit" className="w-1/2 flex justify-center items-center hover:border-sky-500 hover:bg-sky-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl">
+                  Login
+                </button>
               </div>
             </form>
+            <div className="text-gray-400">
+              If you forgot your password &nbsp;
+              <Link to='/admin-forgot-password'>
+                <span className="text-white hover:text-sky-500 hover:underline  cursor-pointer font-semibold">
+                  click here
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

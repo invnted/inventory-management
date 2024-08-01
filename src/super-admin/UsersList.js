@@ -213,7 +213,6 @@ function UsersList() {
                       <th className="py-2 px-4 border border-gray-300 text-center">Designation</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Appointment</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Section</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Password</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Action</th>
                     </tr>
                   </thead>
@@ -273,19 +272,7 @@ function UsersList() {
                             user.section
                           )}
                         </td>
-                        <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingUser === user.userId ? (
-                            <input
-                              type="text"
-                              name="password"
-                              value={editedUser.password}
-                              onChange={handleInputChange}
-                              className="bg-gray-200"
-                            />
-                          ) : (
-                            user.password
-                          )}
-                        </td>
+                       
                         <td className="py-2 px-4 border border-gray-300 text-center">
                           {editingUser === user.userId ? (
                             <>

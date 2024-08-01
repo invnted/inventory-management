@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
-import Demand from '../Images/demand1.png'
+import Demand from '../Images/demand1.png';
 import { toast } from 'react-toastify';
 import fetchWithToken from '../services/api';
 
@@ -11,6 +11,8 @@ const downloadCSVURL = `${serverUrl}/users/download-companyDemand-csv`; // CSV d
 
 function CompanyDemandRequest() {
   const [demandData, setDemandData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchDemandData = async () => {
@@ -26,12 +28,9 @@ function CompanyDemandRequest() {
           const data = await response.json();
           setDemandData(data.demands);
           toast.success("Fetched Successfully");
-        }
-
-        else {
+        } else {
           toast.error("Failed to fetch");
         }
-
       } catch (error) {
         console.error('Error fetching demand data:', error);
       }
@@ -58,7 +57,6 @@ function CompanyDemandRequest() {
         return '';
     }
   };
-
 
   // Function to handle CSV download
   const handleDownloadCSV = async () => {
@@ -90,10 +88,24 @@ function CompanyDemandRequest() {
     }
   };
 
+  // Pagination logic
+  const indexOfLastDemand = currentPage * itemsPerPage;
+  const indexOfFirstDemand = indexOfLastDemand - itemsPerPage;
+  const currentDemands = demandData.slice(indexOfFirstDemand, indexOfLastDemand);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(demandData.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div>
       <Navbar />
-      <div className='m-4 md:m-12  justify-between'>
+      <div className='m-4 md:m-12 justify-between'>
         <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
           <div className='flex gap-10'>
             <Link to='/home/demand-request'>
@@ -149,8 +161,8 @@ function CompanyDemandRequest() {
                   </tr>
                 </thead>
                 <tbody>
-                  {demandData.length > 0 ? (
-                    demandData.map((demand) => (
+                  {currentDemands.length > 0 ? (
+                    currentDemands.map((demand) => (
                       <tr key={demand.demandId}>
                         <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                         <td className="py-2 px-4 border border-black text-center">{demand.companyId}</td>
@@ -172,6 +184,17 @@ function CompanyDemandRequest() {
                 </tbody>
               </table>
             </div>
+            <div className="flex justify-center mt-4">
+              {pageNumbers.map(number => (
+                <button
+                  key={number}
+                  onClick={() => handleClick(number)}
+                  className={`mx-1 px-3 py-1 rounded-md ${currentPage === number ? 'bg-sky-800 text-white' : 'bg-gray-300 text-black'}`}
+                >
+                  {number}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -179,4 +202,4 @@ function CompanyDemandRequest() {
   );
 }
 
-export default CompanyDemandRequest
+export default CompanyDemandRequest;

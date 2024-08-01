@@ -13,6 +13,8 @@ function ManagerProductReport() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;  // Set items per page to 10
 
     useEffect(() => {
         fetchProducts();
@@ -63,11 +65,13 @@ function ManagerProductReport() {
             (product.status && product.status.toLowerCase().includes(lowercasedSearchTerm))
         );
         setFilteredProducts(filtered);
+        setCurrentPage(1); // Reset to first page when filtering
     };
 
     const handleRefresh = () => {
         setSearchTerm('');
         setFilteredProducts(products);
+        setCurrentPage(1); // Reset to first page when refreshing
     };
 
     const handleDownloadCSV = async () => {
@@ -77,7 +81,6 @@ function ManagerProductReport() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // Include body if necessary
             });
 
             if (!response.ok) {
@@ -104,6 +107,17 @@ function ManagerProductReport() {
             return 'bg-yellow-400'; // Golden background color
         }
         return 'bg-green-400'; // Green background color
+    };
+
+    // Pagination logic
+    const indexOfLastProduct = currentPage * itemsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
     };
 
     return (
@@ -142,7 +156,7 @@ function ManagerProductReport() {
                                 </button>
                             </div>
                         </div>
-                        {!loading && !error && filteredProducts.length > 0 && (
+                        {!loading && !error && currentProducts.length > 0 && (
                             <div className="overflow-x-auto mt-4">
                                 <table className="min-w-full bg-white border-2 border-gray-400">
                                     <thead>
@@ -158,7 +172,7 @@ function ManagerProductReport() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredProducts.map((product) => (
+                                        {currentProducts.map((product) => (
                                             <tr key={product.productId} className={getRowBackgroundColor(product)}>
                                                 <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productId}</td>
                                                 <td className="py-2 px-4 border-2 border-gray-400 text-center font-bold">{product.productType}</td>
@@ -174,7 +188,18 @@ function ManagerProductReport() {
                                 </table>
                             </div>
                         )}
-                        {!loading && !error && filteredProducts.length === 0 && <p className="text-center">No products found</p>}
+                        {!loading && !error && currentProducts.length === 0 && <p className="text-center">No products found</p>}
+                        <div className="flex justify-center mt-4">
+                            {Array.from({ length: totalPages }, (_, index) => index + 1).map(number => (
+                                <button
+                                    key={number}
+                                    onClick={() => handlePageChange(number)}
+                                    className={`mx-1 px-3 py-1 rounded ${currentPage === number ? 'bg-sky-600 text-white' : 'bg-sky-300 text-black'}`}
+                                >
+                                    {number}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

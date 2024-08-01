@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import ManagerNavbar from './ManagerNavbar'
+import React, { useEffect, useState } from 'react';
+import ManagerNavbar from './ManagerNavbar';
 import { Link } from 'react-router-dom';
-import Demand from '../Images/demand1.png'
+import Demand from '../Images/demand1.png';
 import fetchWithToken from '../services/api';
 import { toast } from 'react-toastify';
 
@@ -11,10 +11,11 @@ const UPDATE_URL = `${serverUrl}/products/updateCompanyDemandStatus`;
 
 const companyId = localStorage.getItem('companyId');
 
-
 function CompanyDemand() {
     const [demands, setDemands] = useState([]);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,11 +84,20 @@ function CompanyDemand() {
                 return '';
         }
     };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentDemands = demands.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = Math.ceil(demands.length / itemsPerPage);
+
     return (
         <div>
             <ManagerNavbar />
             <div className='m-4 md:m-12 '>
-            <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
+                <div className='text-center bg-sky-800 text-black h-24 flex items-center justify-center'>
                     <div className='flex gap-4 md:gap-10'>
                         <Link to='/manager-dashboard/CompanyDemand'>
                             <div className='bg-gray-200 p-2 md:p-4 h-32 w-32 rounded-2xl flex flex-col justify-center items-center cursor-pointer border-4 border-blue-500'>
@@ -129,47 +139,60 @@ function CompanyDemand() {
                             {error ? (
                                 <div className="text-red-500 text-center">{error}</div>
                             ) : (
-                                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-                                    <thead className="bg-sky-500 text-white">
-                                        <tr>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Demand ID</th>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Name</th>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Model</th>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Brand</th>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Quantity</th>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Status</th>
-                                            <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Created At</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {demands.length > 0 ? (
-                                            demands.map((demand) => (
-                                                <tr key={demand.demandId} className="hover:bg-sky-100">
-                                                    <td className=" md:py-2  md:px-4 border border-black text-center">{demand.demandId}</td>
-                                                    <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productName}</td>
-                                                    <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productModel}</td>
-                                                    <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productBrand}</td>
-                                                    <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productQuantity}</td>
-                                                    <td className="py-1 md:py-2 px-2 md:px-4 border border-black text-center">
-                                                        {demand.status.toLowerCase() === 'pending' ? (
-                                                            <div className='flex justify-around text-white text-sm md:text-xl'>
-                                                                <button className='bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-700' onClick={() => updateDemandStatus(demand.demandId, 'APPROVED')}>Approve</button>
-                                                                <button className='bg-red-500 px-2 py-1 rounded-lg hover:bg-red-700' onClick={() => updateDemandStatus(demand.demandId, 'REJECTED')}>Reject</button>
-                                                            </div>
-                                                        ) : (
-                                                            <span className={getStatusClassName(demand.status)}>{demand.status}</span>
-                                                        )}
-                                                    </td>
-                                                    <td className=" md:py-2  md:px-4 border border-black text-center">{demand.createdAt}</td>
-                                                </tr>
-                                            ))
-                                        ) : (
+                                <>
+                                    <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+                                        <thead className="bg-sky-500 text-white">
                                             <tr>
-                                                <td colSpan="7" className=" md:py-2 md:px-4 border border-black text-center">No demands found</td>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Demand ID</th>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Name</th>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Model</th>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Brand</th>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Product Quantity</th>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Status</th>
+                                                <th className=" md:py-2 px-2 md:px-4 border border-black text-center">Created At</th>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {currentDemands.length > 0 ? (
+                                                currentDemands.map((demand) => (
+                                                    <tr key={demand.demandId} className="hover:bg-sky-100">
+                                                        <td className=" md:py-2  md:px-4 border border-black text-center">{demand.demandId}</td>
+                                                        <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productName}</td>
+                                                        <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productModel}</td>
+                                                        <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productBrand}</td>
+                                                        <td className=" md:py-2  md:px-4 border border-black text-center">{demand.productQuantity}</td>
+                                                        <td className="py-1 md:py-2 px-2 md:px-4 border border-black text-center">
+                                                            {demand.status.toLowerCase() === 'pending' ? (
+                                                                <div className='flex justify-around text-white text-sm md:text-xl'>
+                                                                    <button className='bg-blue-500 px-2 py-1 rounded-lg hover:bg-blue-700' onClick={() => updateDemandStatus(demand.demandId, 'APPROVED')}>Approve</button>
+                                                                    <button className='bg-red-500 px-2 py-1 rounded-lg hover:bg-red-700' onClick={() => updateDemandStatus(demand.demandId, 'REJECTED')}>Reject</button>
+                                                                </div>
+                                                            ) : (
+                                                                <span className={getStatusClassName(demand.status)}>{demand.status}</span>
+                                                            )}
+                                                        </td>
+                                                        <td className=" md:py-2  md:px-4 border border-black text-center">{demand.createdAt}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="7" className=" md:py-2 md:px-4 border border-black text-center">No demands found</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                    <div className="flex justify-center mt-4">
+                                        {Array.from({ length: totalPages }, (_, index) => (
+                                            <button
+                                                key={index + 1}
+                                                onClick={() => handlePageChange(index + 1)}
+                                                className={`px-4 py-2 mx-1 border ${currentPage === index + 1 ? 'bg-sky-500 text-white' : 'bg-white text-sky-500'} rounded`}
+                                            >
+                                                {index + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
                             )}
                         </div>
                     </div>
@@ -179,4 +202,4 @@ function CompanyDemand() {
     )
 }
 
-export default CompanyDemand
+export default CompanyDemand;

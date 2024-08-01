@@ -14,12 +14,11 @@ function AddManager() {
   const registrationURL = `${serverUrl}/managers/manager-register`;
   const UPLOADCSVURL = `${serverUrl}/users/upload-manager-csv`;
 
-  const navigate = useNavigate();
-
 
   const [manager, setManager] = useState({
     managerId: '',
     managerName: '',
+    email: '',
     password: '',
     designation: '',
     section: '',
@@ -91,6 +90,7 @@ function AddManager() {
         setManager({
           managerId: '',
           managerName: '',
+          email: '',
           password: '',
           designation: '',
           section: '',
@@ -193,6 +193,16 @@ function AddManager() {
                 className='m-3 p-2 outline-none border rounded-xl'
                 required
               />
+              <input
+                type='email'
+                name='email'
+                onChange={handleInput}
+                value={manager.email}
+                placeholder='Manager Email'
+                className='m-3 p-2 outline-none border rounded-xl'
+                required
+              />
+
               <input
                 type='password'
                 name='password'

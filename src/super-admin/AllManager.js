@@ -221,7 +221,6 @@ function AllManager() {
                                         <tr>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Manager ID</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Manager Name</th>
-                                            <th className="py-2 px-4 border border-gray-300 text-center">Password</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Designation</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Section</th>
                                             <th className="py-2 px-4 border border-gray-300 text-center">Appointment</th>
@@ -260,19 +259,7 @@ function AllManager() {
                                                         manager.managerName
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-4 border border-gray-300 text-center">
-                                                    {editingManager === manager.managerId ? (
-                                                        <input
-                                                            type="text"
-                                                            name="password"
-                                                            value={editedManager.password}
-                                                            onChange={handleInputChange}
-                                                            className="border rounded-md px-2 py-1 w-full"
-                                                        />
-                                                    ) : (
-                                                        manager.password
-                                                    )}
-                                                </td>
+                                                
                                                 <td className="py-2 px-4 border border-gray-300 text-center">
                                                     {editingManager === manager.managerId ? (
                                                         <input

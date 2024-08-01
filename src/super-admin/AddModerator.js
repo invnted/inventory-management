@@ -13,11 +13,10 @@ function AddModerator() {
   const uploadCSVURL = `${serverUrl}/moderators/upload-moderator-csv`;
   
 
-  const navigate = useNavigate();
-
   const [moderator, setModerator] = useState({
     moderatorId: '',
     moderatorName: '',
+    email: '',
     password: '',
     designation: '',
     section: '',
@@ -48,6 +47,7 @@ function AddModerator() {
         setModerator({
           moderatorId: '',
           moderatorName: '',
+          email: '',
           password: '',
           designation: '',
           section: '',
@@ -151,6 +151,15 @@ function AddModerator() {
                     onChange={handleInput}
                     value={moderator.moderatorName}
                     placeholder='Moderator Name'
+                    className='m-3 p-2 outline-none border rounded-xl'
+                    required
+                  />
+                  <input
+                    type='email'
+                    name='email'
+                    onChange={handleInput}
+                    value={moderator.email}
+                    placeholder='Moderator Email'
                     className='m-3 p-2 outline-none border rounded-xl'
                     required
                   />

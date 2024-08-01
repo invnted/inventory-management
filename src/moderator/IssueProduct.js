@@ -10,6 +10,8 @@ const REQ_URL = `${serverUrl}/products/unissuedDemandList`;
 
 function IssueProduct() {
     const [demandData, setDemandData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchDemandData = async () => {
@@ -34,11 +36,7 @@ function IssueProduct() {
         fetchDemandData();
     }, []);
 
-    useEffect(() => {
-        console.log('Updated demandData:', demandData);
-    }, [demandData]);
-
-    const handleIssue = (demandId, userId, productType, productName, productModel,productBrand,productQuantity) => {
+    const handleIssue = (demandId, userId, productType, productName, productModel, productBrand, productQuantity) => {
         // Handle issue logic here
         localStorage.setItem('demandId', demandId);
         localStorage.setItem('userId', userId);
@@ -47,7 +45,27 @@ function IssueProduct() {
         localStorage.setItem('productName', productName);
         localStorage.setItem('productModel', productModel);
         localStorage.setItem('productQuantity', productQuantity);
-        
+    };
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = demandData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(demandData.length / itemsPerPage);
+
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => setCurrentPage(i)}
+                    className={`px-4 py-2 mx-1 ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'} border border-blue-500 rounded`}
+                >
+                    {i}
+                </button>
+            );
+        }
+        return pageNumbers;
     };
 
     return (
@@ -87,8 +105,8 @@ function IssueProduct() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {demandData.length > 0 ? (
-                                        demandData.map((demand) => (
+                                    {currentItems.length > 0 ? (
+                                        currentItems.map((demand) => (
                                             <tr key={demand.demandId}>
                                                 <td className="py-2 px-4 border border-black text-center">{demand.demandId}</td>
                                                 <td className="py-2 px-4 border border-black text-center">{demand.userId}</td>
@@ -102,7 +120,7 @@ function IssueProduct() {
                                                     <Link to='/moderator-home/confirm-product'>
                                                         <button
                                                             className="bg-sky-800 text-white px-2 py-1 rounded active:bg-sky-900"
-                                                            onClick={() => handleIssue(demand.demandId, demand.userId, demand.productType, demand.productName, demand.productModel,demand.productBrand,demand.productQuantity)}
+                                                            onClick={() => handleIssue(demand.demandId, demand.userId, demand.productType, demand.productName, demand.productModel, demand.productBrand, demand.productQuantity)}
                                                         >
                                                             Issue
                                                         </button>
@@ -119,6 +137,9 @@ function IssueProduct() {
                                     )}
                                 </tbody>
                             </table>
+                        </div>
+                        <div className="flex justify-center mt-4">
+                            {renderPageNumbers()}
                         </div>
                     </div>
                 </div>

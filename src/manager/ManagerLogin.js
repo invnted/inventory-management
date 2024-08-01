@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import PasswordHide from '../Images/passHide.png';
+import PasswordShow from '../Images/passShow.png';
 
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const LOGIN_URL = `${serverUrl}/managers/manager-login`;
 
 function ManagerLogin() {
   const [manager, setManager] = useState({
-    managerId: '',
+    email: '',
     password: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleInput = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
+    const { name, value } = e.target;
     setManager({
       ...manager,
       [name]: value,
@@ -43,6 +44,7 @@ function ManagerLogin() {
           managerData: {
             managerId,
             managerName,
+            email,
             designation,
             section,
             appointment,
@@ -54,6 +56,7 @@ function ManagerLogin() {
 
         localStorage.setItem('managerId', managerId);
         localStorage.setItem('managerName', managerName);
+        localStorage.setItem('email', email);
         localStorage.setItem('designation', designation);
         localStorage.setItem('section', section);
         localStorage.setItem('appointment', appointment);
@@ -62,18 +65,9 @@ function ManagerLogin() {
         localStorage.setItem('issueProduct', issueProduct);
         localStorage.setItem('token', token);
 
-        console.log('ManagerId:', managerId);
-        console.log('ManagerName:', managerName);
-        console.log('Designation:', designation);
-        console.log('Section:', section);
-        console.log('Appointment:', appointment);
-        console.log('All Product Report:', allProductReport);
-        console.log('Demand Received:', demandReceived);
-        console.log('Issue Product:', issueProduct);
-        console.log('Token:', token);
-
+        
         toast.success('Login successful');
-        setManager({ managerId: '', password: '' });
+        setManager({ email: '', password: '' });
 
         navigate('/Manager-Dashboard');
       } else {
@@ -84,9 +78,13 @@ function ManagerLogin() {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const Dropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Manager");
+    const [selectedOption, setSelectedOption] = useState('Manager');
     const navigate = useNavigate();
 
     const toggleDropdown = () => {
@@ -100,20 +98,29 @@ function ManagerLogin() {
     };
 
     return (
-      <div className="relative inline-block text-center w-full mt-5 ">
-        
+      <div className="relative inline-block text-center w-full mt-5">
         <div>
           <button
             type="button"
-            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md  shadow-sm px-4 py-2  font-semibold text-white"
+            className="inline-flex bg-sky-500 text-xl justify-center w-full rounded-md shadow-sm px-4 py-2 font-semibold text-white"
             id="menu-button"
             aria-expanded="true"
             aria-haspopup="true"
             onClick={toggleDropdown}
           >
             {selectedOption}
-            <svg className="-mr-2 ml-4 h-5 w-5 text-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 20 20" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            <svg
+              className="-mr-2 ml-4 h-5 w-5 text-center"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 -5 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
         </div>
@@ -126,7 +133,7 @@ function ManagerLogin() {
             aria-labelledby="menu-button"
             tabIndex="-1"
           >
-            <div className="py-1 text-center " role="none">
+            <div className="py-1 text-center" role="none">
               <button
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-sky-600"
                 role="menuitem"
@@ -179,54 +186,80 @@ function ManagerLogin() {
     );
   };
 
-
   return (
     <div className="relative h-screen bg-sky-800">
-      <div className="absolute inset-0  flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-4/5 md:w-1/4 border rounded-lg shadow p-5">
-        <Dropdown/>
+          <Dropdown />
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-3xl dark:text-white">
               Manager Login
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="managerId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Manager ID
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Email
                 </label>
                 <input
-                  type="text"
-                  name="managerId"
-                  id="managerId"
+                  type="email"
+                  name="email"
+                  id="email"
                   onChange={handleInput}
                   className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white"
-                  placeholder="Manager ID"
+                  placeholder="Your Email"
                   required
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Password
                 </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={handleInput}
-                  placeholder="••••••••"
-                  className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    id="password"
+                    onChange={handleInput}
+                    placeholder="••••••••"
+                    className="w-full bg-transparent border-b border-gray-300 px-4 py-2 focus:outline-none text-white mb-6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-white"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? (
+                      <img className="w-5 md:w-6 mb-4" src={PasswordShow} alt="Show Password" />
+                    ) : (
+                      <img className="w-5 md:w-6 mb-4" src={PasswordHide} alt="Hide Password" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="mt-20 flex justify-center items-center">
                 <button
                   type="submit"
-                  className="w-1/2 flex justify-center items-center hover:bg-gray-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl"
+                  className="w-1/2 flex justify-center items-center hover:border-sky-500 hover:bg-sky-500 hover:text-black text-xl font-bold text-white border p-3 rounded-xl"
                 >
                   Login
                 </button>
               </div>
             </form>
+            <div className="text-gray-400">
+              If you forgot your password &nbsp;
+              <Link to='/manager-forgot-password'>
+                <span className="text-white hover:text-sky-500 hover:underline  cursor-pointer font-semibold">
+                  click here
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

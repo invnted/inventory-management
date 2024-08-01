@@ -209,7 +209,7 @@ function AllModerator() {
           </form>
           <div className="p-2 md:p-10">
             <button onClick={fetchModerators} className="bg-blue-500 text-white p-2 rounded-md">Refresh</button>
-            <button onClick={handleDownloadCSV} className="bg-green-500 text-white p-2 rounded-md ml-4">Download CSV</button>
+            <button onClick={handleDownloadCSV} className="bg-blue-500 text-white p-2 rounded-md ml-4">Download CSV</button>
             {currentModerators.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">
@@ -220,7 +220,6 @@ function AllModerator() {
                       <th className="py-2 px-4 border border-gray-300 text-center">Designation</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Appointment</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Section</th>
-                      <th className="py-2 px-4 border border-gray-300 text-center">Password</th>
                       <th className="py-2 px-4 border border-gray-300 text-center">Action</th>
                     </tr>
                   </thead>
@@ -241,6 +240,7 @@ function AllModerator() {
                             moderator.moderatorName
                           )}
                         </td>
+
                         <td className="py-2 px-4 border border-gray-300 text-center">
                           {editingModerator === moderator.moderatorId ? (
                             <input
@@ -280,19 +280,7 @@ function AllModerator() {
                             moderator.section
                           )}
                         </td>
-                        <td className="py-2 px-4 border border-gray-300 text-center">
-                          {editingModerator === moderator.moderatorId ? (
-                            <input
-                              type="text"
-                              name="password"
-                              value={editedModerator.password}
-                              onChange={handleInputChange}
-                              className="bg-gray-200"
-                            />
-                          ) : (
-                            moderator.password
-                          )}
-                        </td>
+        
                         <td className="py-2 px-4 border border-gray-300 text-center">
                           {editingModerator === moderator.moderatorId ? (
                             <>

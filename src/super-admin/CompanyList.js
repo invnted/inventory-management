@@ -11,6 +11,8 @@ function CompanyList() {
   const [editingCompany, setEditingCompany] = useState(null);
   const [editedCompany, setEditedCompany] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const companyListURL = `${serverUrl}/companies/company-getAll`;
   const companyEditURL = `${serverUrl}/companies/company-update`;
@@ -28,9 +30,8 @@ function CompanyList() {
       });
 
       const data = await response.json();
-        console.log("Received:", data);
-  
-  
+      console.log("Received:", data);
+
       if (data.success) {
         setCompanies(data.companies);
         toast.success('Successfully fetched data');
@@ -42,7 +43,6 @@ function CompanyList() {
       toast.error('An error occurred');
     }
   };
-  
 
   const handleEditClick = (company) => {
     setEditingCompany(company.companyId);
@@ -59,13 +59,11 @@ function CompanyList() {
 
   const handleSaveClick = async (companyId) => {
     try {
-      // Fetch the response from the API
       const response = await fetchWithToken(companyEditURL, {
         method: 'POST',
         body: JSON.stringify(editedCompany),
       });
-  
-    
+
       if (response.ok) {
         const updatedCompanies = companies.map((company) =>
           company.companyId === companyId ? editedCompany : company
@@ -73,9 +71,7 @@ function CompanyList() {
         setCompanies(updatedCompanies);
         setEditingCompany(null);
         toast.success('Company updated successfully');
-      } 
-      
-      else {
+      } else {
         toast.error('Failed to update company');
       }
     } catch (error) {
@@ -83,7 +79,6 @@ function CompanyList() {
       toast.error('An error occurred');
     }
   };
-  
 
   const handleDeleteClick = async (companyId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this company?');
@@ -113,16 +108,14 @@ function CompanyList() {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-  
+
   const handleDownloadCSV = async () => {
     try {
-      // Fetch the CSV file using fetchWithToken
       const response = await fetch(companiesCSV, {
         method: 'POST',
       });
-  
-      // Create a Blob from the response data
-      const blob = await response.blob(); // Use response.blob() instead of response.json()
+
+      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -136,14 +129,24 @@ function CompanyList() {
       toast.error('An error occurred while downloading CSV');
     }
   };
-  
-  
-
 
   const filteredCompanies = companies.filter((company) =>
     company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     company.companyId.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const indexOfLastCompany = currentPage * itemsPerPage;
+  const indexOfFirstCompany = indexOfLastCompany - itemsPerPage;
+  const currentCompanies = filteredCompanies.slice(indexOfFirstCompany, indexOfLastCompany);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredCompanies.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -189,7 +192,7 @@ function CompanyList() {
             <button onClick={fetchCompanies} className="bg-sky-800 text-white p-2 rounded-md">Refresh</button>
             &nbsp;&nbsp;&nbsp;
             <button onClick={handleDownloadCSV} className="bg-sky-800 text-white p-2 rounded-md">Download CSV</button>
-            {filteredCompanies.length > 0 && (
+            {currentCompanies.length > 0 && (
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full bg-white border border-gray-300">
                   <thead>
@@ -204,7 +207,7 @@ function CompanyList() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCompanies.map((company) => (
+                    {currentCompanies.map((company) => (
                       <tr key={company.companyId}>
                         <td className="py-2 px-4 border border-gray-300 text-center">{company.companyId}</td>
                         <td className="py-2 px-4 border border-gray-300 text-center">
@@ -311,6 +314,17 @@ function CompanyList() {
                 </table>
               </div>
             )}
+            <div className="flex justify-center mt-4">
+              {pageNumbers.map(number => (
+                <button
+                  key={number}
+                  onClick={() => handleClick(number)}
+                  className={`mx-1 px-3 py-1 rounded-md ${currentPage === number ? 'bg-sky-800 text-white' : 'bg-gray-300 text-black'}`}
+                >
+                  {number}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
