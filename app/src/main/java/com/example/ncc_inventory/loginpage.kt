@@ -1,5 +1,6 @@
 package com.example.ncc_inventory
 
+import AuthInterceptor
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Build
@@ -17,6 +18,7 @@ import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,11 +30,11 @@ import retrofit2.http.POST
 
 object rFit {
     var retrofit: Retrofit? = null
-    const val BASE_URL_PLACEHOLDER = "https://97cb-103-37-80-91.ngrok-free.app/"
+    const val BASE_URL_PLACEHOLDER = "https://48ea-103-37-80-91.ngrok-free.app/"
 }
 
 data class managerloginrequest(
-    val managerId: String, val password: String
+    val email: String, val password: String
 )
 
 class loginpage : AppCompatActivity() {
@@ -43,6 +45,8 @@ class loginpage : AppCompatActivity() {
     private lateinit var identity: String
     private lateinit var pb : ProgressBar
     private lateinit var loginButton : TextView
+    private lateinit var fp : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginpage)
@@ -96,6 +100,11 @@ class loginpage : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         })
 
+        fp = findViewById(R.id.forgetPass)
+        fp.setOnClickListener {
+            startActivity(Intent(this@loginpage,forgot_pass::class.java))
+        }
+
     }
 
     private fun loginUser(email: String, password: String, baseUrl: String) {
@@ -104,7 +113,6 @@ class loginpage : AppCompatActivity() {
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        rFit.retrofit = retrofit
         pb.visibility =View.VISIBLE
         if (identity == "Admin") {
             val loginService = retrofit.create(LoginService::class.java)
@@ -121,7 +129,12 @@ class loginpage : AppCompatActivity() {
                             val loginResponse = response.body()
                             if (loginResponse != null) {
                                 // Handle successful login
-
+                                loginResponse.token?.let {
+                                    TokenManager.saveToken(this@loginpage,
+                                        it
+                                    )
+                                }
+                                newRetroFit(baseUrl)
                                 val user = loginResponse.admin
                                 Toast.makeText(
                                     this@loginpage,
@@ -184,6 +197,8 @@ class loginpage : AppCompatActivity() {
                             pb.visibility =View.INVISIBLE
                             loginButton.visibility = View.VISIBLE
                             val respo = response.body()
+                            respo?.token?.let { TokenManager.saveToken(this@loginpage, it) }
+                            newRetroFit(baseUrl)
                             if (respo?.success == true) {
                                 val it = Intent(this@loginpage, managerDashboard::class.java)
                                 it.putExtra("name", respo.managerData.managerName)
@@ -231,6 +246,8 @@ class loginpage : AppCompatActivity() {
                             loginButton.visibility = View.VISIBLE
                             val respo = response.body()
                             if (respo?.success == true) {
+                                respo.token?.let { TokenManager.saveToken(this@loginpage, it) }
+                                newRetroFit(baseUrl)
                                 val user = respo.user
                                 if (user != null) {
                                     val it = Intent(this@loginpage, userDashboard::class.java)
@@ -287,6 +304,8 @@ class loginpage : AppCompatActivity() {
                         val respo = response.body()
                         if (respo?.success == true) {
                             val moderator = respo.moderator
+                            respo.token?.let { TokenManager.saveToken(this@loginpage, it) }
+                            newRetroFit(baseUrl)
                             if (moderator != null) {
                                 val it = Intent(this@loginpage, moderatorDashboard::class.java)
                                 it.putExtra("moderatorName", moderator.moderatorName)
@@ -337,6 +356,8 @@ class loginpage : AppCompatActivity() {
                         loginButton.visibility = View.VISIBLE
                         val respo = response.body()
                         if (respo?.success == true) {
+                            respo.token?.let { TokenManager.saveToken(this@loginpage, it) }
+                            newRetroFit(baseUrl)
                             Toast.makeText(this@loginpage, "Login Successful", Toast.LENGTH_SHORT)
                                 .show()
                             val it = Intent(this@loginpage, organizationDashboard::class.java)
@@ -387,5 +408,18 @@ class loginpage : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    private fun newRetroFit(baseUrl: String){
+        val client = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(this))
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .client(client)
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        rFit.retrofit = retrofit
     }
 }

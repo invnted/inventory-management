@@ -6,5 +6,5 @@ import retrofit2.http.POST
 
 interface StoreService {
     @POST("${rFit.BASE_URL_PLACEHOLDER}products/getProductStore")
-    fun getData(@Body productTypeResponse: productTypeResponse ) : Call<storeResponse>
+    fun getData(@Body productTypeResponse: productTypeResponse ) : Call<newStoreResponse>
 }

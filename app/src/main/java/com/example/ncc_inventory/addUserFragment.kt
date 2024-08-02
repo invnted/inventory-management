@@ -55,6 +55,7 @@ class addUserFragment : Fragment() {
         val userSection = binding.userSection
         val userAppointment = binding.userAppointment
         val userRemark = binding.userRemark
+        val userMail = binding.userMail
         context.let {
              click = AnimationUtils.loadAnimation(it,R.anim.click)
         }
@@ -67,10 +68,12 @@ class addUserFragment : Fragment() {
             val section = userSection.text.toString()
             val appointment = userAppointment.text.toString()
             val remark1 = userRemark.text.toString()
-            handleSubmitButtonClick(name,pass,id,designation,section,appointment,remark1)
+            val mail = userMail.text.toString()
+            handleSubmitButtonClick(name,mail,pass,id,designation,section,appointment,remark1)
             userName.text.clear()
             userPass.text.clear()
             userId.text.clear()
+            userMail.text.clear()
             userDesignation.text.clear()
             userSection.text.clear()
             userAppointment.text.clear()
@@ -80,6 +83,7 @@ class addUserFragment : Fragment() {
 
     private fun handleSubmitButtonClick(
         name: String,
+        mail : String,
         pass: String,
         id: String,
         designation: String,
@@ -89,6 +93,7 @@ class addUserFragment : Fragment() {
     ) {
         (activity as? addUser)?.handleUserData(
             name,
+            mail,
             pass,
             id,
             designation,

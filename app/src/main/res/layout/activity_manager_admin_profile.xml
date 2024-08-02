@@ -122,16 +122,6 @@
             android:textColor="@color/purple"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/pPass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center|start"
-            android:text="Password :   25May2005"
-            android:textColor="@color/purple"
-            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/pDesig"

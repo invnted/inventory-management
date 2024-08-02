@@ -49,6 +49,7 @@ class addManagerFragement : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val submitButton = binding.submitButton
         val managerName = binding.managerName
+        val managerEmail = binding.managerEmail
         val managerPass = binding.managerPass
         val managerId = binding.managerId
         val managerDesignation = binding.managerDesignation
@@ -63,6 +64,7 @@ class addManagerFragement : Fragment() {
             val name = managerName.text.toString()
             val pass = managerPass.text.toString()
             val id = managerId.text.toString()
+            val email = managerEmail.text.toString()
             val designation = managerDesignation.text.toString()
             val section = managerSection.text.toString()
             val appointment = managerAppointment.text.toString()
@@ -70,7 +72,7 @@ class addManagerFragement : Fragment() {
             val isAllReport = allReport.isChecked
             val isDemandReceived = demandReceived.isChecked
             val isIssueProduct = issueProduct.isChecked
-           handleSubmitButtonClick(name,pass,id,designation,section,appointment,remark1,isAllReport,isDemandReceived,isIssueProduct)
+           handleSubmitButtonClick(name,email,pass,id,designation,section,appointment,remark1,isAllReport,isDemandReceived,isIssueProduct)
             managerName.text.clear()
             managerPass.text.clear()
             managerId.text.clear()
@@ -103,6 +105,7 @@ class addManagerFragement : Fragment() {
 
     private fun handleSubmitButtonClick(
         name: String,
+        email : String,
         pass: String,
         id: String,
         designation: String,
@@ -115,6 +118,7 @@ class addManagerFragement : Fragment() {
     ) {
         (activity as? ManagerActivity)?.handleManagerData(
             name,
+            email,
             pass,
             id,
             designation,

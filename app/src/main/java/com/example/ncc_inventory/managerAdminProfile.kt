@@ -24,7 +24,6 @@ class managerAdminProfile : AppCompatActivity() {
     private lateinit var myname : TextView
     private lateinit var pName : TextView
     private lateinit var pId : TextView
-    private lateinit var pPass : TextView
     private lateinit var pDesig : TextView
     private lateinit var pSection : TextView
     private lateinit var pAppoint : TextView
@@ -49,7 +48,6 @@ class managerAdminProfile : AppCompatActivity() {
         myname = findViewById(R.id.Mname)
         pName = findViewById(R.id.pName)
         pId = findViewById(R.id.pId)
-        pPass = findViewById(R.id.pPass)
         pDesig = findViewById(R.id.pDesig)
         pSection = findViewById(R.id.pSecrion)
         pAppoint = findViewById(R.id.pAppoint)
@@ -65,7 +63,6 @@ class managerAdminProfile : AppCompatActivity() {
         myname.text = intent.getStringExtra("name")
         pName.text = "Name :   ${intent.getStringExtra("name")}"
         pId.text = "Id :   ${intent.getStringExtra("id")}"
-        pPass.text ="Password :   ${intent.getStringExtra("password")}"
         pDesig.text ="Designation :   ${intent.getStringExtra("desig")}"
         pSection.text ="Section :   ${intent.getStringExtra("section")}"
         pAppoint.text = "Appointment :   ${intent.getStringExtra("appt")}"
@@ -218,7 +215,6 @@ class managerAdminProfile : AppCompatActivity() {
         myname.text = gUsername
         pName.text = "Name :   $gUsername"
         pId.text = "Id :   $gUserId"
-        pPass.text ="Password :   $gUserPass"
         pDesig.text ="Designation :   $gUserDesig"
         pSection.text ="Section :   $gUserSection"
         pAppoint.text = "Appointment :   $gUserAppt"

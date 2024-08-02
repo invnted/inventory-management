@@ -53,6 +53,7 @@ class ManagerActivity : AppCompatActivity(){
 
     fun handleManagerData(
         name: String,
+        email :String,
         pass: String,
         id: String,
         designation: String,
@@ -63,7 +64,7 @@ class ManagerActivity : AppCompatActivity(){
         isDemandReceived: Boolean,
         isIssueProduct: Boolean
     ) {
-       val manager = Manager(id,name,pass,designation,section,appointment,remark,isAllReport,isDemandReceived,isIssueProduct)
+       val manager = Manager(id,email,name,pass,designation,section,appointment,remark,isAllReport,isDemandReceived,isIssueProduct)
        addManger(manager)
     }
 

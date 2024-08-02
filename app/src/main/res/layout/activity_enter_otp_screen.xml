@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lightskyBlue"
-    tools:context=".loginpage">
+    tools:context=".enter_otp_screen">
 
     <ImageView
         android:id="@+id/status_bar_background"
@@ -71,7 +71,7 @@
             android:fontFamily="@font/poppins_medium"
             android:gravity="bottom|center|start"
             android:paddingTop="15dp"
-            android:text="Welcome Back"
+            android:text="Otp Verification"
             android:textColor="@color/skyBlue"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center|start"
-            android:text="Login to your account"
+            android:text="Enter your Otp"
             android:textColor="#BEBEBE"
             android:textSize="21sp"
             android:textStyle="bold" />
@@ -123,31 +123,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5">
 
-        <Spinner
-            android:id="@+id/loginSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/inputborder"
-            android:padding="5dp"
-            android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toTopOf="@+id/email"
-            app:layout_constraintEnd_toStartOf="@+id/guideline6"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.577" />
-
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/F_Otp"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/inputborder"
-            android:drawableStart="@drawable/baseline_mail_24"
+            android:drawableStart="@drawable/baseline_numbers_24"
             android:drawablePadding="12dp"
             android:ems="10"
-            android:hint="Enter your mail"
-            android:inputType="textEmailAddress"
+            android:hint="Enter otp"
+            android:inputType="number"
             android:paddingStart="10dp"
             android:textColor="@color/skyBlue"
             android:textSize="18sp"
@@ -155,25 +141,6 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline6"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toTopOf="@+id/guideline10" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/inputborder"
-            android:drawableStart="@drawable/lock"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:paddingStart="10dp"
-            android:textColor="@color/skyBlue"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline9"
-            app:layout_constraintEnd_toStartOf="@+id/guideline6"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toTopOf="@+id/guideline11" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -233,43 +200,34 @@
         app:layout_constraintGuide_percent="0.93" />
 
     <FrameLayout
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lgly">
 
         <ProgressBar
-            android:id="@+id/pb"
+            android:id="@+id/pbVf"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/login_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:id="@+id/verifyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:padding="10dp"
             android:background="@drawable/loginbtn"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center"
-            android:text="Login"
+            android:text="Verify"
             android:textColor="#dbf0fe"
             android:textSize="18sp"
-             />
+            />
 
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/forgetPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/poppins_medium"
-        android:text="Forgot Password ?"
-        android:textColor="@color/skyBlue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lgly"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

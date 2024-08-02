@@ -51,6 +51,7 @@ class addUser : AppCompatActivity() {
 
     fun handleUserData(
         name: String,
+        mail : String,
         pass: String,
         id: String,
         designation: String,
@@ -58,7 +59,7 @@ class addUser : AppCompatActivity() {
         appointment: String,
         remark: String
     ) {
-        val user = User(id,name,pass,designation,section,appointment,remark)
+        val user = User(id,mail,name,pass,designation,section,appointment,remark)
         addusr(user)
     }
     private fun addusr(user : User){

@@ -51,7 +51,7 @@ class storeReport : AppCompatActivity() {
     private lateinit var service: storeReportService
     private lateinit var retrofit: Retrofit
     private val types: MutableList<String> = mutableListOf()
-    private val obj: MutableList<storeObj> = mutableListOf()
+    private val obj: MutableList<StoreObj> = mutableListOf()
     private var selectedItem = ""
     private lateinit var btn: TextView
     private var selectedType: String = ""
@@ -185,25 +185,14 @@ class storeReport : AppCompatActivity() {
     }
 
     private fun fetchDataAndPopulateSpinner() {
-        service.getProducts().enqueue(object : Callback<List<storeRespo>> {
-            override fun onResponse(call: Call<List<storeRespo>>, response: Response<List<storeRespo>>) {
+        service.getProducts().enqueue(object : Callback<List<StoreResponse>> {
+            override fun onResponse(call: Call<List<StoreResponse>>, response: Response<List<StoreResponse>>) {
                 if (response.isSuccessful) {
                     val respo = response.body()
                     if (respo != null) {
                         respo.forEach { storeRespo ->
-                            val type = storeRespo.productType
-                            val details = storeRespo.details
-                            val nameList = mutableListOf<String>()
-                            val modelList = mutableListOf<String>()
-                            val brandList = mutableListOf<String>()
-
-                            details.forEach { detail ->
-                                nameList.add(detail.productName)
-                                modelList.add(detail.productModel)
-                                brandList.add(detail.productBrand)
-                            }
-                            obj.add(storeObj(type, nameList, modelList, brandList))
-                            types.add(type)
+                            obj.add(StoreObj(storeRespo.productType, storeRespo.brands))
+                            types.add(storeRespo.productType)
                         }
                         populateTypeSpinner()
                     }
@@ -212,14 +201,14 @@ class storeReport : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<List<storeRespo>>, t: Throwable) {
+            override fun onFailure(call: Call<List<StoreResponse>>, t: Throwable) {
                 Toast.makeText(this@storeReport, "Some error Occurred", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+
     private fun populateTypeSpinner() {
-        // Add hint "Select Type" at the beginning of the types list
         types.add(0, "Select Type")
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, types)
@@ -230,45 +219,65 @@ class storeReport : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedItem = parent.getItemAtPosition(position).toString()
                 if (position > 0) {
-                    // Get the selected type
                     val selectedType = types[position]
-
-                    // Filter obj to find the selected type
                     val selectedObj = obj.find { it.type == selectedType }
 
-                    // Populate nameSpinner with names for the selected type
-                    val nameList = selectedObj?.name ?: emptyList()
-                    val nameAdapter = createSpinnerAdapter(nameList.distinct(), "Select Name")
-                    nameSpinner.adapter = nameAdapter
-
-                    // Populate modelSpinner with models for the selected type
-                    val modelList = selectedObj?.model ?: emptyList()
-                    val modelAdapter = createSpinnerAdapter(modelList.distinct(), "Select Model")
-                    modelSpinner.adapter = modelAdapter
-
-                    // Populate brandSpinner with brands for the selected type
-                    val brandList = selectedObj?.brand ?: emptyList()
+                    val brandList = selectedObj?.brands?.map { it.productBrand } ?: emptyList()
                     val brandAdapter = createSpinnerAdapter(brandList.distinct(), "Select Brand")
                     brandSpinner.adapter = brandAdapter
 
-                    // Enable spinners
-                    nameSpinner.isEnabled = true
                     brandSpinner.isEnabled = true
-                    modelSpinner.isEnabled = true
+                    brandSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                            val selectedBrand = parent.getItemAtPosition(position).toString()
+                            if (position > 0) {
+                                val selectedBrandObj = selectedObj?.brands?.find { it.productBrand == selectedBrand }
+                                val productList = selectedBrandObj?.products?.map { it.productName } ?: emptyList()
+                                val productAdapter = createSpinnerAdapter(productList.distinct(), "Select Product")
+                                nameSpinner.adapter = productAdapter
+                                nameSpinner.isEnabled = true
+
+                                nameSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                                        val selectedProduct = parent.getItemAtPosition(position).toString()
+                                        if (position > 0) {
+                                            val selectedProductObj = selectedBrandObj?.products?.find { it.productName == selectedProduct }
+                                            val modelList = selectedProductObj?.models ?: emptyList()
+                                            val modelAdapter = createSpinnerAdapter(modelList.distinct(), "Select Model")
+                                            modelSpinner.adapter = modelAdapter
+                                            modelSpinner.isEnabled = true
+                                        } else {
+                                            clearModelSpinner()
+                                        }
+                                    }
+
+                                    override fun onNothingSelected(parent: AdapterView<*>) {
+                                        clearModelSpinner()
+                                    }
+                                }
+                            } else {
+                                clearProductAndModelSpinners()
+                            }
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>) {
+                            clearProductAndModelSpinners()
+                        }
+                    }
                 } else {
-                    // Clear spinners and disable them when "Select Type" is selected
-                    clearSpinners()
+                    clearBrandProductAndModelSpinners()
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                clearSpinners()
+                clearBrandProductAndModelSpinners()
             }
         }
     }
 
+
+
     private fun createSpinnerAdapter(data: List<String>, hint: String): ArrayAdapter<String> {
-        // Add hint at the beginning of the data list
         val dataList = mutableListOf<String>()
         dataList.add(hint)
         dataList.addAll(data)
@@ -278,15 +287,30 @@ class storeReport : AppCompatActivity() {
         return adapter
     }
 
-    private fun clearSpinners() {
+
+    private fun clearBrandProductAndModelSpinners() {
+        brandSpinner.adapter = null
         nameSpinner.adapter = null
         modelSpinner.adapter = null
-        brandSpinner.adapter = null
 
-        nameSpinner.isEnabled = false
         brandSpinner.isEnabled = false
+        nameSpinner.isEnabled = false
         modelSpinner.isEnabled = false
     }
+
+    private fun clearProductAndModelSpinners() {
+        nameSpinner.adapter = null
+        modelSpinner.adapter = null
+
+        nameSpinner.isEnabled = false
+        modelSpinner.isEnabled = false
+    }
+
+    private fun clearModelSpinner() {
+        modelSpinner.adapter = null
+        modelSpinner.isEnabled = false
+    }
+
 
     private fun showDatePickerDialog(editText: EditText, calendar: Calendar) {
         val datePickerDialog = DatePickerDialog(

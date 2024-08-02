@@ -22,7 +22,6 @@ class adminModeratorProfile : AppCompatActivity() {
     private lateinit var name: TextView
     private lateinit var name2: TextView
     private lateinit var id: TextView
-    private lateinit var pass: TextView
     private lateinit var desig: TextView
     private lateinit var appt: TextView
     private lateinit var section: TextView
@@ -37,7 +36,6 @@ class adminModeratorProfile : AppCompatActivity() {
         name = findViewById(R.id.modName)
         name2 = findViewById(R.id.mNameU)
         id = findViewById(R.id.modId)
-        pass = findViewById(R.id.modPass)
         desig = findViewById(R.id.modDesig)
         appt = findViewById(R.id.modappt)
         section = findViewById(R.id.modSection)
@@ -53,7 +51,6 @@ class adminModeratorProfile : AppCompatActivity() {
         name.text = intent.getStringExtra("name")
         name2.text = intent.getStringExtra("name")
         id.text = intent.getStringExtra("id")
-        pass.text = intent.getStringExtra("pass")
         desig.text = intent.getStringExtra("desig")
         appt.text = intent.getStringExtra("appt")
         section.text = intent.getStringExtra("section")

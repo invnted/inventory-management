@@ -20,6 +20,18 @@
         android:theme="@style/Theme.NCC_Inventory"
         tools:targetApi="31">
         <activity
+            android:name=".Issue_report_admin"
+            android:exported="false" />
+        <activity
+            android:name=".savepass"
+            android:exported="false" />
+        <activity
+            android:name=".enter_otp_screen"
+            android:exported="false" />
+        <activity
+            android:name=".forgot_pass"
+            android:exported="false" />
+        <activity
             android:name=".user_profile"
             android:exported="false" />
         <activity

@@ -22,9 +22,12 @@ class add_tech_person : AppCompatActivity() {
     private lateinit var itp_appointment : EditText
     private lateinit var itp_pass : EditText
     private lateinit var itp_remark : EditText
+    private lateinit var itp_mail : EditText
     private lateinit var itp_add : TextView
+
     var name = ""
     var id =""
+    var mail = ""
     var deg =""
     var appt = ""
     var sec = ""
@@ -46,6 +49,8 @@ class add_tech_person : AppCompatActivity() {
         itp_remark = findViewById(R.id.itPRemark)
         itp_add = findViewById(R.id.itPsubmitButton2)
         back = findViewById(R.id.itPBack)
+        itp_mail = findViewById(R.id.itPmail)
+
 
 
         //For transparent status bar
@@ -63,10 +68,11 @@ class add_tech_person : AppCompatActivity() {
             sec = itp_section.text.toString()
             reamrk = itp_remark.text.toString()
             pass = itp_pass.text.toString()
-            if(name.isNullOrEmpty()||id.isNullOrEmpty()||deg.isNullOrEmpty()||appt.isNullOrEmpty()||sec.isNullOrEmpty()||pass.isNullOrEmpty()){
+            mail = itp_mail.text.toString()
+            if(name.isNullOrEmpty()||mail.isNullOrEmpty()||id.isNullOrEmpty()||deg.isNullOrEmpty()||appt.isNullOrEmpty()||sec.isNullOrEmpty()||pass.isNullOrEmpty()){
                 Toast.makeText(this@add_tech_person,"Please Fill all the mandatory fields",Toast.LENGTH_SHORT).show()
             }else{
-                val addItResponse  =addItResponse(id,name,pass,deg,sec,appt,reamrk)
+                val addItResponse  =addItResponse(id,mail,name,pass,deg,sec,appt,reamrk)
                 val service = retrofit.create(AddITPersonService::class.java)
                 service.addIt_person(addItResponse).enqueue(object : Callback<additra>{
                     override fun onResponse(call: Call<additra>, response: Response<additra>) {
@@ -94,6 +100,7 @@ class add_tech_person : AppCompatActivity() {
 
     private fun clearFields() {
         itp_name.text.clear()
+        itp_mail.text.clear()
         itp_id.text.clear()
         itp_desig.text.clear()
         itp_appointment.text.clear()

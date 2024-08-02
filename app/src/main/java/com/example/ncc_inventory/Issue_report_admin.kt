@@ -16,63 +16,63 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class allproductreportpanel : AppCompatActivity() {
+class Issue_report_admin : AppCompatActivity() {
+
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: allProductReportAdapter
+    private lateinit var adapter: Issued_ProductsAdapter
     private lateinit var retrofit: Retrofit
     private lateinit var back : ImageView
     private lateinit var reportDemand : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_allproductreportpanel)
-
-        recyclerView = findViewById(R.id.reportRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        searchView = findViewById(R.id.reportSv)
-        adapter = allProductReportAdapter(this, emptyList())
-        retrofit = rFit.retrofit!!
-        back = findViewById(R.id.reportBack)
-        reportDemand = findViewById(R.id.reportdemand)
-        reportDemand.visibility = View.INVISIBLE
+        setContentView(R.layout.activity_issue_report_admin)
 
 
-        //For transparent status bar
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
 
-        val service  = retrofit.create(AllProductReportService::class.java)
-        service.getReport().enqueue(object :Callback<allProductreportresponse>{
+        recyclerView = findViewById(R.id.IssuereportRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        searchView = findViewById(R.id.IssuereportSv)
+        adapter = Issued_ProductsAdapter(this, emptyList())
+        retrofit = rFit.retrofit!!
+        back = findViewById(R.id.issuereportBack)
+        reportDemand = findViewById(R.id.Issuereportdemand)
+        reportDemand.visibility = View.INVISIBLE
+
+        val service  = retrofit.create(issuedProductService::class.java)
+        service.getProducts().enqueue(object : Callback<issue_Product_report_res> {
             override fun onResponse(
-                call: Call<allProductreportresponse>,
-                response: Response<allProductreportresponse>
+                call: Call<issue_Product_report_res>,
+                response: Response<issue_Product_report_res>
             ) {
                 if(response.isSuccessful){
                     val respo = response.body()
                     if(respo?.success==true){
-                        if(respo.products.isNotEmpty()){
-                            adapter = allProductReportAdapter(this@allproductreportpanel,respo.products)
+                        if(respo.issueList.isNotEmpty()){
+                            adapter = Issued_ProductsAdapter(this@Issue_report_admin,respo.issueList)
                             recyclerView.adapter = adapter
                         }else{
                             reportDemand.visibility = View.VISIBLE
                         }
                     }
                 }else{
-                    Toast.makeText(this@allproductreportpanel,"Response failed",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@Issue_report_admin,"Response failed", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<allProductreportresponse>, t: Throwable) {
-                Toast.makeText(this@allproductreportpanel,"Some error occurred",Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<issue_Product_report_res>, t: Throwable) {
+                Toast.makeText(this@Issue_report_admin,"Some error occurred", Toast.LENGTH_SHORT).show()
 
             }
 
         })
 
         setupSearchView()
-
     }
+
     fun onSimulateBackClick(view: View) {
         onBackPressed()
     }

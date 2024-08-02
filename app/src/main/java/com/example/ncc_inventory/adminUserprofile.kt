@@ -24,7 +24,6 @@ class adminUserprofile : AppCompatActivity() {
     private lateinit var pName : TextView
     private lateinit var userName : TextView
     private lateinit var userId : TextView
-    private lateinit var userPass : TextView
     private lateinit var userDesig : TextView
     private lateinit var userSection : TextView
     private lateinit var userAppointment : TextView
@@ -44,7 +43,6 @@ class adminUserprofile : AppCompatActivity() {
         pName = findViewById(R.id.PnameU)
         userName = findViewById(R.id.userNamePf)
         userId = findViewById(R.id.userIdpf)
-        userPass = findViewById(R.id.userPasspf)
         userDesig = findViewById(R.id.userDesigpf)
         userSection = findViewById(R.id.userSectionpf)
         userAppointment = findViewById(R.id.userappt)
@@ -59,7 +57,6 @@ class adminUserprofile : AppCompatActivity() {
         pName.text = gUsername
         userName.text = gUsername
         userId.text = gUserId
-        userPass.text = gUserPass
         userDesig.text = gUserDesig
         userSection.text = gUserSection
         userAppointment.text = gUserAppt
@@ -176,7 +173,6 @@ class adminUserprofile : AppCompatActivity() {
         pName.text = gUsername
         userName.text = gUsername
         userId.text = gUserId
-        userPass.text = gUserPass
         userDesig.text = gUserDesig
         userSection.text = gUserSection
         userAppointment.text = gUserAppt

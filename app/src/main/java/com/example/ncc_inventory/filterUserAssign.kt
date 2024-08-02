@@ -5,11 +5,14 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -38,6 +41,7 @@ class filterUserAssign : AppCompatActivity() {
         retrofit = rFit.retrofit!!
 
         textView = findViewById(R.id.nodemandfil)
+
         val productType = intent.getStringExtra("type")
         val productModel = intent.getStringExtra("model")
         val productBrand = intent.getStringExtra("brand")
@@ -126,5 +130,6 @@ class filterUserAssign : AppCompatActivity() {
     fun vb(){
         textView.visibility = View.VISIBLE
     }
+
 
 }

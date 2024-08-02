@@ -16,6 +16,7 @@ import retrofit2.Retrofit
 import retrofit2.create
 import java.util.Locale
 
+
 class filterItem_adapter(
     val context: Context,
     val adapterItems: List<filteredProducts>,
@@ -26,6 +27,7 @@ class filterItem_adapter(
 ) : RecyclerView.Adapter<filterItem_adapter.ViewHolderClass>() {
 
     val newList: MutableList<filteredProducts> = adapterItems.toMutableList()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderClass {
         val itemView =

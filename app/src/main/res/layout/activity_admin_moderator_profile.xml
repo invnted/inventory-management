@@ -215,54 +215,17 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearlayout5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/scrollview"
-        android:orientation="vertical"
-        android:elevation="5dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline99"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline94"
-        app:layout_constraintTop_toBottomOf="@+id/linearlayout4">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Password :"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:id="@+id/modPass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="25May2005"
-            android:textColor="@color/purple"
-            android:textSize="22dp" />
-
-    </LinearLayout>
-    <LinearLayout
         android:id="@+id/linearlayout6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/scrollview"
         android:elevation="5dp"
-        android:orientation="vertical"
         android:layout_marginTop="12dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/guideline99"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline94"
-        app:layout_constraintTop_toBottomOf="@+id/linearlayout5">
+        app:layout_constraintTop_toBottomOf="@+id/linearlayout4">
 
         <TextView
             android:layout_width="wrap_content"
@@ -276,8 +239,8 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
             android:id="@+id/modDesig"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"

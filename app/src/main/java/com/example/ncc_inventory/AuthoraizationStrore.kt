@@ -144,8 +144,8 @@ class AuthoraizationStrore : AppCompatActivity() {
     private fun sendAndReceiveData() {
         val storeService = rtfit.create(StoreService::class.java)
         val productTypeResponse = productTypeResponse(myItem)
-        storeService.getData(productTypeResponse).enqueue(object : Callback<storeResponse> {
-            override fun onResponse(call: Call<storeResponse>, response: Response<storeResponse>) {
+        storeService.getData(productTypeResponse).enqueue(object : Callback<newStoreResponse> {
+            override fun onResponse(call: Call<newStoreResponse>, response: Response<newStoreResponse>) {
                 if (response.isSuccessful) {
                     val respo = response.body()
                     if (respo?.success == true) {
@@ -162,7 +162,7 @@ class AuthoraizationStrore : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<storeResponse>, t: Throwable) {
+            override fun onFailure(call: Call<newStoreResponse>, t: Throwable) {
                 Toast.makeText(this@AuthoraizationStrore, " response Failed", Toast.LENGTH_SHORT)
                     .show()
             }

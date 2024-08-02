@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lightskyBlue"
-    tools:context=".loginpage">
+    tools:context=".forgot_pass">
 
     <ImageView
         android:id="@+id/status_bar_background"
@@ -71,7 +71,7 @@
             android:fontFamily="@font/poppins_medium"
             android:gravity="bottom|center|start"
             android:paddingTop="15dp"
-            android:text="Welcome Back"
+            android:text="Reset Password"
             android:textColor="@color/skyBlue"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center|start"
-            android:text="Login to your account"
+            android:text="Enter your details"
             android:textColor="#BEBEBE"
             android:textSize="21sp"
             android:textStyle="bold" />
@@ -124,7 +124,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline5">
 
         <Spinner
-            android:id="@+id/loginSpinner"
+            android:id="@+id/ForgotPassSpinner"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/inputborder"
@@ -138,7 +138,7 @@
             app:layout_constraintVertical_bias="0.577" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/F_email"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="15dp"
@@ -146,7 +146,7 @@
             android:drawableStart="@drawable/baseline_mail_24"
             android:drawablePadding="12dp"
             android:ems="10"
-            android:hint="Enter your mail"
+            android:hint="Enter your email"
             android:inputType="textEmailAddress"
             android:paddingStart="10dp"
             android:textColor="@color/skyBlue"
@@ -155,25 +155,6 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline6"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toTopOf="@+id/guideline10" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/inputborder"
-            android:drawableStart="@drawable/lock"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:paddingStart="10dp"
-            android:textColor="@color/skyBlue"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline9"
-            app:layout_constraintEnd_toStartOf="@+id/guideline6"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toTopOf="@+id/guideline11" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -233,43 +214,32 @@
         app:layout_constraintGuide_percent="0.93" />
 
     <FrameLayout
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lgly">
 
         <ProgressBar
-            android:id="@+id/pb"
+            android:id="@+id/pbSo"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/login_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:id="@+id/sendOtp_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
             android:background="@drawable/loginbtn"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center"
-            android:text="Login"
+            android:text="Send Otp"
             android:textColor="#dbf0fe"
             android:textSize="18sp"
-             />
+            />
 
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/forgetPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/poppins_medium"
-        android:text="Forgot Password ?"
-        android:textColor="@color/skyBlue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lgly"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

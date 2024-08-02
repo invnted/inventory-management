@@ -6,7 +6,7 @@
     android:icon="@drawable/baseline_store_24"/>
 
     <item
-        android:id="@+id/issueReport"
+        android:id="@+id/issueReportAd"
         android:title="Issue Report"
         android:icon="@drawable/baseline_issue_long_24"/>
     <item
@@ -38,13 +38,5 @@
         android:id="@+id/orgDemands"
         android:title="Oraganization Demands"
         android:icon="@drawable/baseline_real_estate_agent_24"/>
-
-    <item
-        android:id="@+id/allUserReport"
-        android:title="All User Report"
-        android:icon="@drawable/baseline_user_24"/>
-    <item
-        android:id="@+id/allManagerReport"
-        android:title="All Manager Report"
-        android:icon="@drawable/baseline_manage_accounts_24"/>
+    
 </menu>

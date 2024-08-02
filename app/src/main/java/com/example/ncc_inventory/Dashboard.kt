@@ -137,6 +137,9 @@ class Dashboard : AppCompatActivity() {
                 R.id.orgDemands -> {
                     startActivity(Intent(this,OrganizationDemandsNav::class.java))
                 }
+                R.id.issueReportAd->{
+                    startActivity(Intent(this,Issue_report_admin::class.java))
+                }
 
                 // Add other cases for other menu items as needed
             }

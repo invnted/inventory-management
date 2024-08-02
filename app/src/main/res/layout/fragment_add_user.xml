@@ -116,6 +116,30 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/poppins_medium"
+                    android:text="User Email"
+                    android:textColor="@color/purple" />
+
+                <EditText
+                    android:id="@+id/userMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/spinnerborder"
+                    android:fontFamily="@font/poppins_medium"
+                    android:hint="User Email"
+                    android:inputType="text"
+                    android:paddingStart="10dp"
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins_medium"
                     android:text="User Name"
                     android:textColor="@color/purple" />
 

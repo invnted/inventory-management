@@ -4,6 +4,6 @@ import retrofit2.Call
 import retrofit2.http.POST
 
 interface storeReportService {
-    @POST("${rFit.BASE_URL_PLACEHOLDER}products/getAllProduct")
-    fun getProducts(): Call<List<storeRespo>>
+    @POST("${rFit.BASE_URL_PLACEHOLDER}products/NEW_getAllProduct")
+    fun getProducts(): Call<List<StoreResponse>>
 }
