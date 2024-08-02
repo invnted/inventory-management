@@ -98,7 +98,7 @@ function UserTicketReceived() {
             <ModeratorNavbar />
             <div className='m-4 md:m-12 justify-between'>
                 <div className='flex justify-center items-center text-5xl p-6 bg-sky-800 text-white font-bold'>
-                    User Ticket Received
+                    Ticket Received
                 </div>
                 <div className='bg-sky-300'>
                     <form className="max-w-md mx-auto md:pt-20 p-6">

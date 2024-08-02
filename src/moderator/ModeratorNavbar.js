@@ -50,21 +50,18 @@ function ModeratorNavbar() {
                     >
                         <img src={AsideIcon} alt="Menu" className="w-6 h-6" /> {/* Use the uploaded image */}
                     </button>
-                    <ul className='hidden md:flex gap-10  font-semibold text-white'>
-                        <Link to='/moderator-home' className='hover:text-blue-900 delay-100'>
+                    <ul className='hidden md:flex gap-6  font-semibold text-white'>
+                        <Link to='/moderator-home' className='hover:text-blue-500 delay-100'>
                             <li>Dashboard</li>
                         </Link>
-                        <Link to='/moderator-home/issue-product' className='hover:text-blue-900 delay-100'>
+                        <Link to='/moderator-home/issue-product' className='hover:text-blue-500 delay-100'>
                             <li>Issue for User</li>
                         </Link>
-                        <Link to='/moderator-home/issue-product-company' className='hover:text-blue-900 delay-100'>
+                        <Link to='/moderator-home/issue-product-company' className='hover:text-blue-500 delay-100'>
                             <li>Issue for Company</li>
                         </Link>
-                        <Link to='/moderator-home/user-ticket-received' className='hover:text-blue-900 delay-100'>
-                            <li>User Ticket Received</li>
-                        </Link>
-                        <Link to='/moderator-home/company-ticket-received' className='hover:text-blue-900 delay-100'>
-                            <li>Company Ticket Received</li>
+                        <Link to='/moderator-home/user-ticket-received' className='hover:text-blue-500 delay-100'>
+                            <li>Ticket Received</li>
                         </Link>
                     </ul>
                     <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -140,12 +137,7 @@ function ModeratorNavbar() {
                             </li>
                             <li>
                                 <Link to='/moderator-home/user-ticket-received' className='block px-4 py-2 hover:bg-blue-900 rounded'>
-                                    Issue for Company
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to='/moderator-home/company-ticket-received' className='block px-4 py-2 hover:bg-blue-900 rounded'>
-                                    Issue for Company
+                                    Ticket Received
                                 </Link>
                             </li>
                         </ul>

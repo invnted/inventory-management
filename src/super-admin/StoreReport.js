@@ -19,6 +19,8 @@ function StoreReport() {
   const [toDate, setToDate] = useState('');
   const [reportData, setReportData] = useState([]);
   const [reportFetched, setReportFetched] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -135,6 +137,7 @@ function StoreReport() {
       const data = await response.json();
       setReportData(data);
       setReportFetched(true);
+      setCurrentPage(1); // Reset to first page
     } catch (error) {
       console.error('Error fetching report:', error);
       setReportFetched(false);
@@ -171,7 +174,7 @@ function StoreReport() {
         const columns = row.split(',');
         if (columns.length >= 5) {
           const [productType, productName, productModel, productBrand, productStatus, createdAt] = columns;
-          const formattedDate = createdAt ? formatDate(createdAt.trim()) : ''; 
+          const formattedDate = createdAt ? formatDate(createdAt.trim()) : '';
           return [productType, productName, productModel, productBrand, productStatus, formattedDate].join(',');
         }
         return '';
@@ -193,12 +196,23 @@ function StoreReport() {
     }
   };
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const currentTableData = reportData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const totalPages = Math.ceil(reportData.length / rowsPerPage);
+
   return (
-    <div className='h-screen bg-sky-600'>
+    <div className='h-screen bg-white'>
       <Navbar />
-      <div className='p-4'>
-        <div className='bg-sky-500 rounded-lg shadow-lg p-6'>
-          <div className='text-center text-3xl font-bold text-white mb-6'>Store Report</div>
+      <div className='m-4 md:m-10'>
+        <div className='flex justify-center items-center text-center text-4xl text-white font-semibold h-24 bg-sky-800'>Store Report</div>
+        <div className='bg-sky-300 p-6'>
           <form className='flex flex-wrap gap-4 justify-center'>
             <div className='w-full md:w-1/4'>
               <div className='relative'>
@@ -295,7 +309,7 @@ function StoreReport() {
                 View Report
               </button>
             </div>
-            <div className='w-full flex justify-center mt-4'>
+            {/* <div className='w-full flex justify-center mt-4'>
               <button
                 type='button'
                 className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'
@@ -303,34 +317,45 @@ function StoreReport() {
               >
                 Download CSV
               </button>
-            </div>
+            </div> */}
           </form>
           {reportFetched && (
             <div className='mt-6'>
-              <table className='min-w-full bg-white border border-gray-200'>
+              <table className='min-w-full bg-white border border-black'>
                 <thead>
                   <tr>
-                    <th className='py-2 px-4 border-b'>Product Type</th>
-                    <th className='py-2 px-4 border-b'>Product Name</th>
-                    <th className='py-2 px-4 border-b'>Product Model</th>
-                    <th className='py-2 px-4 border-b'>Product Brand</th>
-                    <th className='py-2 px-4 border-b'>Status</th>
-                    <th className='py-2 px-4 border-b'>Created At</th>
+                    <th className='py-2 px-4 border border-black text-start'>Product Type</th>
+                    <th className='py-2 px-4 border border-black text-start'>Product Name</th>
+                    <th className='py-2 px-4 border border-black text-start'>Product Model</th>
+                    <th className='py-2 px-4 border border-black text-start'>Product Brand</th>
+                    <th className='py-2 px-4 border border-black text-start'>Status</th>
+                    <th className='py-2 px-4 border border-black text-start'>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {reportData.map((item, index) => (
+                  {currentTableData.map((item, index) => (
                     <tr key={index}>
-                      <td className='py-2 px-4 border-b'>{item.productType}</td>
-                      <td className='py-2 px-4 border-b'>{item.productName}</td>
-                      <td className='py-2 px-4 border-b'>{item.productModel}</td>
-                      <td className='py-2 px-4 border-b'>{item.productBrand}</td>
-                      <td className='py-2 px-4 border-b'>{item.status}</td>
-                      <td className='py-2 px-4 border-b'>{formatDate(item.createdAt)}</td>
+                      <td className='py-2 px-4 border border-black'>{item.productType}</td>
+                      <td className='py-2 px-4 border border-black'>{item.productName}</td>
+                      <td className='py-2 px-4 border border-black'>{item.productModel}</td>
+                      <td className='py-2 px-4 border border-black'>{item.productBrand}</td>
+                      <td className='py-2 px-4 border border-black'>{item.status}</td>
+                      <td className='py-2 px-4 border border-black'>{formatDate(item.createdAt)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              <div className='flex justify-center mt-4'>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    className={`mx-1 px-3 py-1 rounded-lg ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+                    onClick={() => handlePageChange(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>

@@ -19,7 +19,6 @@ function ManagerUserList() {
   const userEditURL = `${serverUrl}/users/user-update`;
   const userDeleteURL = `${serverUrl}/users/user-delete`;
 
-  // Function to fetch all users
   const fetchUsers = async () => {
     try {
       const response = await fetchWithToken(userListURL, {
@@ -127,7 +126,9 @@ function ManagerUserList() {
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   return (
@@ -253,15 +254,32 @@ function ManagerUserList() {
                         </td>
                         <td className='py-2 px-4 border border-gray-300 text-center'>
                           {editingUser === user.userId ? (
-                            <button onClick={() => handleSaveClick(user.userId)} className='bg-blue-500 text-white p-2 rounded'>
-                              Save
-                            </button>
+                            <>
+                              <button
+                                onClick={() => handleSaveClick(user.userId)}
+                                className='bg-blue-500 text-white px-2 py-1 rounded-md'
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() => setEditingUser(null)}
+                                className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2'
+                              >
+                                Cancel
+                              </button>
+                            </>
                           ) : (
                             <>
-                              <button onClick={() => handleEditClick(user)} className='bg-green-500 text-white p-2 rounded mr-2'>
+                              <button
+                                onClick={() => handleEditClick(user)}
+                                className='bg-yellow-500 text-white px-2 py-1 rounded-md'
+                              >
                                 Edit
                               </button>
-                              <button onClick={() => handleDeleteClick(user.userId)} className='bg-red-500 text-white p-2 rounded'>
+                              <button
+                                onClick={() => handleDeleteClick(user.userId)}
+                                className='bg-red-500 text-white px-2 py-1 rounded-md ml-2'
+                              >
                                 Delete
                               </button>
                             </>
@@ -271,29 +289,29 @@ function ManagerUserList() {
                     ))}
                   </tbody>
                 </table>
-                <div className='flex justify-between items-center mt-4'>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className='bg-gray-300 p-2 rounded'
-                  >
-                    Previous
-                  </button>
-                  <span className='text-sm'>
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className='bg-gray-300 p-2 rounded'
-                  >
-                    Next
-                  </button>
-                </div>
               </div>
             ) : (
-              <p className='text-center text-gray-600 mt-4'>No users found.</p>
+              <p className='text-center mt-4'>No users found.</p>
             )}
+            <div className='flex justify-between mt-4'>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-md ${currentPage === 1 ? 'bg-gray-300' : 'bg-sky-800 text-white'}`}
+              >
+                Previous
+              </button>
+              <span className='text-center'>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-md ${currentPage === totalPages ? 'bg-gray-300' : 'bg-sky-800 text-white'}`}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>

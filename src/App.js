@@ -63,6 +63,7 @@ import AdminForgotPassword from './super-admin/AdminForgotPassword';
 import ManagerForgotPassword from './manager/ManagerForgotPassword';
 import CompanyForgotPassword from './company/CompanyForgotPassword';
 import ModeratorForgotPassword from './moderator/ModeratorForgotPassword';
+import IssueReport from './super-admin/IssueReport';
 
 
 
@@ -85,6 +86,7 @@ function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/reports/manager-report" element={<ManagerReport />} />
         <Route path="/reports/store-reports" element={<StoreReport/>} />
+        <Route path="/reports/issue-report" element={<IssueReport/>} />
         <Route path="/home/add-category" element={<AddCategory />} />
         <Route path="/home/add-manager" element={<AddManager />} />
         <Route path="/home/all-managers" element={<AllManager/>} />
